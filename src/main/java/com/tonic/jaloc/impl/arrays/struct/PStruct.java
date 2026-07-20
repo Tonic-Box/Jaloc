@@ -8,7 +8,7 @@ import java.util.Objects;
 public class PStruct
 {
     private final PStructArray<?> array;
-    private final long index;
+    private long index;
 
     protected PStruct(PStructArray<?> array, long index)
     {
@@ -19,6 +19,13 @@ public class PStruct
     public long index()
     {
         return index;
+    }
+
+    public PStruct moveTo(long index)
+    {
+        array.checkStructIndex(index);
+        this.index = index;
+        return this;
     }
 
     public StructLayout layout()

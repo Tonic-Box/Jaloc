@@ -200,6 +200,16 @@ public final class PStructArray<T extends PStruct> extends AbstractNativeArray<P
         return viewFactory.create(this, index);
     }
 
+    public T cursor()
+    {
+        return viewFactory.create(this, 0);
+    }
+
+    void checkStructIndex(long index)
+    {
+        checkIndex(index);
+    }
+
     long structOffset(long index)
     {
         checkIndex(index);
@@ -253,6 +263,38 @@ public final class PStructArray<T extends PStruct> extends AbstractNativeArray<P
                 }
 
                 return at(index++);
+            }
+
+            @Override
+            public void remove()
+            {
+                throw new UnsupportedOperationException();
+            }
+        };
+    }
+
+    public Iterator<T> cursorIterator()
+    {
+        return new Iterator<T>()
+        {
+            private final T cursor = cursor();
+            private long index;
+
+            @Override
+            public boolean hasNext()
+            {
+                return index < length();
+            }
+
+            @Override
+            public T next()
+            {
+                if (!hasNext()) {
+                    throw new NoSuchElementException();
+                }
+
+                cursor.moveTo(index++);
+                return cursor;
             }
 
             @Override

@@ -132,4 +132,41 @@ public final class PStructList<T extends PStruct> extends AbstractNativeList<PSt
             }
         };
     }
+
+    public Iterator<T> cursorIterator()
+    {
+        ensureOpen();
+
+        final long fence = size();
+        final T cursor = elements().cursor();
+
+        return new Iterator<T>()
+        {
+            private long index;
+
+            @Override
+            public boolean hasNext()
+            {
+                return index < fence;
+            }
+
+            @Override
+            public T next()
+            {
+                if (!hasNext())
+                {
+                    throw new NoSuchElementException();
+                }
+
+                cursor.moveTo(index++);
+                return cursor;
+            }
+
+            @Override
+            public void remove()
+            {
+                throw new UnsupportedOperationException();
+            }
+        };
+    }
 }
