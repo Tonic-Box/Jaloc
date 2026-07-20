@@ -30,7 +30,7 @@ public final class PIntHeap extends AbstractPrimitiveHeap<PIntArray, PIntWriter>
         PIntWriter writer = appendWriter(1);
         writer.put(value);
         commitWriter();
-        siftUp(size() - 1);
+        siftUp(sizeUnchecked() - 1);
     }
 
     public int pop() {
@@ -39,9 +39,9 @@ public final class PIntHeap extends AbstractPrimitiveHeap<PIntArray, PIntWriter>
         }
         PIntArray heap = elements();
         int root = heap.getUnchecked(0);
-        int last = heap.getUnchecked(size() - 1);
+        int last = heap.getUnchecked(sizeUnchecked() - 1);
         decrementSize();
-        if (size() != 0) {
+        if (sizeUnchecked() != 0) {
             heap.setUnchecked(0, last);
             siftDown(0);
         }
@@ -72,7 +72,7 @@ public final class PIntHeap extends AbstractPrimitiveHeap<PIntArray, PIntWriter>
 
     private void siftDown(long index) {
         PIntArray heap = elements();
-        long count = size();
+        long count = sizeUnchecked();
         int value = heap.getUnchecked(index);
         while (true) {
             long child = index * 2 + 1;

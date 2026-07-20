@@ -30,7 +30,7 @@ public final class PByteHeap extends AbstractPrimitiveHeap<PByteArray, PByteWrit
         PByteWriter writer = appendWriter(1);
         writer.put(value);
         commitWriter();
-        siftUp(size() - 1);
+        siftUp(sizeUnchecked() - 1);
     }
 
     public byte pop() {
@@ -39,9 +39,9 @@ public final class PByteHeap extends AbstractPrimitiveHeap<PByteArray, PByteWrit
         }
         PByteArray heap = elements();
         byte root = heap.getUnchecked(0);
-        byte last = heap.getUnchecked(size() - 1);
+        byte last = heap.getUnchecked(sizeUnchecked() - 1);
         decrementSize();
-        if (size() != 0) {
+        if (sizeUnchecked() != 0) {
             heap.setUnchecked(0, last);
             siftDown(0);
         }
@@ -72,7 +72,7 @@ public final class PByteHeap extends AbstractPrimitiveHeap<PByteArray, PByteWrit
 
     private void siftDown(long index) {
         PByteArray heap = elements();
-        long count = size();
+        long count = sizeUnchecked();
         byte value = heap.getUnchecked(index);
         while (true) {
             long child = index * 2 + 1;

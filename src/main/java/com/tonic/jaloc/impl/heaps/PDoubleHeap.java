@@ -30,7 +30,7 @@ public final class PDoubleHeap extends AbstractPrimitiveHeap<PDoubleArray, PDoub
         PDoubleWriter writer = appendWriter(1);
         writer.put(value);
         commitWriter();
-        siftUp(size() - 1);
+        siftUp(sizeUnchecked() - 1);
     }
 
     public double pop() {
@@ -39,9 +39,9 @@ public final class PDoubleHeap extends AbstractPrimitiveHeap<PDoubleArray, PDoub
         }
         PDoubleArray heap = elements();
         double root = heap.getUnchecked(0);
-        double last = heap.getUnchecked(size() - 1);
+        double last = heap.getUnchecked(sizeUnchecked() - 1);
         decrementSize();
-        if (size() != 0) {
+        if (sizeUnchecked() != 0) {
             heap.setUnchecked(0, last);
             siftDown(0);
         }
@@ -72,7 +72,7 @@ public final class PDoubleHeap extends AbstractPrimitiveHeap<PDoubleArray, PDoub
 
     private void siftDown(long index) {
         PDoubleArray heap = elements();
-        long count = size();
+        long count = sizeUnchecked();
         double value = heap.getUnchecked(index);
         while (true) {
             long child = index * 2 + 1;

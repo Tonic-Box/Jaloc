@@ -34,7 +34,7 @@ public final class PBoolHeap extends AbstractPrimitiveHeap<PBoolArray, PBoolWrit
         PBoolWriter writer = appendWriter(1);
         writer.put(value);
         commitWriter();
-        siftUp(size() - 1);
+        siftUp(sizeUnchecked() - 1);
     }
 
     public boolean pop()
@@ -44,11 +44,11 @@ public final class PBoolHeap extends AbstractPrimitiveHeap<PBoolArray, PBoolWrit
         }
         PBoolArray heap = elements();
         boolean root = heap.getUnchecked(0);
-        long lastIndex = size() - 1;
+        long lastIndex = sizeUnchecked() - 1;
         boolean last = heap.getUnchecked(lastIndex);
         heap.setUnchecked(lastIndex, false);
         decrementSize();
-        if (size() != 0) {
+        if (sizeUnchecked() != 0) {
             heap.setUnchecked(0, last);
             siftDown(0);
         }
@@ -82,7 +82,7 @@ public final class PBoolHeap extends AbstractPrimitiveHeap<PBoolArray, PBoolWrit
     private void siftDown(long index)
     {
         PBoolArray heap = elements();
-        long count = size();
+        long count = sizeUnchecked();
         boolean value = heap.getUnchecked(index);
         while (true) {
             long child = index * 2 + 1;

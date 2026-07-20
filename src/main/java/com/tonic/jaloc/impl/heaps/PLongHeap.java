@@ -30,7 +30,7 @@ public final class PLongHeap extends AbstractPrimitiveHeap<PLongArray, PLongWrit
         PLongWriter writer = appendWriter(1);
         writer.put(value);
         commitWriter();
-        siftUp(size() - 1);
+        siftUp(sizeUnchecked() - 1);
     }
 
     public long pop() {
@@ -39,9 +39,9 @@ public final class PLongHeap extends AbstractPrimitiveHeap<PLongArray, PLongWrit
         }
         PLongArray heap = elements();
         long root = heap.getUnchecked(0);
-        long last = heap.getUnchecked(size() - 1);
+        long last = heap.getUnchecked(sizeUnchecked() - 1);
         decrementSize();
-        if (size() != 0) {
+        if (sizeUnchecked() != 0) {
             heap.setUnchecked(0, last);
             siftDown(0);
         }
@@ -72,7 +72,7 @@ public final class PLongHeap extends AbstractPrimitiveHeap<PLongArray, PLongWrit
 
     private void siftDown(long index) {
         PLongArray heap = elements();
-        long count = size();
+        long count = sizeUnchecked();
         long value = heap.getUnchecked(index);
         while (true) {
             long child = index * 2 + 1;

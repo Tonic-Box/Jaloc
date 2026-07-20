@@ -123,7 +123,7 @@ public abstract class AbstractNativeMap<T extends PStruct> extends AbstractNativ
         }
 
         hasZeroKey = true;
-        size(size() + 1);
+        size(sizeUnchecked() + 1);
         return ~slot;
     }
 
@@ -136,7 +136,7 @@ public abstract class AbstractNativeMap<T extends PStruct> extends AbstractNativ
 
         UnsafeMemory.clear(tableBase + zeroSlot() * stride, stride);
         hasZeroKey = false;
-        size(size() - 1);
+        size(sizeUnchecked() - 1);
         return true;
     }
 
@@ -205,7 +205,7 @@ public abstract class AbstractNativeMap<T extends PStruct> extends AbstractNativ
         }
 
         writeKeyAt(base, position, keyBits);
-        size(size() + 1);
+        size(sizeUnchecked() + 1);
         return ~position;
     }
 
@@ -227,7 +227,7 @@ public abstract class AbstractNativeMap<T extends PStruct> extends AbstractNativ
             if (current == keyBits)
             {
                 shiftEntries(base, position, mask);
-                size(size() - 1);
+                size(sizeUnchecked() - 1);
                 return true;
             }
 
@@ -376,7 +376,7 @@ public abstract class AbstractNativeMap<T extends PStruct> extends AbstractNativ
 
     private long occupancy()
     {
-        return size() - (hasZeroKey ? 1 : 0);
+        return sizeUnchecked() - (hasZeroKey ? 1 : 0);
     }
 
     private long loadLimit()

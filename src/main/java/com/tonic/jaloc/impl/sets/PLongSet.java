@@ -72,7 +72,7 @@ public final class PLongSet extends AbstractNativeCollection<PLongArray, PLongWr
             }
 
             containsZero = true;
-            size(size() + 1);
+            size(sizeUnchecked() + 1);
             return true;
         }
 
@@ -97,9 +97,9 @@ public final class PLongSet extends AbstractNativeCollection<PLongArray, PLongWr
             position = (position + 1) & mask;
         }
 
-        if (occupancy() + 1 > loadLimit())
+        if (occupancy() + 1 > loadLimit(mask + 1))
         {
-            replaceArray(capacity() << 1);
+            replaceArray((mask + 1) << 1);
 
             table = elements();
             mask = table.length() - 1;
@@ -112,7 +112,7 @@ public final class PLongSet extends AbstractNativeCollection<PLongArray, PLongWr
         }
 
         table.setUnchecked(position, value);
-        size(size() + 1);
+        size(sizeUnchecked() + 1);
         return true;
     }
 
@@ -128,7 +128,7 @@ public final class PLongSet extends AbstractNativeCollection<PLongArray, PLongWr
             }
 
             containsZero = false;
-            size(size() - 1);
+            size(sizeUnchecked() - 1);
             return true;
         }
 
@@ -148,7 +148,7 @@ public final class PLongSet extends AbstractNativeCollection<PLongArray, PLongWr
             if (current == value)
             {
                 shiftKeys(table, position, mask);
-                size(size() - 1);
+                size(sizeUnchecked() - 1);
                 return true;
             }
 
@@ -256,12 +256,12 @@ public final class PLongSet extends AbstractNativeCollection<PLongArray, PLongWr
 
     private long occupancy()
     {
-        return size() - (containsZero ? 1 : 0);
+        return sizeUnchecked() - (containsZero ? 1 : 0);
     }
 
-    private long loadLimit()
+    private long loadLimit(long tableLength)
     {
-        return capacity() - (capacity() >>> 2);
+        return tableLength - (tableLength >>> 2);
     }
 
     private static long mix(long value)

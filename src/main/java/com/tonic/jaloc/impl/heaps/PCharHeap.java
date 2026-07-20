@@ -30,7 +30,7 @@ public final class PCharHeap extends AbstractPrimitiveHeap<PCharArray, PCharWrit
         PCharWriter writer = appendWriter(1);
         writer.put(value);
         commitWriter();
-        siftUp(size() - 1);
+        siftUp(sizeUnchecked() - 1);
     }
 
     public char pop() {
@@ -39,9 +39,9 @@ public final class PCharHeap extends AbstractPrimitiveHeap<PCharArray, PCharWrit
         }
         PCharArray heap = elements();
         char root = heap.getUnchecked(0);
-        char last = heap.getUnchecked(size() - 1);
+        char last = heap.getUnchecked(sizeUnchecked() - 1);
         decrementSize();
-        if (size() != 0) {
+        if (sizeUnchecked() != 0) {
             heap.setUnchecked(0, last);
             siftDown(0);
         }
@@ -72,7 +72,7 @@ public final class PCharHeap extends AbstractPrimitiveHeap<PCharArray, PCharWrit
 
     private void siftDown(long index) {
         PCharArray heap = elements();
-        long count = size();
+        long count = sizeUnchecked();
         char value = heap.getUnchecked(index);
         while (true) {
             long child = index * 2 + 1;

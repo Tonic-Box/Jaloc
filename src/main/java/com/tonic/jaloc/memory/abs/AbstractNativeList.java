@@ -66,11 +66,11 @@ public abstract class AbstractNativeList<A extends AbstractNativeArray<W>, W ext
             throw new IllegalArgumentException("additionalElements cannot be negative");
         }
 
-        long requiredCapacity = Math.addExact(size(), additionalElements);
+        long requiredCapacity = Math.addExact(sizeUnchecked(), additionalElements);
 
         ensureCapacity(requiredCapacity);
 
-        writer.position(size());
+        writer.position(sizeUnchecked());
         return writer;
     }
 
@@ -80,7 +80,7 @@ public abstract class AbstractNativeList<A extends AbstractNativeArray<W>, W ext
 
         long position = writer.position();
 
-        if (position < size() || position > capacity())
+        if (position < sizeUnchecked() || position > capacity())
         {
             throw new IllegalStateException("Invalid writer position: " + position);
         }
@@ -92,13 +92,13 @@ public abstract class AbstractNativeList<A extends AbstractNativeArray<W>, W ext
     {
         ensureOpen();
 
-        if (size() == 0)
+        if (sizeUnchecked() == 0)
         {
             throw new IllegalStateException("List is empty");
         }
 
-        size(size() - 1);
-        writer.position(size());
+        size(sizeUnchecked() - 1);
+        writer.position(sizeUnchecked());
     }
 
     @Override

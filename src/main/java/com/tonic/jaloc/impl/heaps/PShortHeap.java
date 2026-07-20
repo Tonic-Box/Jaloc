@@ -30,7 +30,7 @@ public final class PShortHeap extends AbstractPrimitiveHeap<PShortArray, PShortW
         PShortWriter writer = appendWriter(1);
         writer.put(value);
         commitWriter();
-        siftUp(size() - 1);
+        siftUp(sizeUnchecked() - 1);
     }
 
     public short pop() {
@@ -39,9 +39,9 @@ public final class PShortHeap extends AbstractPrimitiveHeap<PShortArray, PShortW
         }
         PShortArray heap = elements();
         short root = heap.getUnchecked(0);
-        short last = heap.getUnchecked(size() - 1);
+        short last = heap.getUnchecked(sizeUnchecked() - 1);
         decrementSize();
-        if (size() != 0) {
+        if (sizeUnchecked() != 0) {
             heap.setUnchecked(0, last);
             siftDown(0);
         }
@@ -72,7 +72,7 @@ public final class PShortHeap extends AbstractPrimitiveHeap<PShortArray, PShortW
 
     private void siftDown(long index) {
         PShortArray heap = elements();
-        long count = size();
+        long count = sizeUnchecked();
         short value = heap.getUnchecked(index);
         while (true) {
             long child = index * 2 + 1;
