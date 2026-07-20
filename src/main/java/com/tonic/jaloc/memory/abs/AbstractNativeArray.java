@@ -14,6 +14,7 @@ public abstract class AbstractNativeArray<W extends AbstractArrayWriter> impleme
 
     private final MemoryBlock block;
     private final MemoryRegion memory;
+    private final long baseAddress;
 
     protected AbstractNativeArray(long length, long byteSize, int alignment)
     {
@@ -40,11 +41,13 @@ public abstract class AbstractNativeArray<W extends AbstractArrayWriter> impleme
         MemoryBlock allocatedBlock = allocator.allocate(byteSize, alignment);
 
         MemoryRegion allocatedMemory;
+        long allocatedAddress;
 
         try
         {
             allocatedMemory = allocatedBlock.region();
             allocatedMemory.clear();
+            allocatedAddress = allocatedMemory.address();
         }
         catch (RuntimeException | Error e)
         {
@@ -54,6 +57,7 @@ public abstract class AbstractNativeArray<W extends AbstractArrayWriter> impleme
 
         this.block = allocatedBlock;
         this.memory = allocatedMemory;
+        this.baseAddress = allocatedAddress;
     }
 
     public final long length()
@@ -97,8 +101,23 @@ public abstract class AbstractNativeArray<W extends AbstractArrayWriter> impleme
         return memory;
     }
 
+    protected final long baseAddress()
+    {
+        return baseAddress;
+    }
+
+    protected final void ensureOpen()
+    {
+        if (!block.isOpen())
+        {
+            throw new IllegalStateException("Native memory has been released");
+        }
+    }
+
     protected final void checkIndex(long index)
     {
+        ensureOpen();
+
         if (index < 0 || index >= length)
         {
             throw new IndexOutOfBoundsException("index=" + index + ", length=" + length);
@@ -107,6 +126,8 @@ public abstract class AbstractNativeArray<W extends AbstractArrayWriter> impleme
 
     protected final void checkRange(long fromIndex, long toIndex)
     {
+        ensureOpen();
+
         if (fromIndex < 0 || toIndex < fromIndex || toIndex > length)
         {
             throw new IndexOutOfBoundsException("fromIndex=" + fromIndex + ", toIndex=" + toIndex + ", length=" + length);

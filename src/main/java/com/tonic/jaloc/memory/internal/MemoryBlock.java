@@ -7,7 +7,7 @@ public final class MemoryBlock implements AutoCloseable
 
     public MemoryBlock(AllocationState state) {
         this.state = state;
-        this.region = new MemoryRegion(state, 0, state.size());
+        this.region = new MemoryRegion(state, state.address(), state.size());
     }
 
     public MemoryRegion region() {

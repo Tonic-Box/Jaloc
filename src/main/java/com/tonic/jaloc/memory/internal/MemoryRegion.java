@@ -3,13 +3,13 @@ package com.tonic.jaloc.memory.internal;
 public final class MemoryRegion
 {
     private final AllocationState state;
-    private final long offset;
+    private final long address;
     private final long size;
 
-    MemoryRegion(AllocationState state, long offset, long size)
+    MemoryRegion(AllocationState state, long address, long size)
     {
         this.state = state;
-        this.offset = offset;
+        this.address = address;
         this.size = size;
     }
 
@@ -21,37 +21,37 @@ public final class MemoryRegion
     public long address()
     {
         state.ensureOpen();
-        return state.address() + offset;
+        return address;
     }
 
     public MemoryRegion slice(long offset, long size)
     {
         checkRange(offset, size);
-        return new MemoryRegion(state, this.offset + offset, size);
+        return new MemoryRegion(state, address + offset, size);
     }
 
     public byte getByte(long offset)
     {
         checkRange(offset, Byte.BYTES);
-        return UnsafeMemory.getByte(address() + offset);
+        return UnsafeMemory.getByte(address + offset);
     }
 
     public void putByte(long offset, byte value)
     {
         checkRange(offset, Byte.BYTES);
-        UnsafeMemory.putByte(address() + offset, value);
+        UnsafeMemory.putByte(address + offset, value);
     }
 
     public short getShort(long offset)
     {
         checkRange(offset, Short.BYTES);
-        return UnsafeMemory.getShort(address() + offset);
+        return UnsafeMemory.getShort(address + offset);
     }
 
     public void putShort(long offset, short value)
     {
         checkRange(offset, Short.BYTES);
-        UnsafeMemory.putShort(address() + offset, value);
+        UnsafeMemory.putShort(address + offset, value);
     }
 
     public char getChar(long offset)
@@ -67,49 +67,49 @@ public final class MemoryRegion
     public int getInt(long offset)
     {
         checkRange(offset, Integer.BYTES);
-        return UnsafeMemory.getInt(address() + offset);
+        return UnsafeMemory.getInt(address + offset);
     }
 
     public void putInt(long offset, int value)
     {
         checkRange(offset, Integer.BYTES);
-        UnsafeMemory.putInt(address() + offset, value);
+        UnsafeMemory.putInt(address + offset, value);
     }
 
     public long getLong(long offset)
     {
         checkRange(offset, Long.BYTES);
-        return UnsafeMemory.getLong(address() + offset);
+        return UnsafeMemory.getLong(address + offset);
     }
 
     public void putLong(long offset, long value)
     {
         checkRange(offset, Long.BYTES);
-        UnsafeMemory.putLong(address() + offset, value);
+        UnsafeMemory.putLong(address + offset, value);
     }
 
     public float getFloat(long offset)
     {
         checkRange(offset, Float.BYTES);
-        return UnsafeMemory.getFloat(address() + offset);
+        return UnsafeMemory.getFloat(address + offset);
     }
 
     public void putFloat(long offset, float value)
     {
         checkRange(offset, Float.BYTES);
-        UnsafeMemory.putFloat(address() + offset, value);
+        UnsafeMemory.putFloat(address + offset, value);
     }
 
     public double getDouble(long offset)
     {
         checkRange(offset, Double.BYTES);
-        return UnsafeMemory.getDouble(address() + offset);
+        return UnsafeMemory.getDouble(address + offset);
     }
 
     public void putDouble(long offset, double value)
     {
         checkRange(offset, Double.BYTES);
-        UnsafeMemory.putDouble(address() + offset, value);
+        UnsafeMemory.putDouble(address + offset, value);
     }
 
     public void copyTo(
@@ -126,8 +126,8 @@ public final class MemoryRegion
         destination.checkRange(destinationOffset, length);
 
         UnsafeMemory.copy(
-                address() + sourceOffset,
-                destination.address() + destinationOffset,
+                address + sourceOffset,
+                destination.address + destinationOffset,
                 length
         );
     }
