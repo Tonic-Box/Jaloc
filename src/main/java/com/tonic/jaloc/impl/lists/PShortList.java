@@ -27,13 +27,6 @@ public final class PShortList extends AbstractPrimitiveList<PShortArray, PShortW
         return new PShortArray(allocator, capacity);
     }
 
-    @Override
-    protected void copyElements(PShortArray source, PShortArray destination, long elementCount) {
-        for (long i = 0; i < elementCount; i++) {
-            destination.set(i, source.get(i));
-        }
-    }
-
     public void add(short value) {
         PShortWriter writer = appendWriter(1);
         writer.put(value);

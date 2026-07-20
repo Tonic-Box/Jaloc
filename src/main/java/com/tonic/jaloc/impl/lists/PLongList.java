@@ -27,13 +27,6 @@ public final class PLongList extends AbstractPrimitiveList<PLongArray, PLongWrit
         return new PLongArray(allocator, capacity);
     }
 
-    @Override
-    protected void copyElements(PLongArray source, PLongArray destination, long elementCount) {
-        for (long i = 0; i < elementCount; i++) {
-            destination.set(i, source.get(i));
-        }
-    }
-
     public void add(long value) {
         PLongWriter writer = appendWriter(1);
         writer.put(value);

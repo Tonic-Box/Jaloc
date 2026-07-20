@@ -26,8 +26,6 @@ public abstract class AbstractNativeList<A extends AbstractNativeArray<W>, W ext
 
     protected abstract A createArray(NativeAllocator allocator, long capacity);
 
-    protected abstract void copyElements(A source, A destination, long elementCount);
-
     public final long size()
     {
         ensureOpen();
@@ -170,7 +168,10 @@ public abstract class AbstractNativeList<A extends AbstractNativeArray<W>, W ext
 
         try
         {
-            copyElements(array, replacement, size);
+            if (size != 0)
+            {
+                array.memory().copyTo(0, replacement.memory(), 0, array.byteSize(size));
+            }
 
             W replacementWriter = replacement.writer(size);
 

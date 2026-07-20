@@ -56,6 +56,12 @@ public final class PBoolArray extends AbstractPrimitiveArray<PBoolWriter>
     }
 
     @Override
+    protected long byteSize(long elementCount)
+    {
+        return packedByteSize(elementCount);
+    }
+
+    @Override
     public PBoolWriter writer()
     {
         return new PBoolWriter(this);

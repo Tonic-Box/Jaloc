@@ -27,13 +27,6 @@ public final class PByteList extends AbstractPrimitiveList<PByteArray, PByteWrit
         return new PByteArray(allocator, capacity);
     }
 
-    @Override
-    protected void copyElements(PByteArray source, PByteArray destination, long elementCount) {
-        for (long i = 0; i < elementCount; i++) {
-            destination.set(i, source.get(i));
-        }
-    }
-
     public void add(byte value) {
         PByteWriter writer = appendWriter(1);
         writer.put(value);

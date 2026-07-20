@@ -26,13 +26,6 @@ public final class PIntList extends AbstractPrimitiveList<PIntArray, PIntWriter>
         return new PIntArray(allocator, capacity);
     }
 
-    @Override
-    protected void copyElements(PIntArray source, PIntArray destination, long elementCount) {
-        for (long i = 0; i < elementCount; i++) {
-            destination.set(i, source.get(i));
-        }
-    }
-
     public void add(int value) {
         PIntWriter writer = appendWriter(1);
         writer.put(value);

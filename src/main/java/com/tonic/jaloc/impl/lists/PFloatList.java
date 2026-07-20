@@ -27,13 +27,6 @@ public final class PFloatList extends AbstractPrimitiveList<PFloatArray, PFloatW
         return new PFloatArray(allocator, capacity);
     }
 
-    @Override
-    protected void copyElements(PFloatArray source, PFloatArray destination, long elementCount) {
-        for (long i = 0; i < elementCount; i++) {
-            destination.set(i, source.get(i));
-        }
-    }
-
     public void add(float value) {
         PFloatWriter writer = appendWriter(1);
         writer.put(value);

@@ -48,6 +48,12 @@ public abstract class AbstractPrimitiveArray<W extends AbstractArrayWriter> exte
         UnsafeMemory.clear(baseAddress() + fromIndex * elementSize.getSize(), elementCount * elementSize.getSize());
     }
 
+    @Override
+    protected long byteSize(long elementCount)
+    {
+        return elementSize.byteSize(elementCount);
+    }
+
     protected final long offsetOf(long index)
     {
         checkIndex(index);

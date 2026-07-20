@@ -30,13 +30,6 @@ public final class PBoolList extends AbstractPrimitiveList<PBoolArray, PBoolWrit
         return new PBoolArray(allocator, capacity);
     }
 
-    @Override
-    protected void copyElements(PBoolArray source, PBoolArray destination, long elementCount) {
-        for (long i = 0; i < elementCount; i++) {
-            destination.set(i, source.get(i));
-        }
-    }
-
     public void add(boolean value)
     {
         PBoolWriter writer = appendWriter(1);

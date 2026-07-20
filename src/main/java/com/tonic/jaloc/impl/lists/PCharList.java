@@ -27,13 +27,6 @@ public final class PCharList extends AbstractPrimitiveList<PCharArray, PCharWrit
         return new PCharArray(allocator, capacity);
     }
 
-    @Override
-    protected void copyElements(PCharArray source, PCharArray destination, long elementCount) {
-        for (long i = 0; i < elementCount; i++) {
-            destination.set(i, source.get(i));
-        }
-    }
-
     public void add(char value) {
         PCharWriter writer = appendWriter(1);
         writer.put(value);

@@ -87,6 +87,8 @@ public abstract class AbstractNativeArray<W extends AbstractArrayWriter> impleme
 
     public abstract void clearRange(long fromIndex, long toIndex);
 
+    protected abstract long byteSize(long elementCount);
+
     public abstract W writer();
 
     public final W writer(long position)

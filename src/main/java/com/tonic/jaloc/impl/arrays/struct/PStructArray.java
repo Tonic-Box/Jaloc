@@ -159,6 +159,12 @@ public final class PStructArray<T extends PStruct> extends AbstractNativeArray<P
         UnsafeMemory.clear(baseAddress() + fromIndex * layout.stride(), count * layout.stride());
     }
 
+    @Override
+    protected long byteSize(long elementCount)
+    {
+        return Math.multiplyExact(layout.stride(), elementCount);
+    }
+
     public void copyStruct(long sourceIndex, long destinationIndex)
     {
         long sourceOffset = structOffset(sourceIndex);

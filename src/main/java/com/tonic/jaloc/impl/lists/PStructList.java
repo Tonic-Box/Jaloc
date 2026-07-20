@@ -47,15 +47,6 @@ public final class PStructList<T extends PStruct> extends AbstractNativeList<PSt
         return new PStructArray<>(allocator, viewFactory, layout, capacity);
     }
 
-    @Override
-    protected void copyElements(PStructArray<T> source, PStructArray<T> destination, long elementCount)
-    {
-        for (long i = 0; i < elementCount; i++)
-        {
-            source.copyStructTo(i, destination, i);
-        }
-    }
-
     public T add()
     {
         PStructWriter<T> writer = appendWriter(1);

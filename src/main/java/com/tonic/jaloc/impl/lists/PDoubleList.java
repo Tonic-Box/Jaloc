@@ -27,13 +27,6 @@ public final class PDoubleList extends AbstractPrimitiveList<PDoubleArray, PDoub
         return new PDoubleArray(allocator, capacity);
     }
 
-    @Override
-    protected void copyElements(PDoubleArray source, PDoubleArray destination, long elementCount) {
-        for (long i = 0; i < elementCount; i++) {
-            destination.set(i, source.get(i));
-        }
-    }
-
     public void add(double value) {
         PDoubleWriter writer = appendWriter(1);
         writer.put(value);
