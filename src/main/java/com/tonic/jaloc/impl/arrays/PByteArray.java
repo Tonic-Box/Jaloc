@@ -24,6 +24,16 @@ public final class PByteArray extends AbstractPrimitiveArray<PByteWriter>
         writeByte(index, value);
     }
 
+    public byte getUnchecked(long index)
+    {
+        return readByteUnchecked(index);
+    }
+
+    public void setUnchecked(long index, byte value)
+    {
+        writeByteUnchecked(index, value);
+    }
+
     @Override
     public PByteWriter writer()
     {

@@ -26,6 +26,16 @@ public final class PFloatArray extends AbstractPrimitiveArray<PFloatWriter>
         writeFloat(index, value);
     }
 
+    public float getUnchecked(long index)
+    {
+        return readFloatUnchecked(index);
+    }
+
+    public void setUnchecked(long index, float value)
+    {
+        writeFloatUnchecked(index, value);
+    }
+
     @Override
     public PFloatWriter writer()
     {

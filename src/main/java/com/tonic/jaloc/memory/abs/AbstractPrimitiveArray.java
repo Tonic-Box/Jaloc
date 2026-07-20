@@ -140,6 +140,76 @@ public abstract class AbstractPrimitiveArray<W extends AbstractArrayWriter> exte
         UnsafeMemory.putDouble(baseAddress() + offsetOf(index), value);
     }
 
+    protected final byte readByteUnchecked(long index)
+    {
+        return UnsafeMemory.getByte(baseAddress() + index * elementSize.getSize());
+    }
+
+    protected final void writeByteUnchecked(long index, byte value)
+    {
+        UnsafeMemory.putByte(baseAddress() + index * elementSize.getSize(), value);
+    }
+
+    protected final short readShortUnchecked(long index)
+    {
+        return UnsafeMemory.getShort(baseAddress() + index * elementSize.getSize());
+    }
+
+    protected final void writeShortUnchecked(long index, short value)
+    {
+        UnsafeMemory.putShort(baseAddress() + index * elementSize.getSize(), value);
+    }
+
+    protected final char readCharUnchecked(long index)
+    {
+        return UnsafeMemory.getChar(baseAddress() + index * elementSize.getSize());
+    }
+
+    protected final void writeCharUnchecked(long index, char value)
+    {
+        UnsafeMemory.putChar(baseAddress() + index * elementSize.getSize(), value);
+    }
+
+    protected final int readIntUnchecked(long index)
+    {
+        return UnsafeMemory.getInt(baseAddress() + index * elementSize.getSize());
+    }
+
+    protected final void writeIntUnchecked(long index, int value)
+    {
+        UnsafeMemory.putInt(baseAddress() + index * elementSize.getSize(), value);
+    }
+
+    protected final long readLongUnchecked(long index)
+    {
+        return UnsafeMemory.getLong(baseAddress() + index * elementSize.getSize());
+    }
+
+    protected final void writeLongUnchecked(long index, long value)
+    {
+        UnsafeMemory.putLong(baseAddress() + index * elementSize.getSize(), value);
+    }
+
+    protected final float readFloatUnchecked(long index)
+    {
+        return UnsafeMemory.getFloat(baseAddress() + index * elementSize.getSize());
+    }
+
+    protected final void writeFloatUnchecked(long index, float value)
+    {
+        UnsafeMemory.putFloat(baseAddress() + index * elementSize.getSize(), value);
+    }
+
+    protected final double readDoubleUnchecked(long index)
+    {
+        return UnsafeMemory.getDouble(baseAddress() + index * elementSize.getSize());
+    }
+
+    protected final void writeDoubleUnchecked(long index, double value)
+    {
+        UnsafeMemory.putDouble(baseAddress() + index * elementSize.getSize(), value);
+    }
+
     private static ElementSize requireElementSize(ElementSize elementSize)
     {
         return Objects.requireNonNull(elementSize, "elementSize");

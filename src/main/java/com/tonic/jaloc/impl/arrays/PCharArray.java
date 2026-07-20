@@ -26,6 +26,16 @@ public final class PCharArray extends AbstractPrimitiveArray<PCharWriter>
         writeChar(index, value);
     }
 
+    public char getUnchecked(long index)
+    {
+        return readCharUnchecked(index);
+    }
+
+    public void setUnchecked(long index, char value)
+    {
+        writeCharUnchecked(index, value);
+    }
+
     @Override
     public PCharWriter writer()
     {

@@ -26,6 +26,16 @@ public final class PLongArray extends AbstractPrimitiveArray<PLongWriter>
         writeLong(index, value);
     }
 
+    public long getUnchecked(long index)
+    {
+        return readLongUnchecked(index);
+    }
+
+    public void setUnchecked(long index, long value)
+    {
+        writeLongUnchecked(index, value);
+    }
+
     @Override
     public PLongWriter writer()
     {

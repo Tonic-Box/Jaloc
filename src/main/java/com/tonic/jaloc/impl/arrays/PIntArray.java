@@ -26,6 +26,16 @@ public final class PIntArray extends AbstractPrimitiveArray<PIntWriter>
         writeInt(index, value);
     }
 
+    public int getUnchecked(long index)
+    {
+        return readIntUnchecked(index);
+    }
+
+    public void setUnchecked(long index, int value)
+    {
+        writeIntUnchecked(index, value);
+    }
+
     @Override
     public PIntWriter writer()
     {

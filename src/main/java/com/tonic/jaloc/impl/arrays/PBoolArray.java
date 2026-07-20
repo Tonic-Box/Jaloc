@@ -4,6 +4,7 @@ import com.tonic.jaloc.memory.SystemAllocator;
 import com.tonic.jaloc.memory.abs.AbstractPrimitiveArray;
 import com.tonic.jaloc.memory.data.ElementSize;
 import com.tonic.jaloc.memory.iface.NativeAllocator;
+import com.tonic.jaloc.memory.internal.UnsafeMemory;
 
 public final class PBoolArray extends AbstractPrimitiveArray<PBoolWriter>
 {
@@ -41,24 +42,28 @@ public final class PBoolArray extends AbstractPrimitiveArray<PBoolWriter>
     public boolean get(long index)
     {
         checkIndex(index);
-        byte packed = memory().getByte(byteOffset(index));
-        return (packed & bitMask(index)) != 0;
+        return getUnchecked(index);
     }
 
     public void set(long index, boolean value)
     {
         checkIndex(index);
-        long offset = byteOffset(index);
-        int mask = bitMask(index);
-        byte packed = memory().getByte(offset);
-        packed = value ? (byte) (packed | mask) : (byte) (packed & ~mask);
-        memory().putByte(offset, packed);
+        setUnchecked(index, value);
     }
 
-    @Override
-    protected long byteSize(long elementCount)
+    public boolean getUnchecked(long index)
     {
-        return packedByteSize(elementCount);
+        byte packed = UnsafeMemory.getByte(baseAddress() + byteOffset(index));
+        return (packed & bitMask(index)) != 0;
+    }
+
+    public void setUnchecked(long index, boolean value)
+    {
+        long address = baseAddress() + byteOffset(index);
+        int mask = bitMask(index);
+        byte packed = UnsafeMemory.getByte(address);
+        packed = value ? (byte) (packed | mask) : (byte) (packed & ~mask);
+        UnsafeMemory.putByte(address, packed);
     }
 
     @Override
@@ -68,12 +73,51 @@ public final class PBoolArray extends AbstractPrimitiveArray<PBoolWriter>
     }
 
     @Override
+    protected long byteSize(long elementCount)
+    {
+        return packedByteSize(elementCount);
+    }
+
+    @Override
     public void clearRange(long fromIndex, long toIndex)
     {
         checkRange(fromIndex, toIndex);
 
-        for (long i = fromIndex; i < toIndex; i++) {
-            set(i, false);
+        if (fromIndex == toIndex)
+        {
+            return;
+        }
+
+        long base = baseAddress();
+        long fromByte = fromIndex >>> 3;
+        long toByte = toIndex >>> 3;
+
+        if (fromByte == toByte)
+        {
+            int keep = ((1 << (int) (fromIndex & 7L)) - 1) | ~((1 << (int) (toIndex & 7L)) - 1);
+            byte packed = UnsafeMemory.getByte(base + fromByte);
+            UnsafeMemory.putByte(base + fromByte, (byte) (packed & keep));
+            return;
+        }
+
+        if ((fromIndex & 7L) != 0)
+        {
+            int keep = (1 << (int) (fromIndex & 7L)) - 1;
+            byte packed = UnsafeMemory.getByte(base + fromByte);
+            UnsafeMemory.putByte(base + fromByte, (byte) (packed & keep));
+            fromByte++;
+        }
+
+        if (toByte > fromByte)
+        {
+            UnsafeMemory.clear(base + fromByte, toByte - fromByte);
+        }
+
+        if ((toIndex & 7L) != 0)
+        {
+            int keep = ~((1 << (int) (toIndex & 7L)) - 1);
+            byte packed = UnsafeMemory.getByte(base + toByte);
+            UnsafeMemory.putByte(base + toByte, (byte) (packed & keep));
         }
     }
 }

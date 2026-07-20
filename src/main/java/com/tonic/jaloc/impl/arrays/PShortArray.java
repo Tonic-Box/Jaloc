@@ -26,6 +26,16 @@ public final class PShortArray extends AbstractPrimitiveArray<PShortWriter>
         writeShort(index, value);
     }
 
+    public short getUnchecked(long index)
+    {
+        return readShortUnchecked(index);
+    }
+
+    public void setUnchecked(long index, short value)
+    {
+        writeShortUnchecked(index, value);
+    }
+
     @Override
     public PShortWriter writer()
     {

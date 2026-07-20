@@ -26,6 +26,16 @@ public final class PDoubleArray extends AbstractPrimitiveArray<PDoubleWriter>
         writeDouble(index, value);
     }
 
+    public double getUnchecked(long index)
+    {
+        return readDoubleUnchecked(index);
+    }
+
+    public void setUnchecked(long index, double value)
+    {
+        writeDoubleUnchecked(index, value);
+    }
+
     @Override
     public PDoubleWriter writer()
     {
