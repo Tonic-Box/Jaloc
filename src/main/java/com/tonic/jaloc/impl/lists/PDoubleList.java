@@ -71,7 +71,6 @@ public final class PDoubleList extends AbstractPrimitiveList<PDoubleArray, PDoub
             throw new NoSuchElementException("List is empty");
         }
         long lastIndex = size() - 1;
-        checkElementIndex(lastIndex);
         double previous = elements().get(lastIndex);
         decrementSize();
         return previous;

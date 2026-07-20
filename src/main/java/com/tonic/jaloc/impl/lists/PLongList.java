@@ -71,7 +71,6 @@ public final class PLongList extends AbstractPrimitiveList<PLongArray, PLongWrit
             throw new NoSuchElementException("List is empty");
         }
         long lastIndex = size() - 1;
-        checkElementIndex(lastIndex);
         long previous = elements().get(lastIndex);
         decrementSize();
         return previous;

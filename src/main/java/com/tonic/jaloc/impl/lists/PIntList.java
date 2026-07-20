@@ -70,7 +70,6 @@ public final class PIntList extends AbstractPrimitiveList<PIntArray, PIntWriter>
             throw new NoSuchElementException("List is empty");
         }
         long lastIndex = size() - 1;
-        checkElementIndex(lastIndex);
         int previous = elements().get(lastIndex);
         decrementSize();
         return previous;

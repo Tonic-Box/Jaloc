@@ -71,7 +71,6 @@ public final class PFloatList extends AbstractPrimitiveList<PFloatArray, PFloatW
             throw new NoSuchElementException("List is empty");
         }
         long lastIndex = size() - 1;
-        checkElementIndex(lastIndex);
         float previous = elements().get(lastIndex);
         decrementSize();
         return previous;

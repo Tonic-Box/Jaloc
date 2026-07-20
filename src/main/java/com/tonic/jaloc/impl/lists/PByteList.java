@@ -57,10 +57,10 @@ public final class PByteList extends AbstractPrimitiveList<PByteArray, PByteWrit
         return elements().get(index);
     }
 
-    public int set(long index, byte value)
+    public byte set(long index, byte value)
     {
         checkElementIndex(index);
-        int previous = elements().get(index);
+        byte previous = elements().get(index);
         elements().set(index, value);
         return previous;
     }
@@ -71,7 +71,6 @@ public final class PByteList extends AbstractPrimitiveList<PByteArray, PByteWrit
             throw new NoSuchElementException("List is empty");
         }
         long lastIndex = size() - 1;
-        checkElementIndex(lastIndex);
         byte previous = elements().get(lastIndex);
         decrementSize();
         return previous;

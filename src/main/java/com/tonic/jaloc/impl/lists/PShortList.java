@@ -71,7 +71,6 @@ public final class PShortList extends AbstractPrimitiveList<PShortArray, PShortW
             throw new NoSuchElementException("List is empty");
         }
         long lastIndex = size() - 1;
-        checkElementIndex(lastIndex);
         short previous = elements().get(lastIndex);
         decrementSize();
         return previous;

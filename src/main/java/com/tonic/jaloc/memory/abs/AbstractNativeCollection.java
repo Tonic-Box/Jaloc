@@ -73,16 +73,6 @@ public abstract class AbstractNativeCollection<A extends AbstractNativeArray<W>,
         }
     }
 
-    protected final void checkPositionIndex(long index)
-    {
-        ensureOpen();
-
-        if (index < 0 || index > size)
-        {
-            throw new IndexOutOfBoundsException("index=" + index + ", size=" + size);
-        }
-    }
-
     protected final void replaceArray(long newCapacity)
     {
         A replacement = createArray(allocator, newCapacity);

@@ -72,7 +72,6 @@ public final class PCharList extends AbstractPrimitiveList<PCharArray, PCharWrit
         }
 
         long lastIndex = size() - 1;
-        checkElementIndex(lastIndex);
         char previous = elements().get(lastIndex);
         decrementSize();
         return previous;
