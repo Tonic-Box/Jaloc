@@ -2,62 +2,27 @@ package com.tonic.jaloc.memory.abs;
 
 import com.tonic.jaloc.memory.iface.NativeAllocator;
 
-import java.util.Objects;
-
-public abstract class AbstractNativeList<A extends AbstractNativeArray<W>, W extends AbstractArrayWriter> implements AutoCloseable
+public abstract class AbstractNativeList<A extends AbstractNativeArray<W>, W extends AbstractArrayWriter> extends AbstractNativeCollection<A, W>
 {
-    private static final long DEFAULT_CAPACITY = 8;
-
-    private final NativeAllocator allocator;
-
-    private A array;
     private W writer;
-    private long size;
-    private boolean open = true;
 
     protected AbstractNativeList(NativeAllocator allocator, A initialArray)
     {
-        this.allocator = Objects.requireNonNull(allocator, "allocator");
-
-        this.array = Objects.requireNonNull(initialArray, "initialArray");
+        super(allocator, initialArray);
 
         this.writer = initialArray.writer();
-    }
-
-    protected abstract A createArray(NativeAllocator allocator, long capacity);
-
-    public final long size()
-    {
-        ensureOpen();
-        return size;
-    }
-
-    public final boolean isEmpty()
-    {
-        return size() == 0;
-    }
-
-    public final long capacity()
-    {
-        ensureOpen();
-        return array.length();
-    }
-
-    public boolean isOpen()
-    {
-        return open && array.isOpen();
     }
 
     public final void clear()
     {
         ensureOpen();
 
-        if (size != 0)
+        if (size() != 0)
         {
-            array.clearRange(0, size);
+            elements().clearRange(0, size());
         }
 
-        size = 0;
+        size(0);
         writer.position(0);
     }
 
@@ -70,24 +35,26 @@ public abstract class AbstractNativeList<A extends AbstractNativeArray<W>, W ext
             throw new IllegalArgumentException("requiredCapacity cannot be negative");
         }
 
-        if (requiredCapacity <= array.length())
+        if (requiredCapacity <= capacity())
         {
             return;
         }
 
-        replaceArray(growCapacity(array.length(), requiredCapacity));
+        replaceArray(growCapacity(capacity(), requiredCapacity));
+        writer = elements().writer(size());
     }
 
     public final void trimToSize()
     {
         ensureOpen();
 
-        if (size == array.length())
+        if (size() == capacity())
         {
             return;
         }
 
-        replaceArray(size);
+        replaceArray(size());
+        writer = elements().writer(size());
     }
 
     protected final W appendWriter(long additionalElements)
@@ -99,11 +66,11 @@ public abstract class AbstractNativeList<A extends AbstractNativeArray<W>, W ext
             throw new IllegalArgumentException("additionalElements cannot be negative");
         }
 
-        long requiredCapacity = Math.addExact(size, additionalElements);
+        long requiredCapacity = Math.addExact(size(), additionalElements);
 
         ensureCapacity(requiredCapacity);
 
-        writer.position(size);
+        writer.position(size());
         return writer;
     }
 
@@ -113,125 +80,33 @@ public abstract class AbstractNativeList<A extends AbstractNativeArray<W>, W ext
 
         long position = writer.position();
 
-        if (position < size || position > array.length())
+        if (position < size() || position > capacity())
         {
             throw new IllegalStateException("Invalid writer position: " + position);
         }
 
-        size = position;
-    }
-
-    protected final A elements()
-    {
-        ensureOpen();
-        return array;
-    }
-
-    protected final void checkElementIndex(long index)
-    {
-        ensureOpen();
-
-        if (index < 0 || index >= size)
-        {
-            throw new IndexOutOfBoundsException("index=" + index + ", size=" + size);
-        }
-    }
-
-    protected final void checkPositionIndex(long index)
-    {
-        ensureOpen();
-
-        if (index < 0 || index > size)
-        {
-            throw new IndexOutOfBoundsException("index=" + index + ", size=" + size);
-        }
+        size(position);
     }
 
     protected final void decrementSize()
     {
         ensureOpen();
 
-        if (size == 0)
+        if (size() == 0)
         {
             throw new IllegalStateException("List is empty");
         }
 
-        size--;
-        writer.position(size);
-    }
-
-    private void replaceArray(long newCapacity)
-    {
-        A replacement = createArray(allocator, newCapacity);
-
-        boolean installed = false;
-
-        try
-        {
-            if (size != 0)
-            {
-                array.memory().copyTo(0, replacement.memory(), 0, array.byteSize(size));
-            }
-
-            W replacementWriter = replacement.writer(size);
-
-            A previous = array;
-
-            array = replacement;
-            writer = replacementWriter;
-            installed = true;
-
-            previous.close();
-        }
-        finally
-        {
-            if (!installed)
-            {
-                replacement.close();
-            }
-        }
-    }
-
-    private static long growCapacity(long currentCapacity, long requiredCapacity)
-    {
-        if (currentCapacity == 0)
-        {
-            return Math.max(DEFAULT_CAPACITY, requiredCapacity);
-        }
-
-        long growth = Math.max(1, currentCapacity >>> 1);
-
-        long candidate;
-
-        try
-        {
-            candidate = Math.addExact(currentCapacity, growth);
-        }
-        catch (ArithmeticException ignored)
-        {
-            candidate = Long.MAX_VALUE;
-        }
-
-        return Math.max(candidate, requiredCapacity);
-    }
-
-    protected final void ensureOpen()
-    {
-        if (!isOpen())
-        {
-            throw new IllegalStateException("Native list has been closed");
-        }
+        size(size() - 1);
+        writer.position(size());
     }
 
     @Override
-    public final void close()
+    protected void migrateElements(A source, A destination)
     {
-        if (!open)
+        if (size() != 0)
         {
-            return;
+            source.memory().copyTo(0, destination.memory(), 0, source.byteSize(size()));
         }
-
-        open = false;
-        array.close();
     }
 }
