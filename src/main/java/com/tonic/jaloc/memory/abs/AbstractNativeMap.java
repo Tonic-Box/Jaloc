@@ -11,12 +11,23 @@ import com.tonic.jaloc.memory.internal.UnsafeMemory;
 
 public abstract class AbstractNativeMap<T extends PStruct> extends AbstractNativeCollection<PStructArray<T>, PStructWriter<T>>
 {
+    private static final int KEY_BYTE = 0;
+    private static final int KEY_SHORT = 1;
+    private static final int KEY_CHAR = 2;
+    private static final int KEY_INT = 3;
+    private static final int KEY_LONG = 4;
+
     private final StructLayout layout;
     private final StructField keyField;
     private final StructType keyType;
     private final long keyOffset;
     private final long stride;
+    private final int keyKind;
+    private final boolean integralKey;
+    private final boolean floatKey;
 
+    private long tableBase;
+    private long tableMask;
     private boolean hasZeroKey;
 
     protected AbstractNativeMap(NativeAllocator allocator, PStructArray<T> initialArray, String keyFieldName)
@@ -28,11 +39,11 @@ public abstract class AbstractNativeMap<T extends PStruct> extends AbstractNativ
         this.keyType = keyField.getType();
         this.keyOffset = keyField.getOffset();
         this.stride = layout.stride();
-
-        if (keyType == StructType.BOOLEAN)
-        {
-            throw new IllegalArgumentException("key field cannot be BOOLEAN");
-        }
+        this.keyKind = kindOf(keyType);
+        this.integralKey = keyType != StructType.FLOAT && keyType != StructType.DOUBLE;
+        this.floatKey = keyType == StructType.FLOAT;
+        this.tableBase = initialArray.baseAddress();
+        this.tableMask = initialArray.length() - 2;
     }
 
     public final StructLayout layout()
@@ -89,12 +100,12 @@ public abstract class AbstractNativeMap<T extends PStruct> extends AbstractNativ
 
     protected final long slotCount()
     {
-        return capacity() - 1;
+        return tableMask + 1;
     }
 
     protected final long zeroSlot()
     {
-        return capacity() - 1;
+        return tableMask + 1;
     }
 
     protected final boolean containsZeroKey()
@@ -123,7 +134,7 @@ public abstract class AbstractNativeMap<T extends PStruct> extends AbstractNativ
             return false;
         }
 
-        UnsafeMemory.clear(elements().baseAddress() + zeroSlot() * stride, stride);
+        UnsafeMemory.clear(tableBase + zeroSlot() * stride, stride);
         hasZeroKey = false;
         size(size() - 1);
         return true;
@@ -131,9 +142,8 @@ public abstract class AbstractNativeMap<T extends PStruct> extends AbstractNativ
 
     protected final long findSlot(long keyBits)
     {
-        PStructArray<T> table = elements();
-        long base = table.baseAddress();
-        long mask = table.length() - 2;
+        long base = tableBase;
+        long mask = tableMask;
         long position = mix(keyBits) & mask;
 
         while (true)
@@ -156,9 +166,8 @@ public abstract class AbstractNativeMap<T extends PStruct> extends AbstractNativ
 
     protected final long insertSlot(long keyBits)
     {
-        PStructArray<T> table = elements();
-        long base = table.baseAddress();
-        long mask = table.length() - 2;
+        long base = tableBase;
+        long mask = tableMask;
         long position = mix(keyBits) & mask;
 
         while (true)
@@ -180,11 +189,13 @@ public abstract class AbstractNativeMap<T extends PStruct> extends AbstractNativ
 
         if (occupancy() + 1 > loadLimit())
         {
-            replaceArray(((capacity() - 1) << 1) + 1);
+            replaceArray(((tableMask + 1) << 1) + 1);
 
-            table = elements();
-            base = table.baseAddress();
-            mask = table.length() - 2;
+            tableBase = elements().baseAddress();
+            tableMask = elements().length() - 2;
+
+            base = tableBase;
+            mask = tableMask;
             position = mix(keyBits) & mask;
 
             while (keyBitsAt(base, position) != 0)
@@ -200,9 +211,8 @@ public abstract class AbstractNativeMap<T extends PStruct> extends AbstractNativ
 
     protected final boolean removeSlot(long keyBits)
     {
-        PStructArray<T> table = elements();
-        long base = table.baseAddress();
-        long mask = table.length() - 2;
+        long base = tableBase;
+        long mask = tableMask;
         long position = mix(keyBits) & mask;
 
         while (true)
@@ -227,57 +237,65 @@ public abstract class AbstractNativeMap<T extends PStruct> extends AbstractNativ
 
     protected final long keyBitsAt(long slot)
     {
-        return keyBitsAt(elements().baseAddress(), slot);
+        return keyBitsAt(tableBase, slot);
+    }
+
+    protected final long slotAddress(long slot)
+    {
+        return tableBase + slot * stride;
     }
 
     protected final long integralKeyBits(long key)
     {
-        switch (keyType)
+        if (!integralKey)
         {
-            case BYTE:
+            throw new IllegalArgumentException("key field is " + keyType + ", not integral");
+        }
+
+        switch (keyKind)
+        {
+            case KEY_BYTE:
                 if (key != (byte) key)
                 {
                     throw new IllegalArgumentException("key does not fit BYTE: " + key);
                 }
                 return key;
-            case SHORT:
+            case KEY_SHORT:
                 if (key != (short) key)
                 {
                     throw new IllegalArgumentException("key does not fit SHORT: " + key);
                 }
                 return key;
-            case CHAR:
+            case KEY_CHAR:
                 if (key != (key & 0xFFFFL))
                 {
                     throw new IllegalArgumentException("key does not fit CHAR: " + key);
                 }
                 return key;
-            case INT:
+            case KEY_INT:
                 if (key != (int) key)
                 {
                     throw new IllegalArgumentException("key does not fit INT: " + key);
                 }
                 return key;
-            case LONG:
-                return key;
             default:
-                throw new IllegalArgumentException("key field is " + keyType + ", not integral");
+                return key;
         }
     }
 
     protected final long floatingKeyBits(double key)
     {
-        if (keyType == StructType.FLOAT)
+        if (integralKey)
+        {
+            throw new IllegalArgumentException("key field is " + keyType + ", not floating");
+        }
+
+        if (floatKey)
         {
             return Float.floatToIntBits((float) key);
         }
 
-        if (keyType == StructType.DOUBLE)
-        {
-            return Double.doubleToLongBits(key);
-        }
-
-        throw new IllegalArgumentException("key field is " + keyType + ", not floating");
+        return Double.doubleToLongBits(key);
     }
 
     private void shiftEntries(long base, long position, long mask)
@@ -318,22 +336,18 @@ public abstract class AbstractNativeMap<T extends PStruct> extends AbstractNativ
     {
         long address = base + slot * stride + keyOffset;
 
-        switch (keyType)
+        switch (keyKind)
         {
-            case BYTE:
+            case KEY_BYTE:
                 return UnsafeMemory.getByte(address);
-            case SHORT:
+            case KEY_SHORT:
                 return UnsafeMemory.getShort(address);
-            case CHAR:
+            case KEY_CHAR:
                 return UnsafeMemory.getChar(address);
-            case INT:
-            case FLOAT:
+            case KEY_INT:
                 return UnsafeMemory.getInt(address);
-            case LONG:
-            case DOUBLE:
-                return UnsafeMemory.getLong(address);
             default:
-                throw new IllegalStateException("Unsupported key type: " + keyType);
+                return UnsafeMemory.getLong(address);
         }
     }
 
@@ -341,27 +355,22 @@ public abstract class AbstractNativeMap<T extends PStruct> extends AbstractNativ
     {
         long address = base + slot * stride + keyOffset;
 
-        switch (keyType)
+        switch (keyKind)
         {
-            case BYTE:
+            case KEY_BYTE:
                 UnsafeMemory.putByte(address, (byte) keyBits);
                 return;
-            case SHORT:
+            case KEY_SHORT:
                 UnsafeMemory.putShort(address, (short) keyBits);
                 return;
-            case CHAR:
+            case KEY_CHAR:
                 UnsafeMemory.putChar(address, (char) keyBits);
                 return;
-            case INT:
-            case FLOAT:
+            case KEY_INT:
                 UnsafeMemory.putInt(address, (int) keyBits);
                 return;
-            case LONG:
-            case DOUBLE:
-                UnsafeMemory.putLong(address, keyBits);
-                return;
             default:
-                throw new IllegalStateException("Unsupported key type: " + keyType);
+                UnsafeMemory.putLong(address, keyBits);
         }
     }
 
@@ -372,9 +381,30 @@ public abstract class AbstractNativeMap<T extends PStruct> extends AbstractNativ
 
     private long loadLimit()
     {
-        long tableSize = capacity() - 1;
+        long tableSize = tableMask + 1;
 
         return tableSize - (tableSize >>> 2);
+    }
+
+    private static int kindOf(StructType keyType)
+    {
+        switch (keyType)
+        {
+            case BYTE:
+                return KEY_BYTE;
+            case SHORT:
+                return KEY_SHORT;
+            case CHAR:
+                return KEY_CHAR;
+            case INT:
+            case FLOAT:
+                return KEY_INT;
+            case LONG:
+            case DOUBLE:
+                return KEY_LONG;
+            default:
+                throw new IllegalArgumentException("key field cannot be BOOLEAN");
+        }
     }
 
     private static long mix(long value)
