@@ -87,6 +87,47 @@ public final class PStructMap<K, V extends PStruct> extends AbstractNativeMap<V>
         return slot < 0 ? null : elements().at(slot);
     }
 
+    public V cursor()
+    {
+        ensureOpen();
+
+        return elements().cursor();
+    }
+
+    public V get(long key, V cursor)
+    {
+        Objects.requireNonNull(cursor, "cursor");
+        ensureOpen();
+
+        long bits = integralKeyBits(key);
+        long slot = bits == 0 ? (containsZeroKey() ? zeroSlot() : -1) : findSlot(bits);
+
+        if (slot < 0)
+        {
+            return null;
+        }
+
+        cursor.moveTo(slot);
+        return cursor;
+    }
+
+    public V get(double key, V cursor)
+    {
+        Objects.requireNonNull(cursor, "cursor");
+        ensureOpen();
+
+        long bits = floatingKeyBits(key);
+        long slot = bits == 0 ? (containsZeroKey() ? zeroSlot() : -1) : findSlot(bits);
+
+        if (slot < 0)
+        {
+            return null;
+        }
+
+        cursor.moveTo(slot);
+        return cursor;
+    }
+
     public boolean containsKey(long key)
     {
         ensureOpen();
