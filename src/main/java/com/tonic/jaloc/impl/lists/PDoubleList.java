@@ -76,4 +76,14 @@ public final class PDoubleList extends AbstractPrimitiveList<PDoubleArray, PDoub
         decrementSize();
         return previous;
     }
+
+    public void sort()
+    {
+        elements().sort(0, size());
+    }
+
+    public long binarySearch(double value)
+    {
+        return elements().binarySearch(0, size(), value);
+    }
 }

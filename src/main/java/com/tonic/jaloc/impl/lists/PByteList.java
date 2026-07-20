@@ -76,4 +76,14 @@ public final class PByteList extends AbstractPrimitiveList<PByteArray, PByteWrit
         decrementSize();
         return previous;
     }
+
+    public void sort()
+    {
+        elements().sort(0, size());
+    }
+
+    public long binarySearch(byte value)
+    {
+        return elements().binarySearch(0, size(), value);
+    }
 }

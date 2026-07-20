@@ -76,4 +76,14 @@ public final class PShortList extends AbstractPrimitiveList<PShortArray, PShortW
         decrementSize();
         return previous;
     }
+
+    public void sort()
+    {
+        elements().sort(0, size());
+    }
+
+    public long binarySearch(short value)
+    {
+        return elements().binarySearch(0, size(), value);
+    }
 }

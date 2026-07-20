@@ -75,4 +75,14 @@ public final class PIntList extends AbstractPrimitiveList<PIntArray, PIntWriter>
         decrementSize();
         return previous;
     }
+
+    public void sort()
+    {
+        elements().sort(0, size());
+    }
+
+    public long binarySearch(int value)
+    {
+        return elements().binarySearch(0, size(), value);
+    }
 }

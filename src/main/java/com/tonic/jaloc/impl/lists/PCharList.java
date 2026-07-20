@@ -77,4 +77,14 @@ public final class PCharList extends AbstractPrimitiveList<PCharArray, PCharWrit
         decrementSize();
         return previous;
     }
+
+    public void sort()
+    {
+        elements().sort(0, size());
+    }
+
+    public long binarySearch(char value)
+    {
+        return elements().binarySearch(0, size(), value);
+    }
 }

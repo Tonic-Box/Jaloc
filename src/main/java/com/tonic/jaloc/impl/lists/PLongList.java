@@ -76,4 +76,14 @@ public final class PLongList extends AbstractPrimitiveList<PLongArray, PLongWrit
         decrementSize();
         return previous;
     }
+
+    public void sort()
+    {
+        elements().sort(0, size());
+    }
+
+    public long binarySearch(long value)
+    {
+        return elements().binarySearch(0, size(), value);
+    }
 }

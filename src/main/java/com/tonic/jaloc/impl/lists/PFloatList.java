@@ -76,4 +76,14 @@ public final class PFloatList extends AbstractPrimitiveList<PFloatArray, PFloatW
         decrementSize();
         return previous;
     }
+
+    public void sort()
+    {
+        elements().sort(0, size());
+    }
+
+    public long binarySearch(float value)
+    {
+        return elements().binarySearch(0, size(), value);
+    }
 }

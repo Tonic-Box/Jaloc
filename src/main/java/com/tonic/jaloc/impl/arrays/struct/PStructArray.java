@@ -9,6 +9,7 @@ import com.tonic.jaloc.memory.iface.NativeAllocator;
 import com.tonic.jaloc.memory.internal.UnsafeMemory;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.Comparator;
 import java.util.Iterator;
 import java.util.NoSuchElementException;
 import java.util.Objects;
@@ -186,6 +187,159 @@ public final class PStructArray<T extends PStruct> extends AbstractNativeArray<P
         long destinationOffset = destination.structOffset(destinationIndex);
 
         UnsafeMemory.copy(baseAddress() + sourceOffset, destination.baseAddress() + destinationOffset, layout.stride());
+    }
+
+    public void swapStruct(long firstIndex, long secondIndex)
+    {
+        long firstOffset = structOffset(firstIndex);
+        long secondOffset = structOffset(secondIndex);
+
+        if (firstOffset == secondOffset)
+        {
+            return;
+        }
+
+        long first = baseAddress() + firstOffset;
+        long second = baseAddress() + secondOffset;
+        long stride = layout.stride();
+        int alignment = layout.alignment();
+
+        if (alignment == 8)
+        {
+            for (long offset = 0; offset < stride; offset += Long.BYTES)
+            {
+                long temp = UnsafeMemory.getLong(first + offset);
+                UnsafeMemory.putLong(first + offset, UnsafeMemory.getLong(second + offset));
+                UnsafeMemory.putLong(second + offset, temp);
+            }
+        }
+        else if (alignment == 4)
+        {
+            for (long offset = 0; offset < stride; offset += Integer.BYTES)
+            {
+                int temp = UnsafeMemory.getInt(first + offset);
+                UnsafeMemory.putInt(first + offset, UnsafeMemory.getInt(second + offset));
+                UnsafeMemory.putInt(second + offset, temp);
+            }
+        }
+        else if (alignment == 2)
+        {
+            for (long offset = 0; offset < stride; offset += Short.BYTES)
+            {
+                short temp = UnsafeMemory.getShort(first + offset);
+                UnsafeMemory.putShort(first + offset, UnsafeMemory.getShort(second + offset));
+                UnsafeMemory.putShort(second + offset, temp);
+            }
+        }
+        else
+        {
+            for (long offset = 0; offset < stride; offset++)
+            {
+                byte temp = UnsafeMemory.getByte(first + offset);
+                UnsafeMemory.putByte(first + offset, UnsafeMemory.getByte(second + offset));
+                UnsafeMemory.putByte(second + offset, temp);
+            }
+        }
+    }
+
+    public void sort(Comparator<? super T> comparator)
+    {
+        sort(0, length(), comparator);
+    }
+
+    public void sort(long fromIndex, long toIndex, Comparator<? super T> comparator)
+    {
+        Objects.requireNonNull(comparator, "comparator");
+        checkRange(fromIndex, toIndex);
+
+        quicksort(fromIndex, toIndex - 1, comparator, cursor(), cursor());
+    }
+
+    private void quicksort(long low, long high, Comparator<? super T> comparator, T first, T second)
+    {
+        while (high - low >= 16)
+        {
+            long middle = low + ((high - low) >>> 1);
+
+            swapStruct(medianOfThree(low, middle, high, comparator, first, second), high);
+
+            long lessThan = low;
+            long current = low;
+            long greaterThan = high - 1;
+
+            while (current <= greaterThan)
+            {
+                int comparison = compareAt(current, high, comparator, first, second);
+
+                if (comparison < 0)
+                {
+                    swapStruct(current, lessThan);
+                    lessThan++;
+                    current++;
+                }
+                else if (comparison > 0)
+                {
+                    swapStruct(current, greaterThan);
+                    greaterThan--;
+                }
+                else
+                {
+                    current++;
+                }
+            }
+
+            swapStruct(greaterThan + 1, high);
+
+            long leftHigh = lessThan - 1;
+            long rightLow = greaterThan + 2;
+
+            if (leftHigh - low < high - rightLow)
+            {
+                quicksort(low, leftHigh, comparator, first, second);
+                low = rightLow;
+            }
+            else
+            {
+                quicksort(rightLow, high, comparator, first, second);
+                high = leftHigh;
+            }
+        }
+
+        insertionSort(low, high, comparator, first, second);
+    }
+
+    private void insertionSort(long low, long high, Comparator<? super T> comparator, T first, T second)
+    {
+        for (long i = low + 1; i <= high; i++)
+        {
+            for (long j = i; j > low; j--)
+            {
+                if (compareAt(j - 1, j, comparator, first, second) <= 0)
+                {
+                    break;
+                }
+
+                swapStruct(j - 1, j);
+            }
+        }
+    }
+
+    private long medianOfThree(long a, long b, long c, Comparator<? super T> comparator, T first, T second)
+    {
+        if (compareAt(a, b, comparator, first, second) < 0)
+        {
+            return compareAt(c, a, comparator, first, second) < 0 ? a : (compareAt(c, b, comparator, first, second) < 0 ? c : b);
+        }
+
+        return compareAt(c, b, comparator, first, second) < 0 ? b : (compareAt(c, a, comparator, first, second) < 0 ? c : a);
+    }
+
+    private int compareAt(long firstIndex, long secondIndex, Comparator<? super T> comparator, T first, T second)
+    {
+        first.moveTo(firstIndex);
+        second.moveTo(secondIndex);
+
+        return comparator.compare(first, second);
     }
 
     @Override

@@ -8,6 +8,7 @@ import com.tonic.jaloc.memory.data.struct.StructLayout;
 import com.tonic.jaloc.memory.iface.NativeAllocator;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.Comparator;
 import java.util.Iterator;
 import java.util.NoSuchElementException;
 import java.util.Objects;
@@ -94,6 +95,11 @@ public final class PStructList<T extends PStruct> extends AbstractNativeList<PSt
 
         elements().clearStruct(lastIndex);
         decrementSize();
+    }
+
+    public void sort(Comparator<? super T> comparator)
+    {
+        elements().sort(0, size(), comparator);
     }
 
     @Override
