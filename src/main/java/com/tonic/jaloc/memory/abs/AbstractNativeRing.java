@@ -41,6 +41,37 @@ public abstract class AbstractNativeRing<A extends AbstractNativeArray<W>, W ext
         size(size() + 1);
     }
 
+    protected final long reserveHead()
+    {
+        ensureOpen();
+        ensureRingCapacity(Math.addExact(size(), 1));
+
+        head = (head == 0 ? capacity() : head) - 1;
+
+        return head;
+    }
+
+    protected final void commitHead()
+    {
+        size(size() + 1);
+    }
+
+    protected final long tailIndex()
+    {
+        checkElementIndex(0);
+        return physicalIndex(size() - 1);
+    }
+
+    protected final void shrinkTail()
+    {
+        size(size() - 1);
+
+        if (size() == 0)
+        {
+            head = 0;
+        }
+    }
+
     protected final long headIndex()
     {
         checkElementIndex(0);
