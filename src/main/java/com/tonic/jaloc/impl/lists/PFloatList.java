@@ -54,14 +54,14 @@ public final class PFloatList extends AbstractPrimitiveList<PFloatArray, PFloatW
     public float get(long index)
     {
         checkElementIndex(index);
-        return elements().get(index);
+        return elementsUnchecked().getUnchecked(index);
     }
 
     public float set(long index, float value)
     {
         checkElementIndex(index);
-        float previous = elements().get(index);
-        elements().set(index, value);
+        float previous = elementsUnchecked().getUnchecked(index);
+        elementsUnchecked().setUnchecked(index, value);
         return previous;
     }
 
@@ -71,7 +71,7 @@ public final class PFloatList extends AbstractPrimitiveList<PFloatArray, PFloatW
             throw new NoSuchElementException("List is empty");
         }
         long lastIndex = size() - 1;
-        float previous = elements().get(lastIndex);
+        float previous = elementsUnchecked().getUnchecked(lastIndex);
         decrementSize();
         return previous;
     }

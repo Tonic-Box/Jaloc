@@ -25,13 +25,13 @@ public final class PFloatRingBuffer extends AbstractPrimitiveRingBuffer<PFloatAr
     public void enqueue(float value) {
         if (size() == capacity()) {
             long index = headIndex();
-            elements().set(index, value);
+            elementsUnchecked().setUnchecked(index, value);
             rotateHead();
             return;
         }
 
         long index = reserveTail();
-        elements().set(index, value);
+        elementsUnchecked().setUnchecked(index, value);
         commitTail();
     }
 
@@ -50,7 +50,7 @@ public final class PFloatRingBuffer extends AbstractPrimitiveRingBuffer<PFloatAr
             throw new NoSuchElementException("Ring buffer is empty");
         }
         long index = headIndex();
-        float value = elements().get(index);
+        float value = elementsUnchecked().getUnchecked(index);
         advanceHead();
         return value;
     }
@@ -59,7 +59,7 @@ public final class PFloatRingBuffer extends AbstractPrimitiveRingBuffer<PFloatAr
         if (isEmpty()) {
             throw new NoSuchElementException("Ring buffer is empty");
         }
-        return elements().get(headIndex());
+        return elementsUnchecked().getUnchecked(headIndex());
     }
 
     private static long requireCapacity(long capacity) {

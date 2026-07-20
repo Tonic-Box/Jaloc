@@ -36,7 +36,7 @@ public final class PIntQueue extends AbstractPrimitiveQueue<PIntArray, PIntWrite
 
     public void enqueue(int value) {
         long index = reserveTail();
-        elements().set(index, value);
+        elementsUnchecked().setUnchecked(index, value);
         commitTail();
     }
 
@@ -61,7 +61,7 @@ public final class PIntQueue extends AbstractPrimitiveQueue<PIntArray, PIntWrite
             throw new NoSuchElementException("Queue is empty");
         }
         long index = headIndex();
-        int value = elements().get(index);
+        int value = elementsUnchecked().getUnchecked(index);
         advanceHead();
         return value;
     }
@@ -70,6 +70,6 @@ public final class PIntQueue extends AbstractPrimitiveQueue<PIntArray, PIntWrite
         if (isEmpty()) {
             throw new NoSuchElementException("Queue is empty");
         }
-        return elements().get(headIndex());
+        return elementsUnchecked().getUnchecked(headIndex());
     }
 }

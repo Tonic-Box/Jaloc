@@ -36,7 +36,7 @@ public final class PShortQueue extends AbstractPrimitiveQueue<PShortArray, PShor
 
     public void enqueue(short value) {
         long index = reserveTail();
-        elements().set(index, value);
+        elementsUnchecked().setUnchecked(index, value);
         commitTail();
     }
 
@@ -61,7 +61,7 @@ public final class PShortQueue extends AbstractPrimitiveQueue<PShortArray, PShor
             throw new NoSuchElementException("Queue is empty");
         }
         long index = headIndex();
-        short value = elements().get(index);
+        short value = elementsUnchecked().getUnchecked(index);
         advanceHead();
         return value;
     }
@@ -70,6 +70,6 @@ public final class PShortQueue extends AbstractPrimitiveQueue<PShortArray, PShor
         if (isEmpty()) {
             throw new NoSuchElementException("Queue is empty");
         }
-        return elements().get(headIndex());
+        return elementsUnchecked().getUnchecked(headIndex());
     }
 }

@@ -55,7 +55,7 @@ public final class PShortStack extends AbstractPrimitiveStack<PShortArray, PShor
             throw new NoSuchElementException("Stack is empty");
         }
         long lastIndex = size() - 1;
-        short value = elements().get(lastIndex);
+        short value = elementsUnchecked().getUnchecked(lastIndex);
         decrementSize();
         return value;
     }
@@ -64,6 +64,6 @@ public final class PShortStack extends AbstractPrimitiveStack<PShortArray, PShor
         if (isEmpty()) {
             throw new NoSuchElementException("Stack is empty");
         }
-        return elements().get(size() - 1);
+        return elementsUnchecked().getUnchecked(size() - 1);
     }
 }

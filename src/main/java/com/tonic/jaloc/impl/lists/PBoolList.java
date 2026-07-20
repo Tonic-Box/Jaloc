@@ -53,14 +53,14 @@ public final class PBoolList extends AbstractPrimitiveList<PBoolArray, PBoolWrit
     public boolean get(long index)
     {
         checkElementIndex(index);
-        return elements().get(index);
+        return elementsUnchecked().getUnchecked(index);
     }
 
     public boolean set(long index, boolean value)
     {
         checkElementIndex(index);
-        boolean previous = elements().get(index);
-        elements().set(index, value);
+        boolean previous = elementsUnchecked().getUnchecked(index);
+        elementsUnchecked().setUnchecked(index, value);
         return previous;
     }
 
@@ -70,8 +70,8 @@ public final class PBoolList extends AbstractPrimitiveList<PBoolArray, PBoolWrit
             throw new NoSuchElementException("List is empty");
         }
         long lastIndex = size() - 1;
-        boolean previous = elements().get(lastIndex);
-        elements().set(lastIndex, false);
+        boolean previous = elementsUnchecked().getUnchecked(lastIndex);
+        elementsUnchecked().setUnchecked(lastIndex, false);
         decrementSize();
         return previous;
     }

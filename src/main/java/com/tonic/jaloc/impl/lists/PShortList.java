@@ -54,14 +54,14 @@ public final class PShortList extends AbstractPrimitiveList<PShortArray, PShortW
     public short get(long index)
     {
         checkElementIndex(index);
-        return elements().get(index);
+        return elementsUnchecked().getUnchecked(index);
     }
 
     public short set(long index, short value)
     {
         checkElementIndex(index);
-        short previous = elements().get(index);
-        elements().set(index, value);
+        short previous = elementsUnchecked().getUnchecked(index);
+        elementsUnchecked().setUnchecked(index, value);
         return previous;
     }
 
@@ -71,7 +71,7 @@ public final class PShortList extends AbstractPrimitiveList<PShortArray, PShortW
             throw new NoSuchElementException("List is empty");
         }
         long lastIndex = size() - 1;
-        short previous = elements().get(lastIndex);
+        short previous = elementsUnchecked().getUnchecked(lastIndex);
         decrementSize();
         return previous;
     }

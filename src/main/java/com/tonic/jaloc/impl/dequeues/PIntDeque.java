@@ -36,13 +36,13 @@ public final class PIntDeque extends AbstractPrimitiveDeque<PIntArray, PIntWrite
 
     public void addFirst(int value) {
         long index = reserveHead();
-        elements().set(index, value);
+        elementsUnchecked().setUnchecked(index, value);
         commitHead();
     }
 
     public void addLast(int value) {
         long index = reserveTail();
-        elements().set(index, value);
+        elementsUnchecked().setUnchecked(index, value);
         commitTail();
     }
 
@@ -51,7 +51,7 @@ public final class PIntDeque extends AbstractPrimitiveDeque<PIntArray, PIntWrite
             throw new NoSuchElementException("Deque is empty");
         }
         long index = headIndex();
-        int value = elements().get(index);
+        int value = elementsUnchecked().getUnchecked(index);
         advanceHead();
         return value;
     }
@@ -61,7 +61,7 @@ public final class PIntDeque extends AbstractPrimitiveDeque<PIntArray, PIntWrite
             throw new NoSuchElementException("Deque is empty");
         }
         long index = tailIndex();
-        int value = elements().get(index);
+        int value = elementsUnchecked().getUnchecked(index);
         shrinkTail();
         return value;
     }
@@ -70,13 +70,13 @@ public final class PIntDeque extends AbstractPrimitiveDeque<PIntArray, PIntWrite
         if (isEmpty()) {
             throw new NoSuchElementException("Deque is empty");
         }
-        return elements().get(headIndex());
+        return elementsUnchecked().getUnchecked(headIndex());
     }
 
     public int peekLast() {
         if (isEmpty()) {
             throw new NoSuchElementException("Deque is empty");
         }
-        return elements().get(tailIndex());
+        return elementsUnchecked().getUnchecked(tailIndex());
     }
 }

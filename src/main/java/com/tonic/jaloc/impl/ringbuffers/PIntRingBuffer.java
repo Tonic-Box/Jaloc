@@ -25,13 +25,13 @@ public final class PIntRingBuffer extends AbstractPrimitiveRingBuffer<PIntArray,
     public void enqueue(int value) {
         if (size() == capacity()) {
             long index = headIndex();
-            elements().set(index, value);
+            elementsUnchecked().setUnchecked(index, value);
             rotateHead();
             return;
         }
 
         long index = reserveTail();
-        elements().set(index, value);
+        elementsUnchecked().setUnchecked(index, value);
         commitTail();
     }
 
@@ -50,7 +50,7 @@ public final class PIntRingBuffer extends AbstractPrimitiveRingBuffer<PIntArray,
             throw new NoSuchElementException("Ring buffer is empty");
         }
         long index = headIndex();
-        int value = elements().get(index);
+        int value = elementsUnchecked().getUnchecked(index);
         advanceHead();
         return value;
     }
@@ -59,7 +59,7 @@ public final class PIntRingBuffer extends AbstractPrimitiveRingBuffer<PIntArray,
         if (isEmpty()) {
             throw new NoSuchElementException("Ring buffer is empty");
         }
-        return elements().get(headIndex());
+        return elementsUnchecked().getUnchecked(headIndex());
     }
 
     private static long requireCapacity(long capacity) {

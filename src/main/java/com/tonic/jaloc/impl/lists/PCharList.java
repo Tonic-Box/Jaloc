@@ -54,14 +54,14 @@ public final class PCharList extends AbstractPrimitiveList<PCharArray, PCharWrit
     public char get(long index)
     {
         checkElementIndex(index);
-        return elements().get(index);
+        return elementsUnchecked().getUnchecked(index);
     }
 
     public char set(long index, char value)
     {
         checkElementIndex(index);
-        char previous = elements().get(index);
-        elements().set(index, value);
+        char previous = elementsUnchecked().getUnchecked(index);
+        elementsUnchecked().setUnchecked(index, value);
         return previous;
     }
 
@@ -72,7 +72,7 @@ public final class PCharList extends AbstractPrimitiveList<PCharArray, PCharWrit
         }
 
         long lastIndex = size() - 1;
-        char previous = elements().get(lastIndex);
+        char previous = elementsUnchecked().getUnchecked(lastIndex);
         decrementSize();
         return previous;
     }

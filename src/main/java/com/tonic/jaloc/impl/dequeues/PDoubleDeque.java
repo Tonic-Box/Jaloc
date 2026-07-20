@@ -36,13 +36,13 @@ public final class PDoubleDeque extends AbstractPrimitiveDeque<PDoubleArray, PDo
 
     public void addFirst(double value) {
         long index = reserveHead();
-        elements().set(index, value);
+        elementsUnchecked().setUnchecked(index, value);
         commitHead();
     }
 
     public void addLast(double value) {
         long index = reserveTail();
-        elements().set(index, value);
+        elementsUnchecked().setUnchecked(index, value);
         commitTail();
     }
 
@@ -51,7 +51,7 @@ public final class PDoubleDeque extends AbstractPrimitiveDeque<PDoubleArray, PDo
             throw new NoSuchElementException("Deque is empty");
         }
         long index = headIndex();
-        double value = elements().get(index);
+        double value = elementsUnchecked().getUnchecked(index);
         advanceHead();
         return value;
     }
@@ -61,7 +61,7 @@ public final class PDoubleDeque extends AbstractPrimitiveDeque<PDoubleArray, PDo
             throw new NoSuchElementException("Deque is empty");
         }
         long index = tailIndex();
-        double value = elements().get(index);
+        double value = elementsUnchecked().getUnchecked(index);
         shrinkTail();
         return value;
     }
@@ -70,13 +70,13 @@ public final class PDoubleDeque extends AbstractPrimitiveDeque<PDoubleArray, PDo
         if (isEmpty()) {
             throw new NoSuchElementException("Deque is empty");
         }
-        return elements().get(headIndex());
+        return elementsUnchecked().getUnchecked(headIndex());
     }
 
     public double peekLast() {
         if (isEmpty()) {
             throw new NoSuchElementException("Deque is empty");
         }
-        return elements().get(tailIndex());
+        return elementsUnchecked().getUnchecked(tailIndex());
     }
 }

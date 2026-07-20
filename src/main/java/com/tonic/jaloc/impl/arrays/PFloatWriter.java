@@ -14,7 +14,7 @@ public final class PFloatWriter extends AbstractArrayWriter
 
     public PFloatWriter put(float value)
     {
-        array.set(nextIndex(), value);
+        array.setUnchecked(nextIndex(), value);
         return this;
     }
 }

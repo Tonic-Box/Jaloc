@@ -28,7 +28,7 @@ public final class PFloatFixedQueue extends AbstractPrimitiveFixedQueue<PFloatAr
         }
 
         long index = reserveTail();
-        elements().set(index, value);
+        elementsUnchecked().setUnchecked(index, value);
         commitTail();
     }
 
@@ -38,7 +38,7 @@ public final class PFloatFixedQueue extends AbstractPrimitiveFixedQueue<PFloatAr
         }
 
         long index = reserveTail();
-        elements().set(index, value);
+        elementsUnchecked().setUnchecked(index, value);
         commitTail();
         return true;
     }
@@ -58,7 +58,7 @@ public final class PFloatFixedQueue extends AbstractPrimitiveFixedQueue<PFloatAr
 
         for (float value : values) {
             long index = reserveTail();
-            elements().set(index, value);
+            elementsUnchecked().setUnchecked(index, value);
             commitTail();
         }
     }
@@ -68,7 +68,7 @@ public final class PFloatFixedQueue extends AbstractPrimitiveFixedQueue<PFloatAr
             throw new NoSuchElementException("Queue is empty");
         }
         long index = headIndex();
-        float value = elements().get(index);
+        float value = elementsUnchecked().getUnchecked(index);
         advanceHead();
         return value;
     }
@@ -77,7 +77,7 @@ public final class PFloatFixedQueue extends AbstractPrimitiveFixedQueue<PFloatAr
         if (isEmpty()) {
             throw new NoSuchElementException("Queue is empty");
         }
-        return elements().get(headIndex());
+        return elementsUnchecked().getUnchecked(headIndex());
     }
 
     private static long requireCapacity(long capacity) {

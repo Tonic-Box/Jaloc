@@ -14,7 +14,7 @@ public final class PIntWriter extends AbstractArrayWriter
 
     public PIntWriter put(int value)
     {
-        array.set(nextIndex(), value);
+        array.setUnchecked(nextIndex(), value);
         return this;
     }
 }

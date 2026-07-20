@@ -36,7 +36,7 @@ public final class PDoubleQueue extends AbstractPrimitiveQueue<PDoubleArray, PDo
 
     public void enqueue(double value) {
         long index = reserveTail();
-        elements().set(index, value);
+        elementsUnchecked().setUnchecked(index, value);
         commitTail();
     }
 
@@ -61,7 +61,7 @@ public final class PDoubleQueue extends AbstractPrimitiveQueue<PDoubleArray, PDo
             throw new NoSuchElementException("Queue is empty");
         }
         long index = headIndex();
-        double value = elements().get(index);
+        double value = elementsUnchecked().getUnchecked(index);
         advanceHead();
         return value;
     }
@@ -70,6 +70,6 @@ public final class PDoubleQueue extends AbstractPrimitiveQueue<PDoubleArray, PDo
         if (isEmpty()) {
             throw new NoSuchElementException("Queue is empty");
         }
-        return elements().get(headIndex());
+        return elementsUnchecked().getUnchecked(headIndex());
     }
 }

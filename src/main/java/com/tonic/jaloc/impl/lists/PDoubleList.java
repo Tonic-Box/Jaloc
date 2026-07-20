@@ -54,14 +54,14 @@ public final class PDoubleList extends AbstractPrimitiveList<PDoubleArray, PDoub
     public double get(long index)
     {
         checkElementIndex(index);
-        return elements().get(index);
+        return elementsUnchecked().getUnchecked(index);
     }
 
     public double set(long index, double value)
     {
         checkElementIndex(index);
-        double previous = elements().get(index);
-        elements().set(index, value);
+        double previous = elementsUnchecked().getUnchecked(index);
+        elementsUnchecked().setUnchecked(index, value);
         return previous;
     }
 
@@ -71,7 +71,7 @@ public final class PDoubleList extends AbstractPrimitiveList<PDoubleArray, PDoub
             throw new NoSuchElementException("List is empty");
         }
         long lastIndex = size() - 1;
-        double previous = elements().get(lastIndex);
+        double previous = elementsUnchecked().getUnchecked(lastIndex);
         decrementSize();
         return previous;
     }

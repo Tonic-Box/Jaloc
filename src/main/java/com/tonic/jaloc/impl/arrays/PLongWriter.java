@@ -14,7 +14,7 @@ public final class PLongWriter extends AbstractArrayWriter
 
     public PLongWriter put(long value)
     {
-        array.set(nextIndex(), value);
+        array.setUnchecked(nextIndex(), value);
         return this;
     }
 }

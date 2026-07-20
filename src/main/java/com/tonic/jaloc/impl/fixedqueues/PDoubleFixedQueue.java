@@ -28,7 +28,7 @@ public final class PDoubleFixedQueue extends AbstractPrimitiveFixedQueue<PDouble
         }
 
         long index = reserveTail();
-        elements().set(index, value);
+        elementsUnchecked().setUnchecked(index, value);
         commitTail();
     }
 
@@ -38,7 +38,7 @@ public final class PDoubleFixedQueue extends AbstractPrimitiveFixedQueue<PDouble
         }
 
         long index = reserveTail();
-        elements().set(index, value);
+        elementsUnchecked().setUnchecked(index, value);
         commitTail();
         return true;
     }
@@ -58,7 +58,7 @@ public final class PDoubleFixedQueue extends AbstractPrimitiveFixedQueue<PDouble
 
         for (double value : values) {
             long index = reserveTail();
-            elements().set(index, value);
+            elementsUnchecked().setUnchecked(index, value);
             commitTail();
         }
     }
@@ -68,7 +68,7 @@ public final class PDoubleFixedQueue extends AbstractPrimitiveFixedQueue<PDouble
             throw new NoSuchElementException("Queue is empty");
         }
         long index = headIndex();
-        double value = elements().get(index);
+        double value = elementsUnchecked().getUnchecked(index);
         advanceHead();
         return value;
     }
@@ -77,7 +77,7 @@ public final class PDoubleFixedQueue extends AbstractPrimitiveFixedQueue<PDouble
         if (isEmpty()) {
             throw new NoSuchElementException("Queue is empty");
         }
-        return elements().get(headIndex());
+        return elementsUnchecked().getUnchecked(headIndex());
     }
 
     private static long requireCapacity(long capacity) {

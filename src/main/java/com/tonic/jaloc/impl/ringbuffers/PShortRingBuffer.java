@@ -25,13 +25,13 @@ public final class PShortRingBuffer extends AbstractPrimitiveRingBuffer<PShortAr
     public void enqueue(short value) {
         if (size() == capacity()) {
             long index = headIndex();
-            elements().set(index, value);
+            elementsUnchecked().setUnchecked(index, value);
             rotateHead();
             return;
         }
 
         long index = reserveTail();
-        elements().set(index, value);
+        elementsUnchecked().setUnchecked(index, value);
         commitTail();
     }
 
@@ -50,7 +50,7 @@ public final class PShortRingBuffer extends AbstractPrimitiveRingBuffer<PShortAr
             throw new NoSuchElementException("Ring buffer is empty");
         }
         long index = headIndex();
-        short value = elements().get(index);
+        short value = elementsUnchecked().getUnchecked(index);
         advanceHead();
         return value;
     }
@@ -59,7 +59,7 @@ public final class PShortRingBuffer extends AbstractPrimitiveRingBuffer<PShortAr
         if (isEmpty()) {
             throw new NoSuchElementException("Ring buffer is empty");
         }
-        return elements().get(headIndex());
+        return elementsUnchecked().getUnchecked(headIndex());
     }
 
     private static long requireCapacity(long capacity) {

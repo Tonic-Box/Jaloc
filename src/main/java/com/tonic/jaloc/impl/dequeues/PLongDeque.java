@@ -36,13 +36,13 @@ public final class PLongDeque extends AbstractPrimitiveDeque<PLongArray, PLongWr
 
     public void addFirst(long value) {
         long index = reserveHead();
-        elements().set(index, value);
+        elementsUnchecked().setUnchecked(index, value);
         commitHead();
     }
 
     public void addLast(long value) {
         long index = reserveTail();
-        elements().set(index, value);
+        elementsUnchecked().setUnchecked(index, value);
         commitTail();
     }
 
@@ -51,7 +51,7 @@ public final class PLongDeque extends AbstractPrimitiveDeque<PLongArray, PLongWr
             throw new NoSuchElementException("Deque is empty");
         }
         long index = headIndex();
-        long value = elements().get(index);
+        long value = elementsUnchecked().getUnchecked(index);
         advanceHead();
         return value;
     }
@@ -61,7 +61,7 @@ public final class PLongDeque extends AbstractPrimitiveDeque<PLongArray, PLongWr
             throw new NoSuchElementException("Deque is empty");
         }
         long index = tailIndex();
-        long value = elements().get(index);
+        long value = elementsUnchecked().getUnchecked(index);
         shrinkTail();
         return value;
     }
@@ -70,13 +70,13 @@ public final class PLongDeque extends AbstractPrimitiveDeque<PLongArray, PLongWr
         if (isEmpty()) {
             throw new NoSuchElementException("Deque is empty");
         }
-        return elements().get(headIndex());
+        return elementsUnchecked().getUnchecked(headIndex());
     }
 
     public long peekLast() {
         if (isEmpty()) {
             throw new NoSuchElementException("Deque is empty");
         }
-        return elements().get(tailIndex());
+        return elementsUnchecked().getUnchecked(tailIndex());
     }
 }

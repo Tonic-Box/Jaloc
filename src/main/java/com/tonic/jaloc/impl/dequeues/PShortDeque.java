@@ -36,13 +36,13 @@ public final class PShortDeque extends AbstractPrimitiveDeque<PShortArray, PShor
 
     public void addFirst(short value) {
         long index = reserveHead();
-        elements().set(index, value);
+        elementsUnchecked().setUnchecked(index, value);
         commitHead();
     }
 
     public void addLast(short value) {
         long index = reserveTail();
-        elements().set(index, value);
+        elementsUnchecked().setUnchecked(index, value);
         commitTail();
     }
 
@@ -51,7 +51,7 @@ public final class PShortDeque extends AbstractPrimitiveDeque<PShortArray, PShor
             throw new NoSuchElementException("Deque is empty");
         }
         long index = headIndex();
-        short value = elements().get(index);
+        short value = elementsUnchecked().getUnchecked(index);
         advanceHead();
         return value;
     }
@@ -61,7 +61,7 @@ public final class PShortDeque extends AbstractPrimitiveDeque<PShortArray, PShor
             throw new NoSuchElementException("Deque is empty");
         }
         long index = tailIndex();
-        short value = elements().get(index);
+        short value = elementsUnchecked().getUnchecked(index);
         shrinkTail();
         return value;
     }
@@ -70,13 +70,13 @@ public final class PShortDeque extends AbstractPrimitiveDeque<PShortArray, PShor
         if (isEmpty()) {
             throw new NoSuchElementException("Deque is empty");
         }
-        return elements().get(headIndex());
+        return elementsUnchecked().getUnchecked(headIndex());
     }
 
     public short peekLast() {
         if (isEmpty()) {
             throw new NoSuchElementException("Deque is empty");
         }
-        return elements().get(tailIndex());
+        return elementsUnchecked().getUnchecked(tailIndex());
     }
 }

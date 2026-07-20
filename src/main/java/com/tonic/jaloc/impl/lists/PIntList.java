@@ -53,14 +53,14 @@ public final class PIntList extends AbstractPrimitiveList<PIntArray, PIntWriter>
     public int get(long index)
     {
         checkElementIndex(index);
-        return elements().get(index);
+        return elementsUnchecked().getUnchecked(index);
     }
 
     public int set(long index, int value)
     {
         checkElementIndex(index);
-        int previous = elements().get(index);
-        elements().set(index, value);
+        int previous = elementsUnchecked().getUnchecked(index);
+        elementsUnchecked().setUnchecked(index, value);
         return previous;
     }
 
@@ -70,7 +70,7 @@ public final class PIntList extends AbstractPrimitiveList<PIntArray, PIntWriter>
             throw new NoSuchElementException("List is empty");
         }
         long lastIndex = size() - 1;
-        int previous = elements().get(lastIndex);
+        int previous = elementsUnchecked().getUnchecked(lastIndex);
         decrementSize();
         return previous;
     }

@@ -32,7 +32,7 @@ public final class PBoolFixedQueue extends AbstractPrimitiveFixedQueue<PBoolArra
         }
 
         long index = reserveTail();
-        elements().set(index, value);
+        elementsUnchecked().setUnchecked(index, value);
         commitTail();
     }
 
@@ -43,7 +43,7 @@ public final class PBoolFixedQueue extends AbstractPrimitiveFixedQueue<PBoolArra
         }
 
         long index = reserveTail();
-        elements().set(index, value);
+        elementsUnchecked().setUnchecked(index, value);
         commitTail();
         return true;
     }
@@ -59,7 +59,7 @@ public final class PBoolFixedQueue extends AbstractPrimitiveFixedQueue<PBoolArra
         }
         for (boolean value : values) {
             long index = reserveTail();
-            elements().set(index, value);
+            elementsUnchecked().setUnchecked(index, value);
             commitTail();
         }
     }
@@ -70,8 +70,8 @@ public final class PBoolFixedQueue extends AbstractPrimitiveFixedQueue<PBoolArra
             throw new NoSuchElementException("Queue is empty");
         }
         long index = headIndex();
-        boolean value = elements().get(index);
-        elements().set(index, false);
+        boolean value = elementsUnchecked().getUnchecked(index);
+        elementsUnchecked().setUnchecked(index, false);
         advanceHead();
         return value;
     }
@@ -81,7 +81,7 @@ public final class PBoolFixedQueue extends AbstractPrimitiveFixedQueue<PBoolArra
         if (isEmpty()) {
             throw new NoSuchElementException("Queue is empty");
         }
-        return elements().get(headIndex());
+        return elementsUnchecked().getUnchecked(headIndex());
     }
 
     private static long requireCapacity(long capacity)

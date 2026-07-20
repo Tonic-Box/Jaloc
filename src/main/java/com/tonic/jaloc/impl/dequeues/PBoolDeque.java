@@ -53,14 +53,14 @@ public final class PBoolDeque extends AbstractPrimitiveDeque<PBoolArray, PBoolWr
     public void addFirst(boolean value)
     {
         long index = reserveHead();
-        elements().set(index, value);
+        elementsUnchecked().setUnchecked(index, value);
         commitHead();
     }
 
     public void addLast(boolean value)
     {
         long index = reserveTail();
-        elements().set(index, value);
+        elementsUnchecked().setUnchecked(index, value);
         commitTail();
     }
 
@@ -70,8 +70,8 @@ public final class PBoolDeque extends AbstractPrimitiveDeque<PBoolArray, PBoolWr
             throw new NoSuchElementException("Deque is empty");
         }
         long index = headIndex();
-        boolean value = elements().get(index);
-        elements().set(index, false);
+        boolean value = elementsUnchecked().getUnchecked(index);
+        elementsUnchecked().setUnchecked(index, false);
         advanceHead();
         return value;
     }
@@ -82,8 +82,8 @@ public final class PBoolDeque extends AbstractPrimitiveDeque<PBoolArray, PBoolWr
             throw new NoSuchElementException("Deque is empty");
         }
         long index = tailIndex();
-        boolean value = elements().get(index);
-        elements().set(index, false);
+        boolean value = elementsUnchecked().getUnchecked(index);
+        elementsUnchecked().setUnchecked(index, false);
         shrinkTail();
         return value;
     }
@@ -93,7 +93,7 @@ public final class PBoolDeque extends AbstractPrimitiveDeque<PBoolArray, PBoolWr
         if (isEmpty()) {
             throw new NoSuchElementException("Deque is empty");
         }
-        return elements().get(headIndex());
+        return elementsUnchecked().getUnchecked(headIndex());
     }
 
     public boolean peekLast()
@@ -101,6 +101,6 @@ public final class PBoolDeque extends AbstractPrimitiveDeque<PBoolArray, PBoolWr
         if (isEmpty()) {
             throw new NoSuchElementException("Deque is empty");
         }
-        return elements().get(tailIndex());
+        return elementsUnchecked().getUnchecked(tailIndex());
     }
 }

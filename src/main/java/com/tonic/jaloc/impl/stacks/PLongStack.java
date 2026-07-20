@@ -55,7 +55,7 @@ public final class PLongStack extends AbstractPrimitiveStack<PLongArray, PLongWr
             throw new NoSuchElementException("Stack is empty");
         }
         long lastIndex = size() - 1;
-        long value = elements().get(lastIndex);
+        long value = elementsUnchecked().getUnchecked(lastIndex);
         decrementSize();
         return value;
     }
@@ -64,6 +64,6 @@ public final class PLongStack extends AbstractPrimitiveStack<PLongArray, PLongWr
         if (isEmpty()) {
             throw new NoSuchElementException("Stack is empty");
         }
-        return elements().get(size() - 1);
+        return elementsUnchecked().getUnchecked(size() - 1);
     }
 }

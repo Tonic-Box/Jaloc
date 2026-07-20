@@ -55,7 +55,7 @@ public final class PDoubleStack extends AbstractPrimitiveStack<PDoubleArray, PDo
             throw new NoSuchElementException("Stack is empty");
         }
         long lastIndex = size() - 1;
-        double value = elements().get(lastIndex);
+        double value = elementsUnchecked().getUnchecked(lastIndex);
         decrementSize();
         return value;
     }
@@ -64,6 +64,6 @@ public final class PDoubleStack extends AbstractPrimitiveStack<PDoubleArray, PDo
         if (isEmpty()) {
             throw new NoSuchElementException("Stack is empty");
         }
-        return elements().get(size() - 1);
+        return elementsUnchecked().getUnchecked(size() - 1);
     }
 }

@@ -14,7 +14,7 @@ public final class PBoolWriter extends AbstractArrayWriter
 
     public PBoolWriter put(boolean value)
     {
-        array.set(nextIndex(), value);
+        array.setUnchecked(nextIndex(), value);
         return this;
     }
 }

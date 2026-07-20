@@ -54,7 +54,7 @@ public final class PBoolQueue extends AbstractPrimitiveQueue<PBoolArray, PBoolWr
     public void enqueue(boolean value)
     {
         long index = reserveTail();
-        elements().set(index, value);
+        elementsUnchecked().setUnchecked(index, value);
         commitTail();
     }
 
@@ -76,8 +76,8 @@ public final class PBoolQueue extends AbstractPrimitiveQueue<PBoolArray, PBoolWr
             throw new NoSuchElementException("Queue is empty");
         }
         long index = headIndex();
-        boolean value = elements().get(index);
-        elements().set(index, false);
+        boolean value = elementsUnchecked().getUnchecked(index);
+        elementsUnchecked().setUnchecked(index, false);
         advanceHead();
         return value;
     }
@@ -87,6 +87,6 @@ public final class PBoolQueue extends AbstractPrimitiveQueue<PBoolArray, PBoolWr
         if (isEmpty()) {
             throw new NoSuchElementException("Queue is empty");
         }
-        return elements().get(headIndex());
+        return elementsUnchecked().getUnchecked(headIndex());
     }
 }

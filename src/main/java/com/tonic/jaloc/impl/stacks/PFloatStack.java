@@ -55,7 +55,7 @@ public final class PFloatStack extends AbstractPrimitiveStack<PFloatArray, PFloa
             throw new NoSuchElementException("Stack is empty");
         }
         long lastIndex = size() - 1;
-        float value = elements().get(lastIndex);
+        float value = elementsUnchecked().getUnchecked(lastIndex);
         decrementSize();
         return value;
     }
@@ -64,6 +64,6 @@ public final class PFloatStack extends AbstractPrimitiveStack<PFloatArray, PFloa
         if (isEmpty()) {
             throw new NoSuchElementException("Stack is empty");
         }
-        return elements().get(size() - 1);
+        return elementsUnchecked().getUnchecked(size() - 1);
     }
 }

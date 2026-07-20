@@ -36,13 +36,13 @@ public final class PFloatDeque extends AbstractPrimitiveDeque<PFloatArray, PFloa
 
     public void addFirst(float value) {
         long index = reserveHead();
-        elements().set(index, value);
+        elementsUnchecked().setUnchecked(index, value);
         commitHead();
     }
 
     public void addLast(float value) {
         long index = reserveTail();
-        elements().set(index, value);
+        elementsUnchecked().setUnchecked(index, value);
         commitTail();
     }
 
@@ -51,7 +51,7 @@ public final class PFloatDeque extends AbstractPrimitiveDeque<PFloatArray, PFloa
             throw new NoSuchElementException("Deque is empty");
         }
         long index = headIndex();
-        float value = elements().get(index);
+        float value = elementsUnchecked().getUnchecked(index);
         advanceHead();
         return value;
     }
@@ -61,7 +61,7 @@ public final class PFloatDeque extends AbstractPrimitiveDeque<PFloatArray, PFloa
             throw new NoSuchElementException("Deque is empty");
         }
         long index = tailIndex();
-        float value = elements().get(index);
+        float value = elementsUnchecked().getUnchecked(index);
         shrinkTail();
         return value;
     }
@@ -70,13 +70,13 @@ public final class PFloatDeque extends AbstractPrimitiveDeque<PFloatArray, PFloa
         if (isEmpty()) {
             throw new NoSuchElementException("Deque is empty");
         }
-        return elements().get(headIndex());
+        return elementsUnchecked().getUnchecked(headIndex());
     }
 
     public float peekLast() {
         if (isEmpty()) {
             throw new NoSuchElementException("Deque is empty");
         }
-        return elements().get(tailIndex());
+        return elementsUnchecked().getUnchecked(tailIndex());
     }
 }

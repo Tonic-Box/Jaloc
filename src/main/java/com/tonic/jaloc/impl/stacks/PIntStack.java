@@ -55,7 +55,7 @@ public final class PIntStack extends AbstractPrimitiveStack<PIntArray, PIntWrite
             throw new NoSuchElementException("Stack is empty");
         }
         long lastIndex = size() - 1;
-        int value = elements().get(lastIndex);
+        int value = elementsUnchecked().getUnchecked(lastIndex);
         decrementSize();
         return value;
     }
@@ -64,6 +64,6 @@ public final class PIntStack extends AbstractPrimitiveStack<PIntArray, PIntWrite
         if (isEmpty()) {
             throw new NoSuchElementException("Stack is empty");
         }
-        return elements().get(size() - 1);
+        return elementsUnchecked().getUnchecked(size() - 1);
     }
 }

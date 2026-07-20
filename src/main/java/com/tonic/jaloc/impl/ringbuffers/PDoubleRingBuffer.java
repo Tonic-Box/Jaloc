@@ -25,13 +25,13 @@ public final class PDoubleRingBuffer extends AbstractPrimitiveRingBuffer<PDouble
     public void enqueue(double value) {
         if (size() == capacity()) {
             long index = headIndex();
-            elements().set(index, value);
+            elementsUnchecked().setUnchecked(index, value);
             rotateHead();
             return;
         }
 
         long index = reserveTail();
-        elements().set(index, value);
+        elementsUnchecked().setUnchecked(index, value);
         commitTail();
     }
 
@@ -50,7 +50,7 @@ public final class PDoubleRingBuffer extends AbstractPrimitiveRingBuffer<PDouble
             throw new NoSuchElementException("Ring buffer is empty");
         }
         long index = headIndex();
-        double value = elements().get(index);
+        double value = elementsUnchecked().getUnchecked(index);
         advanceHead();
         return value;
     }
@@ -59,7 +59,7 @@ public final class PDoubleRingBuffer extends AbstractPrimitiveRingBuffer<PDouble
         if (isEmpty()) {
             throw new NoSuchElementException("Ring buffer is empty");
         }
-        return elements().get(headIndex());
+        return elementsUnchecked().getUnchecked(headIndex());
     }
 
     private static long requireCapacity(long capacity) {

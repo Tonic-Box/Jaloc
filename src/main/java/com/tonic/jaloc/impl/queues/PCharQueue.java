@@ -36,7 +36,7 @@ public final class PCharQueue extends AbstractPrimitiveQueue<PCharArray, PCharWr
 
     public void enqueue(char value) {
         long index = reserveTail();
-        elements().set(index, value);
+        elementsUnchecked().setUnchecked(index, value);
         commitTail();
     }
 
@@ -61,7 +61,7 @@ public final class PCharQueue extends AbstractPrimitiveQueue<PCharArray, PCharWr
             throw new NoSuchElementException("Queue is empty");
         }
         long index = headIndex();
-        char value = elements().get(index);
+        char value = elementsUnchecked().getUnchecked(index);
         advanceHead();
         return value;
     }
@@ -70,6 +70,6 @@ public final class PCharQueue extends AbstractPrimitiveQueue<PCharArray, PCharWr
         if (isEmpty()) {
             throw new NoSuchElementException("Queue is empty");
         }
-        return elements().get(headIndex());
+        return elementsUnchecked().getUnchecked(headIndex());
     }
 }

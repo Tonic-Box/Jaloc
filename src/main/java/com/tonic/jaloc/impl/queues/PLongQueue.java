@@ -36,7 +36,7 @@ public final class PLongQueue extends AbstractPrimitiveQueue<PLongArray, PLongWr
 
     public void enqueue(long value) {
         long index = reserveTail();
-        elements().set(index, value);
+        elementsUnchecked().setUnchecked(index, value);
         commitTail();
     }
 
@@ -61,7 +61,7 @@ public final class PLongQueue extends AbstractPrimitiveQueue<PLongArray, PLongWr
             throw new NoSuchElementException("Queue is empty");
         }
         long index = headIndex();
-        long value = elements().get(index);
+        long value = elementsUnchecked().getUnchecked(index);
         advanceHead();
         return value;
     }
@@ -70,6 +70,6 @@ public final class PLongQueue extends AbstractPrimitiveQueue<PLongArray, PLongWr
         if (isEmpty()) {
             throw new NoSuchElementException("Queue is empty");
         }
-        return elements().get(headIndex());
+        return elementsUnchecked().getUnchecked(headIndex());
     }
 }

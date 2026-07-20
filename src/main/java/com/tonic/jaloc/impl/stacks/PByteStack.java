@@ -55,7 +55,7 @@ public final class PByteStack extends AbstractPrimitiveStack<PByteArray, PByteWr
             throw new NoSuchElementException("Stack is empty");
         }
         long lastIndex = size() - 1;
-        byte value = elements().get(lastIndex);
+        byte value = elementsUnchecked().getUnchecked(lastIndex);
         decrementSize();
         return value;
     }
@@ -64,6 +64,6 @@ public final class PByteStack extends AbstractPrimitiveStack<PByteArray, PByteWr
         if (isEmpty()) {
             throw new NoSuchElementException("Stack is empty");
         }
-        return elements().get(size() - 1);
+        return elementsUnchecked().getUnchecked(size() - 1);
     }
 }

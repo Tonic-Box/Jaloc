@@ -13,7 +13,7 @@ public final class PShortWriter extends AbstractArrayWriter
 
     public PShortWriter put(short value)
     {
-        array.set(nextIndex(), value);
+        array.setUnchecked(nextIndex(), value);
         return this;
     }
 }

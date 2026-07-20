@@ -25,13 +25,13 @@ public final class PCharRingBuffer extends AbstractPrimitiveRingBuffer<PCharArra
     public void enqueue(char value) {
         if (size() == capacity()) {
             long index = headIndex();
-            elements().set(index, value);
+            elementsUnchecked().setUnchecked(index, value);
             rotateHead();
             return;
         }
 
         long index = reserveTail();
-        elements().set(index, value);
+        elementsUnchecked().setUnchecked(index, value);
         commitTail();
     }
 
@@ -50,7 +50,7 @@ public final class PCharRingBuffer extends AbstractPrimitiveRingBuffer<PCharArra
             throw new NoSuchElementException("Ring buffer is empty");
         }
         long index = headIndex();
-        char value = elements().get(index);
+        char value = elementsUnchecked().getUnchecked(index);
         advanceHead();
         return value;
     }
@@ -59,7 +59,7 @@ public final class PCharRingBuffer extends AbstractPrimitiveRingBuffer<PCharArra
         if (isEmpty()) {
             throw new NoSuchElementException("Ring buffer is empty");
         }
-        return elements().get(headIndex());
+        return elementsUnchecked().getUnchecked(headIndex());
     }
 
     private static long requireCapacity(long capacity) {

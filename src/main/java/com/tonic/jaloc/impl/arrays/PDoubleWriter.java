@@ -14,7 +14,7 @@ public final class PDoubleWriter extends AbstractArrayWriter
 
     public PDoubleWriter put(double value)
     {
-        array.set(nextIndex(), value);
+        array.setUnchecked(nextIndex(), value);
         return this;
     }
 }

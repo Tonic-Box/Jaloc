@@ -29,13 +29,13 @@ public final class PBoolRingBuffer extends AbstractPrimitiveRingBuffer<PBoolArra
     {
         if (size() == capacity()) {
             long index = headIndex();
-            elements().set(index, value);
+            elementsUnchecked().setUnchecked(index, value);
             rotateHead();
             return;
         }
 
         long index = reserveTail();
-        elements().set(index, value);
+        elementsUnchecked().setUnchecked(index, value);
         commitTail();
     }
 
@@ -53,8 +53,8 @@ public final class PBoolRingBuffer extends AbstractPrimitiveRingBuffer<PBoolArra
             throw new NoSuchElementException("Ring buffer is empty");
         }
         long index = headIndex();
-        boolean value = elements().get(index);
-        elements().set(index, false);
+        boolean value = elementsUnchecked().getUnchecked(index);
+        elementsUnchecked().setUnchecked(index, false);
         advanceHead();
         return value;
     }
@@ -64,7 +64,7 @@ public final class PBoolRingBuffer extends AbstractPrimitiveRingBuffer<PBoolArra
         if (isEmpty()) {
             throw new NoSuchElementException("Ring buffer is empty");
         }
-        return elements().get(headIndex());
+        return elementsUnchecked().getUnchecked(headIndex());
     }
 
     private static long requireCapacity(long capacity)

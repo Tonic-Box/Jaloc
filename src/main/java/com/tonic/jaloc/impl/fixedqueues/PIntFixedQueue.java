@@ -28,7 +28,7 @@ public final class PIntFixedQueue extends AbstractPrimitiveFixedQueue<PIntArray,
         }
 
         long index = reserveTail();
-        elements().set(index, value);
+        elementsUnchecked().setUnchecked(index, value);
         commitTail();
     }
 
@@ -38,7 +38,7 @@ public final class PIntFixedQueue extends AbstractPrimitiveFixedQueue<PIntArray,
         }
 
         long index = reserveTail();
-        elements().set(index, value);
+        elementsUnchecked().setUnchecked(index, value);
         commitTail();
         return true;
     }
@@ -58,7 +58,7 @@ public final class PIntFixedQueue extends AbstractPrimitiveFixedQueue<PIntArray,
 
         for (int value : values) {
             long index = reserveTail();
-            elements().set(index, value);
+            elementsUnchecked().setUnchecked(index, value);
             commitTail();
         }
     }
@@ -68,7 +68,7 @@ public final class PIntFixedQueue extends AbstractPrimitiveFixedQueue<PIntArray,
             throw new NoSuchElementException("Queue is empty");
         }
         long index = headIndex();
-        int value = elements().get(index);
+        int value = elementsUnchecked().getUnchecked(index);
         advanceHead();
         return value;
     }
@@ -77,7 +77,7 @@ public final class PIntFixedQueue extends AbstractPrimitiveFixedQueue<PIntArray,
         if (isEmpty()) {
             throw new NoSuchElementException("Queue is empty");
         }
-        return elements().get(headIndex());
+        return elementsUnchecked().getUnchecked(headIndex());
     }
 
     private static long requireCapacity(long capacity) {

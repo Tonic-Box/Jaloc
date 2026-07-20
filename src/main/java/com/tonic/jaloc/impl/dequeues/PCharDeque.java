@@ -36,13 +36,13 @@ public final class PCharDeque extends AbstractPrimitiveDeque<PCharArray, PCharWr
 
     public void addFirst(char value) {
         long index = reserveHead();
-        elements().set(index, value);
+        elementsUnchecked().setUnchecked(index, value);
         commitHead();
     }
 
     public void addLast(char value) {
         long index = reserveTail();
-        elements().set(index, value);
+        elementsUnchecked().setUnchecked(index, value);
         commitTail();
     }
 
@@ -51,7 +51,7 @@ public final class PCharDeque extends AbstractPrimitiveDeque<PCharArray, PCharWr
             throw new NoSuchElementException("Deque is empty");
         }
         long index = headIndex();
-        char value = elements().get(index);
+        char value = elementsUnchecked().getUnchecked(index);
         advanceHead();
         return value;
     }
@@ -61,7 +61,7 @@ public final class PCharDeque extends AbstractPrimitiveDeque<PCharArray, PCharWr
             throw new NoSuchElementException("Deque is empty");
         }
         long index = tailIndex();
-        char value = elements().get(index);
+        char value = elementsUnchecked().getUnchecked(index);
         shrinkTail();
         return value;
     }
@@ -70,13 +70,13 @@ public final class PCharDeque extends AbstractPrimitiveDeque<PCharArray, PCharWr
         if (isEmpty()) {
             throw new NoSuchElementException("Deque is empty");
         }
-        return elements().get(headIndex());
+        return elementsUnchecked().getUnchecked(headIndex());
     }
 
     public char peekLast() {
         if (isEmpty()) {
             throw new NoSuchElementException("Deque is empty");
         }
-        return elements().get(tailIndex());
+        return elementsUnchecked().getUnchecked(tailIndex());
     }
 }

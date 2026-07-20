@@ -55,7 +55,7 @@ public final class PCharStack extends AbstractPrimitiveStack<PCharArray, PCharWr
             throw new NoSuchElementException("Stack is empty");
         }
         long lastIndex = size() - 1;
-        char value = elements().get(lastIndex);
+        char value = elementsUnchecked().getUnchecked(lastIndex);
         decrementSize();
         return value;
     }
@@ -64,6 +64,6 @@ public final class PCharStack extends AbstractPrimitiveStack<PCharArray, PCharWr
         if (isEmpty()) {
             throw new NoSuchElementException("Stack is empty");
         }
-        return elements().get(size() - 1);
+        return elementsUnchecked().getUnchecked(size() - 1);
     }
 }

@@ -12,7 +12,7 @@ public final class PByteWriter extends AbstractArrayWriter
 
     public PByteWriter put(byte value)
     {
-        array.set(nextIndex(), value);
+        array.setUnchecked(nextIndex(), value);
         return this;
     }
 }

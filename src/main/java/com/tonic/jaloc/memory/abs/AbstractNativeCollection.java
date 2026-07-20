@@ -58,6 +58,11 @@ public abstract class AbstractNativeCollection<A extends AbstractNativeArray<W>,
         return array;
     }
 
+    protected final A elementsUnchecked()
+    {
+        return array;
+    }
+
     protected final long sizeUnchecked()
     {
         return size;

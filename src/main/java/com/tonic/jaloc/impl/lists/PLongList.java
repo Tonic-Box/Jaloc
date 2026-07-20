@@ -54,14 +54,14 @@ public final class PLongList extends AbstractPrimitiveList<PLongArray, PLongWrit
     public long get(long index)
     {
         checkElementIndex(index);
-        return elements().get(index);
+        return elementsUnchecked().getUnchecked(index);
     }
 
     public long set(long index, long value)
     {
         checkElementIndex(index);
-        long previous = elements().get(index);
-        elements().set(index, value);
+        long previous = elementsUnchecked().getUnchecked(index);
+        elementsUnchecked().setUnchecked(index, value);
         return previous;
     }
 
@@ -71,7 +71,7 @@ public final class PLongList extends AbstractPrimitiveList<PLongArray, PLongWrit
             throw new NoSuchElementException("List is empty");
         }
         long lastIndex = size() - 1;
-        long previous = elements().get(lastIndex);
+        long previous = elementsUnchecked().getUnchecked(lastIndex);
         decrementSize();
         return previous;
     }

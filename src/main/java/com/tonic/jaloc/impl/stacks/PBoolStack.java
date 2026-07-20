@@ -56,8 +56,8 @@ public final class PBoolStack extends AbstractPrimitiveStack<PBoolArray, PBoolWr
             throw new NoSuchElementException("Stack is empty");
         }
         long lastIndex = size() - 1;
-        boolean value = elements().get(lastIndex);
-        elements().set(lastIndex, false);
+        boolean value = elementsUnchecked().getUnchecked(lastIndex);
+        elementsUnchecked().setUnchecked(lastIndex, false);
         decrementSize();
         return value;
     }
@@ -67,6 +67,6 @@ public final class PBoolStack extends AbstractPrimitiveStack<PBoolArray, PBoolWr
         if (isEmpty()) {
             throw new NoSuchElementException("Stack is empty");
         }
-        return elements().get(size() - 1);
+        return elementsUnchecked().getUnchecked(size() - 1);
     }
 }

@@ -14,7 +14,7 @@ public final class PCharWriter extends AbstractArrayWriter
 
     public PCharWriter put(char value)
     {
-        array.set(nextIndex(), value);
+        array.setUnchecked(nextIndex(), value);
         return this;
     }
 }

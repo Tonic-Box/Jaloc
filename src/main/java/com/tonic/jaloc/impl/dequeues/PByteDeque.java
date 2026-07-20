@@ -36,13 +36,13 @@ public final class PByteDeque extends AbstractPrimitiveDeque<PByteArray, PByteWr
 
     public void addFirst(byte value) {
         long index = reserveHead();
-        elements().set(index, value);
+        elementsUnchecked().setUnchecked(index, value);
         commitHead();
     }
 
     public void addLast(byte value) {
         long index = reserveTail();
-        elements().set(index, value);
+        elementsUnchecked().setUnchecked(index, value);
         commitTail();
     }
 
@@ -51,7 +51,7 @@ public final class PByteDeque extends AbstractPrimitiveDeque<PByteArray, PByteWr
             throw new NoSuchElementException("Deque is empty");
         }
         long index = headIndex();
-        byte value = elements().get(index);
+        byte value = elementsUnchecked().getUnchecked(index);
         advanceHead();
         return value;
     }
@@ -61,7 +61,7 @@ public final class PByteDeque extends AbstractPrimitiveDeque<PByteArray, PByteWr
             throw new NoSuchElementException("Deque is empty");
         }
         long index = tailIndex();
-        byte value = elements().get(index);
+        byte value = elementsUnchecked().getUnchecked(index);
         shrinkTail();
         return value;
     }
@@ -70,13 +70,13 @@ public final class PByteDeque extends AbstractPrimitiveDeque<PByteArray, PByteWr
         if (isEmpty()) {
             throw new NoSuchElementException("Deque is empty");
         }
-        return elements().get(headIndex());
+        return elementsUnchecked().getUnchecked(headIndex());
     }
 
     public byte peekLast() {
         if (isEmpty()) {
             throw new NoSuchElementException("Deque is empty");
         }
-        return elements().get(tailIndex());
+        return elementsUnchecked().getUnchecked(tailIndex());
     }
 }

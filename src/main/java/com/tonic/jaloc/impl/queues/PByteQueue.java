@@ -36,7 +36,7 @@ public final class PByteQueue extends AbstractPrimitiveQueue<PByteArray, PByteWr
 
     public void enqueue(byte value) {
         long index = reserveTail();
-        elements().set(index, value);
+        elementsUnchecked().setUnchecked(index, value);
         commitTail();
     }
 
@@ -61,7 +61,7 @@ public final class PByteQueue extends AbstractPrimitiveQueue<PByteArray, PByteWr
             throw new NoSuchElementException("Queue is empty");
         }
         long index = headIndex();
-        byte value = elements().get(index);
+        byte value = elementsUnchecked().getUnchecked(index);
         advanceHead();
         return value;
     }
@@ -70,6 +70,6 @@ public final class PByteQueue extends AbstractPrimitiveQueue<PByteArray, PByteWr
         if (isEmpty()) {
             throw new NoSuchElementException("Queue is empty");
         }
-        return elements().get(headIndex());
+        return elementsUnchecked().getUnchecked(headIndex());
     }
 }

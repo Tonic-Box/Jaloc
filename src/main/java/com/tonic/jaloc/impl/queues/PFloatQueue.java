@@ -36,7 +36,7 @@ public final class PFloatQueue extends AbstractPrimitiveQueue<PFloatArray, PFloa
 
     public void enqueue(float value) {
         long index = reserveTail();
-        elements().set(index, value);
+        elementsUnchecked().setUnchecked(index, value);
         commitTail();
     }
 
@@ -61,7 +61,7 @@ public final class PFloatQueue extends AbstractPrimitiveQueue<PFloatArray, PFloa
             throw new NoSuchElementException("Queue is empty");
         }
         long index = headIndex();
-        float value = elements().get(index);
+        float value = elementsUnchecked().getUnchecked(index);
         advanceHead();
         return value;
     }
@@ -70,6 +70,6 @@ public final class PFloatQueue extends AbstractPrimitiveQueue<PFloatArray, PFloa
         if (isEmpty()) {
             throw new NoSuchElementException("Queue is empty");
         }
-        return elements().get(headIndex());
+        return elementsUnchecked().getUnchecked(headIndex());
     }
 }
