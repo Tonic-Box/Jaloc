@@ -63,6 +63,11 @@ public abstract class AbstractNativeCollection<A extends AbstractNativeArray<W>,
         return size;
     }
 
+    protected final long elementsBaseAddress()
+    {
+        return array.baseAddress();
+    }
+
     protected final void size(long size)
     {
         this.size = size;

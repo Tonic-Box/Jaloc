@@ -1,29 +1,29 @@
-package com.tonic.jaloc.impl.deques;
+package com.tonic.jaloc.impl.dequeues;
 
-import com.tonic.jaloc.impl.arrays.PDoubleArray;
-import com.tonic.jaloc.impl.arrays.PDoubleWriter;
+import com.tonic.jaloc.impl.arrays.PFloatArray;
+import com.tonic.jaloc.impl.arrays.PFloatWriter;
 import com.tonic.jaloc.memory.SystemAllocator;
 import com.tonic.jaloc.memory.abs.AbstractPrimitiveDeque;
 import com.tonic.jaloc.memory.iface.NativeAllocator;
 
 import java.util.NoSuchElementException;
 
-public final class PDoubleDeque extends AbstractPrimitiveDeque<PDoubleArray, PDoubleWriter> {
-    public PDoubleDeque() {
+public final class PFloatDeque extends AbstractPrimitiveDeque<PFloatArray, PFloatWriter> {
+    public PFloatDeque() {
         this(0);
     }
 
-    public PDoubleDeque(long initialCapacity) {
+    public PFloatDeque(long initialCapacity) {
         this(SystemAllocator.getInstance(), initialCapacity);
     }
 
-    public PDoubleDeque(NativeAllocator allocator, long initialCapacity) {
-        super(allocator, new PDoubleArray(allocator, initialCapacity));
+    public PFloatDeque(NativeAllocator allocator, long initialCapacity) {
+        super(allocator, new PFloatArray(allocator, initialCapacity));
     }
 
     @Override
-    protected PDoubleArray createArray(NativeAllocator allocator, long capacity) {
-        return new PDoubleArray(allocator, capacity);
+    protected PFloatArray createArray(NativeAllocator allocator, long capacity) {
+        return new PFloatArray(allocator, capacity);
     }
 
     public void ensureCapacity(long requiredCapacity) {
@@ -34,46 +34,46 @@ public final class PDoubleDeque extends AbstractPrimitiveDeque<PDoubleArray, PDo
         trimRing();
     }
 
-    public void addFirst(double value) {
+    public void addFirst(float value) {
         long index = reserveHead();
         elements().set(index, value);
         commitHead();
     }
 
-    public void addLast(double value) {
+    public void addLast(float value) {
         long index = reserveTail();
         elements().set(index, value);
         commitTail();
     }
 
-    public double removeFirst() {
+    public float removeFirst() {
         if (isEmpty()) {
             throw new NoSuchElementException("Deque is empty");
         }
         long index = headIndex();
-        double value = elements().get(index);
+        float value = elements().get(index);
         advanceHead();
         return value;
     }
 
-    public double removeLast() {
+    public float removeLast() {
         if (isEmpty()) {
             throw new NoSuchElementException("Deque is empty");
         }
         long index = tailIndex();
-        double value = elements().get(index);
+        float value = elements().get(index);
         shrinkTail();
         return value;
     }
 
-    public double peekFirst() {
+    public float peekFirst() {
         if (isEmpty()) {
             throw new NoSuchElementException("Deque is empty");
         }
         return elements().get(headIndex());
     }
 
-    public double peekLast() {
+    public float peekLast() {
         if (isEmpty()) {
             throw new NoSuchElementException("Deque is empty");
         }

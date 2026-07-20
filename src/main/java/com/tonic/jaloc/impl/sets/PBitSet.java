@@ -5,11 +5,15 @@ import com.tonic.jaloc.impl.arrays.PLongWriter;
 import com.tonic.jaloc.memory.SystemAllocator;
 import com.tonic.jaloc.memory.abs.AbstractNativeCollection;
 import com.tonic.jaloc.memory.iface.NativeAllocator;
+import com.tonic.jaloc.memory.internal.UnsafeMemory;
 
 import java.util.Objects;
 
 public final class PBitSet extends AbstractNativeCollection<PLongArray, PLongWriter>
 {
+    private long wordsBase;
+    private long wordCapacity;
+
     public PBitSet()
     {
         this(0);
@@ -23,6 +27,9 @@ public final class PBitSet extends AbstractNativeCollection<PLongArray, PLongWri
     public PBitSet(NativeAllocator allocator, long nbits)
     {
         super(allocator, new PLongArray(allocator, wordCount(requireBitCount(nbits))));
+
+        this.wordsBase = elementsBaseAddress();
+        this.wordCapacity = capacity();
     }
 
     @Override
@@ -34,7 +41,7 @@ public final class PBitSet extends AbstractNativeCollection<PLongArray, PLongWri
     @Override
     protected void migrateElements(PLongArray source, PLongArray destination)
     {
-        long words = size();
+        long words = sizeUnchecked();
 
         for (long i = 0; i < words; i++)
         {
@@ -44,13 +51,20 @@ public final class PBitSet extends AbstractNativeCollection<PLongArray, PLongWri
 
     public void set(long bit)
     {
+        ensureOpen();
+
         long word = wordIndex(bit);
 
-        ensureWordCapacity(word + 1);
+        if (word >= wordCapacity)
+        {
+            growWords(word + 1);
+        }
 
-        elements().setUnchecked(word, elements().getUnchecked(word) | (1L << bit));
+        long address = wordsBase + (word << 3);
 
-        if (word >= size())
+        UnsafeMemory.putLong(address, UnsafeMemory.getLong(address) | (1L << bit));
+
+        if (word >= sizeUnchecked())
         {
             size(word + 1);
         }
@@ -58,25 +72,36 @@ public final class PBitSet extends AbstractNativeCollection<PLongArray, PLongWri
 
     public void clear(long bit)
     {
+        ensureOpen();
+
         long word = wordIndex(bit);
 
-        if (word >= size())
+        if (word >= sizeUnchecked())
         {
             return;
         }
 
-        elements().setUnchecked(word, elements().getUnchecked(word) & ~(1L << bit));
+        long address = wordsBase + (word << 3);
+
+        UnsafeMemory.putLong(address, UnsafeMemory.getLong(address) & ~(1L << bit));
     }
 
     public void flip(long bit)
     {
+        ensureOpen();
+
         long word = wordIndex(bit);
 
-        ensureWordCapacity(word + 1);
+        if (word >= wordCapacity)
+        {
+            growWords(word + 1);
+        }
 
-        elements().setUnchecked(word, elements().getUnchecked(word) ^ (1L << bit));
+        long address = wordsBase + (word << 3);
 
-        if (word >= size())
+        UnsafeMemory.putLong(address, UnsafeMemory.getLong(address) ^ (1L << bit));
+
+        if (word >= sizeUnchecked())
         {
             size(word + 1);
         }
@@ -84,25 +109,28 @@ public final class PBitSet extends AbstractNativeCollection<PLongArray, PLongWri
 
     public boolean get(long bit)
     {
+        ensureOpen();
+
         long word = wordIndex(bit);
 
-        if (word >= size())
+        if (word >= sizeUnchecked())
         {
             return false;
         }
 
-        return (elements().getUnchecked(word) & (1L << bit)) != 0;
+        return (UnsafeMemory.getLong(wordsBase + (word << 3)) & (1L << bit)) != 0;
     }
 
     public long cardinality()
     {
-        long words = size();
-        PLongArray table = elements();
+        ensureOpen();
+
+        long words = sizeUnchecked();
         long count = 0;
 
         for (long i = 0; i < words; i++)
         {
-            count += Long.bitCount(table.getUnchecked(i));
+            count += Long.bitCount(UnsafeMemory.getLong(wordsBase + (i << 3)));
         }
 
         return count;
@@ -110,11 +138,11 @@ public final class PBitSet extends AbstractNativeCollection<PLongArray, PLongWri
 
     public long length()
     {
-        PLongArray table = elements();
+        ensureOpen();
 
-        for (long word = size() - 1; word >= 0; word--)
+        for (long word = sizeUnchecked() - 1; word >= 0; word--)
         {
-            long value = table.getUnchecked(word);
+            long value = UnsafeMemory.getLong(wordsBase + (word << 3));
 
             if (value != 0)
             {
@@ -127,16 +155,17 @@ public final class PBitSet extends AbstractNativeCollection<PLongArray, PLongWri
 
     public long nextSetBit(long fromBit)
     {
+        ensureOpen();
+
         long word = wordIndex(fromBit);
-        long words = size();
+        long words = sizeUnchecked();
 
         if (word >= words)
         {
             return -1;
         }
 
-        PLongArray table = elements();
-        long current = table.getUnchecked(word) & (-1L << fromBit);
+        long current = UnsafeMemory.getLong(wordsBase + (word << 3)) & (-1L << fromBit);
 
         while (true)
         {
@@ -152,44 +181,47 @@ public final class PBitSet extends AbstractNativeCollection<PLongArray, PLongWri
                 return -1;
             }
 
-            current = table.getUnchecked(word);
+            current = UnsafeMemory.getLong(wordsBase + (word << 3));
         }
     }
 
     public void and(PBitSet other)
     {
         Objects.requireNonNull(other, "other");
+        ensureOpen();
 
-        long words = size();
+        long words = sizeUnchecked();
         long otherWords = other.size();
-        PLongArray table = elements();
-        PLongArray otherTable = other.elements();
 
         for (long i = 0; i < words; i++)
         {
-            long value = i < otherWords ? otherTable.getUnchecked(i) : 0;
+            long value = i < otherWords ? UnsafeMemory.getLong(other.wordsBase + (i << 3)) : 0;
+            long address = wordsBase + (i << 3);
 
-            table.setUnchecked(i, table.getUnchecked(i) & value);
+            UnsafeMemory.putLong(address, UnsafeMemory.getLong(address) & value);
         }
     }
 
     public void or(PBitSet other)
     {
         Objects.requireNonNull(other, "other");
+        ensureOpen();
 
         long otherWords = other.size();
 
-        ensureWordCapacity(otherWords);
-
-        PLongArray table = elements();
-        PLongArray otherTable = other.elements();
+        if (otherWords > wordCapacity)
+        {
+            growWords(otherWords);
+        }
 
         for (long i = 0; i < otherWords; i++)
         {
-            table.setUnchecked(i, table.getUnchecked(i) | otherTable.getUnchecked(i));
+            long address = wordsBase + (i << 3);
+
+            UnsafeMemory.putLong(address, UnsafeMemory.getLong(address) | UnsafeMemory.getLong(other.wordsBase + (i << 3)));
         }
 
-        if (otherWords > size())
+        if (otherWords > sizeUnchecked())
         {
             size(otherWords);
         }
@@ -198,20 +230,23 @@ public final class PBitSet extends AbstractNativeCollection<PLongArray, PLongWri
     public void xor(PBitSet other)
     {
         Objects.requireNonNull(other, "other");
+        ensureOpen();
 
         long otherWords = other.size();
 
-        ensureWordCapacity(otherWords);
-
-        PLongArray table = elements();
-        PLongArray otherTable = other.elements();
+        if (otherWords > wordCapacity)
+        {
+            growWords(otherWords);
+        }
 
         for (long i = 0; i < otherWords; i++)
         {
-            table.setUnchecked(i, table.getUnchecked(i) ^ otherTable.getUnchecked(i));
+            long address = wordsBase + (i << 3);
+
+            UnsafeMemory.putLong(address, UnsafeMemory.getLong(address) ^ UnsafeMemory.getLong(other.wordsBase + (i << 3)));
         }
 
-        if (otherWords > size())
+        if (otherWords > sizeUnchecked())
         {
             size(otherWords);
         }
@@ -225,16 +260,12 @@ public final class PBitSet extends AbstractNativeCollection<PLongArray, PLongWri
         size(0);
     }
 
-    private void ensureWordCapacity(long requiredWords)
+    private void growWords(long requiredWords)
     {
-        ensureOpen();
+        replaceArray(growCapacity(wordCapacity, requiredWords));
 
-        if (requiredWords <= capacity())
-        {
-            return;
-        }
-
-        replaceArray(growCapacity(capacity(), requiredWords));
+        wordsBase = elementsBaseAddress();
+        wordCapacity = capacity();
     }
 
     private static long wordIndex(long bit)

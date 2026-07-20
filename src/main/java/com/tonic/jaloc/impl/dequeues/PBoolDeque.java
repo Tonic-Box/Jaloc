@@ -1,4 +1,4 @@
-package com.tonic.jaloc.impl.deques;
+package com.tonic.jaloc.impl.dequeues;
 
 import com.tonic.jaloc.impl.arrays.PBoolArray;
 import com.tonic.jaloc.impl.arrays.PBoolWriter;

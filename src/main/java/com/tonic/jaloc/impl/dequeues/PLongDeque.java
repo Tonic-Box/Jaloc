@@ -1,29 +1,29 @@
-package com.tonic.jaloc.impl.deques;
+package com.tonic.jaloc.impl.dequeues;
 
-import com.tonic.jaloc.impl.arrays.PShortArray;
-import com.tonic.jaloc.impl.arrays.PShortWriter;
+import com.tonic.jaloc.impl.arrays.PLongArray;
+import com.tonic.jaloc.impl.arrays.PLongWriter;
 import com.tonic.jaloc.memory.SystemAllocator;
 import com.tonic.jaloc.memory.abs.AbstractPrimitiveDeque;
 import com.tonic.jaloc.memory.iface.NativeAllocator;
 
 import java.util.NoSuchElementException;
 
-public final class PShortDeque extends AbstractPrimitiveDeque<PShortArray, PShortWriter> {
-    public PShortDeque() {
+public final class PLongDeque extends AbstractPrimitiveDeque<PLongArray, PLongWriter> {
+    public PLongDeque() {
         this(0);
     }
 
-    public PShortDeque(long initialCapacity) {
+    public PLongDeque(long initialCapacity) {
         this(SystemAllocator.getInstance(), initialCapacity);
     }
 
-    public PShortDeque(NativeAllocator allocator, long initialCapacity) {
-        super(allocator, new PShortArray(allocator, initialCapacity));
+    public PLongDeque(NativeAllocator allocator, long initialCapacity) {
+        super(allocator, new PLongArray(allocator, initialCapacity));
     }
 
     @Override
-    protected PShortArray createArray(NativeAllocator allocator, long capacity) {
-        return new PShortArray(allocator, capacity);
+    protected PLongArray createArray(NativeAllocator allocator, long capacity) {
+        return new PLongArray(allocator, capacity);
     }
 
     public void ensureCapacity(long requiredCapacity) {
@@ -34,46 +34,46 @@ public final class PShortDeque extends AbstractPrimitiveDeque<PShortArray, PShor
         trimRing();
     }
 
-    public void addFirst(short value) {
+    public void addFirst(long value) {
         long index = reserveHead();
         elements().set(index, value);
         commitHead();
     }
 
-    public void addLast(short value) {
+    public void addLast(long value) {
         long index = reserveTail();
         elements().set(index, value);
         commitTail();
     }
 
-    public short removeFirst() {
+    public long removeFirst() {
         if (isEmpty()) {
             throw new NoSuchElementException("Deque is empty");
         }
         long index = headIndex();
-        short value = elements().get(index);
+        long value = elements().get(index);
         advanceHead();
         return value;
     }
 
-    public short removeLast() {
+    public long removeLast() {
         if (isEmpty()) {
             throw new NoSuchElementException("Deque is empty");
         }
         long index = tailIndex();
-        short value = elements().get(index);
+        long value = elements().get(index);
         shrinkTail();
         return value;
     }
 
-    public short peekFirst() {
+    public long peekFirst() {
         if (isEmpty()) {
             throw new NoSuchElementException("Deque is empty");
         }
         return elements().get(headIndex());
     }
 
-    public short peekLast() {
+    public long peekLast() {
         if (isEmpty()) {
             throw new NoSuchElementException("Deque is empty");
         }

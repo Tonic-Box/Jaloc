@@ -6,8 +6,17 @@ A primitive collections library for Java
 
 ### Structure
 There are currently Array and List implementations for all Java primitives as well as for user defined structs.
-- Primitive Array implementations can be found in [.../impl/arrays/](./src/main/java/com/tonic/jaloc/impl/arrays)
-- Primitive List implementations can be found in [.../impl/lists/](./src/main/java/com/tonic/jaloc/impl/lists)
+- **Array2D** implementations can be found in [.../impl/array2ds/](./src/main/java/com/tonic/jaloc/impl/array2ds)
+- **Array** implementations can be found in [.../impl/arrays/](./src/main/java/com/tonic/jaloc/impl/arrays)
+- **Dequeue** implementations can be found in [.../impl/dequeues/](./src/main/java/com/tonic/jaloc/impl/dequeues)
+- **Fixed** Queue implementations can be found in [.../impl/fixedqueues/](./src/main/java/com/tonic/jaloc/impl/fixedqueues)
+- **Heap** implementations can be found in [.../impl/heaps/](./src/main/java/com/tonic/jaloc/impl/heaps)
+- **List** implementations can be found in [.../impl/lists/](./src/main/java/com/tonic/jaloc/impl/lists)
+- **Map** implementations can be found in [.../impl/maps/](./src/main/java/com/tonic/jaloc/impl/maps)
+- **Queue** implementations can be found in [.../impl/queues/](./src/main/java/com/tonic/jaloc/impl/queues)
+- **Ring** Buffer implementations can be found in [.../impl/ringbuffers/](./src/main/java/com/tonic/jaloc/impl/ringbuffers)
+- **Set** implementations can be found in [.../impl/sets/](./src/main/java/com/tonic/jaloc/impl/sets)
+- **Stack** implementations can be found in [.../impl/stacks/](./src/main/java/com/tonic/jaloc/impl/stacks)
 
 ### Examples
 Idk, will get to it soon, look at [Main.java](./src/main/java/com/tonic/jaloc/demo/Main.java) for an example I guess for now. The example there showcases how to work with `structs`.
