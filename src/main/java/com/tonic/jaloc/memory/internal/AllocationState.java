@@ -1,29 +1,17 @@
 package com.tonic.jaloc.memory.internal;
 
-import com.tonic.jaloc.memory.iface.AllocationOwner;
-
 public final class AllocationState
 {
-    private final AllocationOwner owner;
-    private final long rawAddress;
+    private final AllocationRecord record;
     private final long address;
-    private final long size;
-    private final long reservedBytes;
-    private final int alignment;
 
-    private volatile boolean closed;
-
-    public AllocationState(AllocationOwner owner, long rawAddress, long address, long size, long reservedBytes, int alignment) {
-        this.owner = owner;
-        this.rawAddress = rawAddress;
+    public AllocationState(AllocationRecord record, long address) {
+        this.record = record;
         this.address = address;
-        this.size = size;
-        this.reservedBytes = reservedBytes;
-        this.alignment = alignment;
     }
 
     public long rawAddress() {
-        return rawAddress;
+        return record.rawAddress();
     }
 
     long address() {
@@ -32,19 +20,19 @@ public final class AllocationState
     }
 
     long size() {
-        return size;
+        return record.size();
     }
 
     long reservedBytes() {
-        return reservedBytes;
+        return record.reservedBytes();
     }
 
     int alignment() {
-        return alignment;
+        return record.alignment();
     }
 
     boolean isOpen() {
-        return !closed && owner.isOpen();
+        return record.isOpen();
     }
 
     void ensureOpen() {
@@ -53,12 +41,7 @@ public final class AllocationState
         }
     }
 
-    synchronized void close() {
-        if (closed) {
-            return;
-        }
-
-        closed = true;
-        owner.release(this);
+    void close() {
+        record.close();
     }
 }

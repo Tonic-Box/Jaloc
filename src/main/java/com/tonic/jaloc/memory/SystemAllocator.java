@@ -23,7 +23,7 @@ public final class SystemAllocator implements NativeAllocator, AllocationOwner
         UnsafeMemory.validateAlignment(alignment);
 
         if (bytes == 0) {
-            return new MemoryBlock(new AllocationState(this, 0, 0, 0, 0, alignment));
+            return new MemoryBlock(new AllocationState(new AllocationRecord(this, 0, 0, 0, alignment), 0));
         }
 
         long padding = alignment - 1L;
@@ -35,14 +35,15 @@ public final class SystemAllocator implements NativeAllocator, AllocationOwner
         try {
             long alignedAddress = UnsafeMemory.alignUp(rawAddress, alignment);
 
-            AllocationState state = new AllocationState(
+            AllocationRecord record = new AllocationRecord(
                     this,
                     rawAddress,
-                    alignedAddress,
                     bytes,
                     reservedBytes,
                     alignment
             );
+
+            AllocationState state = new AllocationState(record, alignedAddress);
 
             successful = true;
             return new MemoryBlock(state);
@@ -54,7 +55,7 @@ public final class SystemAllocator implements NativeAllocator, AllocationOwner
     }
 
     @Override
-    public void release(AllocationState allocation) {
+    public void release(AllocationRecord allocation) {
         UnsafeMemory.free(allocation.rawAddress());
     }
 
