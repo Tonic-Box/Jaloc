@@ -11,6 +11,7 @@ public final class AllocationRecord
     private final int alignment;
 
     private boolean closed;
+    private NativeCleaner.Registration registration;
 
     public AllocationRecord(AllocationOwner owner, long rawAddress, long size, long reservedBytes, int alignment) {
         this.owner = owner;
@@ -40,6 +41,10 @@ public final class AllocationRecord
         return !closed && owner.isOpen();
     }
 
+    synchronized void registration(NativeCleaner.Registration registration) {
+        this.registration = registration;
+    }
+
     synchronized boolean close() {
         if (closed) {
             return false;
@@ -47,6 +52,11 @@ public final class AllocationRecord
 
         closed = true;
         owner.release(this);
+
+        if (registration != null) {
+            NativeCleaner.unregister(registration);
+        }
+
         return true;
     }
 }

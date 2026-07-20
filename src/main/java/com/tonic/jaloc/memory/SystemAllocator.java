@@ -45,6 +45,8 @@ public final class SystemAllocator implements NativeAllocator, AllocationOwner
 
             AllocationState state = new AllocationState(record, alignedAddress);
 
+            NativeCleaner.register(state, record);
+
             successful = true;
             return new MemoryBlock(state);
         } finally {
