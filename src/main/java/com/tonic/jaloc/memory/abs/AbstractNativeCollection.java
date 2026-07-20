@@ -129,7 +129,7 @@ public abstract class AbstractNativeCollection<A extends AbstractNativeArray<W>,
 
     protected final void ensureOpen()
     {
-        if (!isOpen())
+        if (!open)
         {
             throw new IllegalStateException("Native collection has been closed");
         }

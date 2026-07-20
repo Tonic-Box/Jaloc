@@ -16,6 +16,8 @@ public abstract class AbstractNativeArray<W extends AbstractArrayWriter> impleme
     private final MemoryRegion memory;
     private final long baseAddress;
 
+    private boolean closed;
+
     protected AbstractNativeArray(long length, long byteSize, int alignment)
     {
         this(SystemAllocator.getInstance(), length, byteSize, alignment);
@@ -110,7 +112,7 @@ public abstract class AbstractNativeArray<W extends AbstractArrayWriter> impleme
 
     protected final void ensureOpen()
     {
-        if (!block.isOpen())
+        if (closed)
         {
             throw new IllegalStateException("Native memory has been released");
         }
@@ -139,6 +141,7 @@ public abstract class AbstractNativeArray<W extends AbstractArrayWriter> impleme
     @Override
     public final void close()
     {
+        closed = true;
         block.close();
     }
 }
