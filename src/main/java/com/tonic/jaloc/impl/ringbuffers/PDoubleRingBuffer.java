@@ -1,28 +1,28 @@
-package com.tonic.jaloc.impl.buffers;
+package com.tonic.jaloc.impl.ringbuffers;
 
-import com.tonic.jaloc.impl.arrays.PFloatArray;
-import com.tonic.jaloc.impl.arrays.PFloatWriter;
+import com.tonic.jaloc.impl.arrays.PDoubleArray;
+import com.tonic.jaloc.impl.arrays.PDoubleWriter;
 import com.tonic.jaloc.memory.SystemAllocator;
 import com.tonic.jaloc.memory.abs.AbstractPrimitiveRingBuffer;
 import com.tonic.jaloc.memory.iface.NativeAllocator;
 
 import java.util.NoSuchElementException;
 
-public final class PFloatRingBuffer extends AbstractPrimitiveRingBuffer<PFloatArray, PFloatWriter> {
-    public PFloatRingBuffer(long capacity) {
+public final class PDoubleRingBuffer extends AbstractPrimitiveRingBuffer<PDoubleArray, PDoubleWriter> {
+    public PDoubleRingBuffer(long capacity) {
         this(SystemAllocator.getInstance(), capacity);
     }
 
-    public PFloatRingBuffer(NativeAllocator allocator, long capacity) {
-        super(allocator, new PFloatArray(allocator, requireCapacity(capacity)));
+    public PDoubleRingBuffer(NativeAllocator allocator, long capacity) {
+        super(allocator, new PDoubleArray(allocator, requireCapacity(capacity)));
     }
 
     @Override
-    protected PFloatArray createArray(NativeAllocator allocator, long capacity) {
-        return new PFloatArray(allocator, capacity);
+    protected PDoubleArray createArray(NativeAllocator allocator, long capacity) {
+        return new PDoubleArray(allocator, capacity);
     }
 
-    public void enqueue(float value) {
+    public void enqueue(double value) {
         if (size() == capacity()) {
             long index = headIndex();
             elements().set(index, value);
@@ -35,27 +35,27 @@ public final class PFloatRingBuffer extends AbstractPrimitiveRingBuffer<PFloatAr
         commitTail();
     }
 
-    public void enqueueAll(float... values) {
+    public void enqueueAll(double... values) {
         if (values == null) {
             throw new NullPointerException("values");
         }
 
-        for (float value : values) {
+        for (double value : values) {
             enqueue(value);
         }
     }
 
-    public float dequeue() {
+    public double dequeue() {
         if (isEmpty()) {
             throw new NoSuchElementException("Ring buffer is empty");
         }
         long index = headIndex();
-        float value = elements().get(index);
+        double value = elements().get(index);
         advanceHead();
         return value;
     }
 
-    public float peek() {
+    public double peek() {
         if (isEmpty()) {
             throw new NoSuchElementException("Ring buffer is empty");
         }

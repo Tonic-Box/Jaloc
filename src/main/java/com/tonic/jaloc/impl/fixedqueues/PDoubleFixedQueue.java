@@ -1,19 +1,19 @@
-package com.tonic.jaloc.impl.buffers;
+package com.tonic.jaloc.impl.fixedqueues;
 
 import com.tonic.jaloc.impl.arrays.PDoubleArray;
 import com.tonic.jaloc.impl.arrays.PDoubleWriter;
 import com.tonic.jaloc.memory.SystemAllocator;
-import com.tonic.jaloc.memory.abs.AbstractPrimitiveRingBuffer;
+import com.tonic.jaloc.memory.abs.AbstractPrimitiveFixedQueue;
 import com.tonic.jaloc.memory.iface.NativeAllocator;
 
 import java.util.NoSuchElementException;
 
-public final class PDoubleRingBuffer extends AbstractPrimitiveRingBuffer<PDoubleArray, PDoubleWriter> {
-    public PDoubleRingBuffer(long capacity) {
+public final class PDoubleFixedQueue extends AbstractPrimitiveFixedQueue<PDoubleArray, PDoubleWriter> {
+    public PDoubleFixedQueue(long capacity) {
         this(SystemAllocator.getInstance(), capacity);
     }
 
-    public PDoubleRingBuffer(NativeAllocator allocator, long capacity) {
+    public PDoubleFixedQueue(NativeAllocator allocator, long capacity) {
         super(allocator, new PDoubleArray(allocator, requireCapacity(capacity)));
     }
 
@@ -24,10 +24,7 @@ public final class PDoubleRingBuffer extends AbstractPrimitiveRingBuffer<PDouble
 
     public void enqueue(double value) {
         if (size() == capacity()) {
-            long index = headIndex();
-            elements().set(index, value);
-            rotateHead();
-            return;
+            throw new IllegalStateException("Queue is full");
         }
 
         long index = reserveTail();
@@ -35,19 +32,40 @@ public final class PDoubleRingBuffer extends AbstractPrimitiveRingBuffer<PDouble
         commitTail();
     }
 
+    public boolean offer(double value) {
+        if (size() == capacity()) {
+            return false;
+        }
+
+        long index = reserveTail();
+        elements().set(index, value);
+        commitTail();
+        return true;
+    }
+
     public void enqueueAll(double... values) {
         if (values == null) {
             throw new NullPointerException("values");
         }
 
+        if (values.length == 0) {
+            return;
+        }
+
+        if (Math.addExact(size(), values.length) > capacity()) {
+            throw new IllegalStateException("Queue is full");
+        }
+
         for (double value : values) {
-            enqueue(value);
+            long index = reserveTail();
+            elements().set(index, value);
+            commitTail();
         }
     }
 
     public double dequeue() {
         if (isEmpty()) {
-            throw new NoSuchElementException("Ring buffer is empty");
+            throw new NoSuchElementException("Queue is empty");
         }
         long index = headIndex();
         double value = elements().get(index);
@@ -57,7 +75,7 @@ public final class PDoubleRingBuffer extends AbstractPrimitiveRingBuffer<PDouble
 
     public double peek() {
         if (isEmpty()) {
-            throw new NoSuchElementException("Ring buffer is empty");
+            throw new NoSuchElementException("Queue is empty");
         }
         return elements().get(headIndex());
     }

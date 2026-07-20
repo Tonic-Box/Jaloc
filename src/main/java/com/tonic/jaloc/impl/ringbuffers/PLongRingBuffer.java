@@ -1,28 +1,28 @@
-package com.tonic.jaloc.impl.buffers;
+package com.tonic.jaloc.impl.ringbuffers;
 
-import com.tonic.jaloc.impl.arrays.PByteArray;
-import com.tonic.jaloc.impl.arrays.PByteWriter;
+import com.tonic.jaloc.impl.arrays.PLongArray;
+import com.tonic.jaloc.impl.arrays.PLongWriter;
 import com.tonic.jaloc.memory.SystemAllocator;
 import com.tonic.jaloc.memory.abs.AbstractPrimitiveRingBuffer;
 import com.tonic.jaloc.memory.iface.NativeAllocator;
 
 import java.util.NoSuchElementException;
 
-public final class PByteRingBuffer extends AbstractPrimitiveRingBuffer<PByteArray, PByteWriter> {
-    public PByteRingBuffer(long capacity) {
+public final class PLongRingBuffer extends AbstractPrimitiveRingBuffer<PLongArray, PLongWriter> {
+    public PLongRingBuffer(long capacity) {
         this(SystemAllocator.getInstance(), capacity);
     }
 
-    public PByteRingBuffer(NativeAllocator allocator, long capacity) {
-        super(allocator, new PByteArray(allocator, requireCapacity(capacity)));
+    public PLongRingBuffer(NativeAllocator allocator, long capacity) {
+        super(allocator, new PLongArray(allocator, requireCapacity(capacity)));
     }
 
     @Override
-    protected PByteArray createArray(NativeAllocator allocator, long capacity) {
-        return new PByteArray(allocator, capacity);
+    protected PLongArray createArray(NativeAllocator allocator, long capacity) {
+        return new PLongArray(allocator, capacity);
     }
 
-    public void enqueue(byte value) {
+    public void enqueue(long value) {
         if (size() == capacity()) {
             long index = headIndex();
             elements().set(index, value);
@@ -35,27 +35,27 @@ public final class PByteRingBuffer extends AbstractPrimitiveRingBuffer<PByteArra
         commitTail();
     }
 
-    public void enqueueAll(byte... values) {
+    public void enqueueAll(long... values) {
         if (values == null) {
             throw new NullPointerException("values");
         }
 
-        for (byte value : values) {
+        for (long value : values) {
             enqueue(value);
         }
     }
 
-    public byte dequeue() {
+    public long dequeue() {
         if (isEmpty()) {
             throw new NoSuchElementException("Ring buffer is empty");
         }
         long index = headIndex();
-        byte value = elements().get(index);
+        long value = elements().get(index);
         advanceHead();
         return value;
     }
 
-    public byte peek() {
+    public long peek() {
         if (isEmpty()) {
             throw new NoSuchElementException("Ring buffer is empty");
         }

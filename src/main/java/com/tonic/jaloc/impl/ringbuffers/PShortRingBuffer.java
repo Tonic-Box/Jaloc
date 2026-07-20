@@ -1,28 +1,28 @@
-package com.tonic.jaloc.impl.buffers;
+package com.tonic.jaloc.impl.ringbuffers;
 
-import com.tonic.jaloc.impl.arrays.PCharArray;
-import com.tonic.jaloc.impl.arrays.PCharWriter;
+import com.tonic.jaloc.impl.arrays.PShortArray;
+import com.tonic.jaloc.impl.arrays.PShortWriter;
 import com.tonic.jaloc.memory.SystemAllocator;
 import com.tonic.jaloc.memory.abs.AbstractPrimitiveRingBuffer;
 import com.tonic.jaloc.memory.iface.NativeAllocator;
 
 import java.util.NoSuchElementException;
 
-public final class PCharRingBuffer extends AbstractPrimitiveRingBuffer<PCharArray, PCharWriter> {
-    public PCharRingBuffer(long capacity) {
+public final class PShortRingBuffer extends AbstractPrimitiveRingBuffer<PShortArray, PShortWriter> {
+    public PShortRingBuffer(long capacity) {
         this(SystemAllocator.getInstance(), capacity);
     }
 
-    public PCharRingBuffer(NativeAllocator allocator, long capacity) {
-        super(allocator, new PCharArray(allocator, requireCapacity(capacity)));
+    public PShortRingBuffer(NativeAllocator allocator, long capacity) {
+        super(allocator, new PShortArray(allocator, requireCapacity(capacity)));
     }
 
     @Override
-    protected PCharArray createArray(NativeAllocator allocator, long capacity) {
-        return new PCharArray(allocator, capacity);
+    protected PShortArray createArray(NativeAllocator allocator, long capacity) {
+        return new PShortArray(allocator, capacity);
     }
 
-    public void enqueue(char value) {
+    public void enqueue(short value) {
         if (size() == capacity()) {
             long index = headIndex();
             elements().set(index, value);
@@ -35,27 +35,27 @@ public final class PCharRingBuffer extends AbstractPrimitiveRingBuffer<PCharArra
         commitTail();
     }
 
-    public void enqueueAll(char... values) {
+    public void enqueueAll(short... values) {
         if (values == null) {
             throw new NullPointerException("values");
         }
 
-        for (char value : values) {
+        for (short value : values) {
             enqueue(value);
         }
     }
 
-    public char dequeue() {
+    public short dequeue() {
         if (isEmpty()) {
             throw new NoSuchElementException("Ring buffer is empty");
         }
         long index = headIndex();
-        char value = elements().get(index);
+        short value = elements().get(index);
         advanceHead();
         return value;
     }
 
-    public char peek() {
+    public short peek() {
         if (isEmpty()) {
             throw new NoSuchElementException("Ring buffer is empty");
         }

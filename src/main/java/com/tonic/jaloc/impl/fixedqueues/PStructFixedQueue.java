@@ -1,4 +1,4 @@
-package com.tonic.jaloc.impl.buffers;
+package com.tonic.jaloc.impl.fixedqueues;
 
 
 import com.tonic.jaloc.impl.arrays.struct.*;
@@ -11,17 +11,17 @@ import java.util.NoSuchElementException;
 import java.util.Objects;
 import java.util.function.Consumer;
 
-public final class PStructRingBuffer<T extends PStruct> extends AbstractNativeRing<PStructArray<T>, PStructWriter<T>>
+public final class PStructFixedQueue<T extends PStruct> extends AbstractNativeRing<PStructArray<T>, PStructWriter<T>>
 {
     private final StructLayout layout;
     private final StructViewFactory<T> viewFactory;
 
-    public PStructRingBuffer(StructLayout layout, StructViewFactory<T> viewFactory, long capacity)
+    public PStructFixedQueue(StructLayout layout, StructViewFactory<T> viewFactory, long capacity)
     {
         this(SystemAllocator.getInstance(), layout, viewFactory, capacity);
     }
 
-    public PStructRingBuffer(NativeAllocator allocator, StructLayout layout, StructViewFactory<T> viewFactory, long capacity)
+    public PStructFixedQueue(NativeAllocator allocator, StructLayout layout, StructViewFactory<T> viewFactory, long capacity)
     {
         super(Objects.requireNonNull(allocator, "allocator"), new PStructArray<>(allocator, viewFactory, layout, requireCapacity(capacity)));
 
@@ -44,12 +44,7 @@ public final class PStructRingBuffer<T extends PStruct> extends AbstractNativeRi
     {
         if (size() == capacity())
         {
-            long index = headIndex();
-
-            elements().clearStruct(index);
-            rotateHead();
-
-            return elements().at(index);
+            throw new IllegalStateException("Queue is full");
         }
 
         long index = reserveTail();
@@ -65,25 +60,48 @@ public final class PStructRingBuffer<T extends PStruct> extends AbstractNativeRi
 
         if (size() == capacity())
         {
-            long index = headIndex();
-
-            elements().clearStruct(index);
-            rotateHead();
-
-            T struct = elements().at(index);
-
-            try
-            {
-                initializer.accept(struct);
-                return struct;
-            }
-            catch (RuntimeException | Error e)
-            {
-                struct.clear();
-                throw e;
-            }
+            throw new IllegalStateException("Queue is full");
         }
 
+        return initialize(initializer);
+    }
+
+    public boolean offer(Consumer<? super T> initializer)
+    {
+        Objects.requireNonNull(initializer, "initializer");
+
+        if (size() == capacity())
+        {
+            return false;
+        }
+
+        initialize(initializer);
+        return true;
+    }
+
+    public T peek()
+    {
+        if (isEmpty())
+        {
+            throw new NoSuchElementException("Queue is empty");
+        }
+
+        return elements().at(headIndex());
+    }
+
+    public void dequeue()
+    {
+        if (isEmpty())
+        {
+            throw new NoSuchElementException("Queue is empty");
+        }
+
+        elements().clearStruct(headIndex());
+        advanceHead();
+    }
+
+    private T initialize(Consumer<? super T> initializer)
+    {
         long index = reserveTail();
         T struct = elements().at(index);
 
@@ -98,27 +116,6 @@ public final class PStructRingBuffer<T extends PStruct> extends AbstractNativeRi
             struct.clear();
             throw e;
         }
-    }
-
-    public T peek()
-    {
-        if (isEmpty())
-        {
-            throw new NoSuchElementException("Ring buffer is empty");
-        }
-
-        return elements().at(headIndex());
-    }
-
-    public void dequeue()
-    {
-        if (isEmpty())
-        {
-            throw new NoSuchElementException("Ring buffer is empty");
-        }
-
-        elements().clearStruct(headIndex());
-        advanceHead();
     }
 
     private static long requireCapacity(long capacity)

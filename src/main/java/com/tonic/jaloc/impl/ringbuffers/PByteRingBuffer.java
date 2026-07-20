@@ -1,28 +1,28 @@
-package com.tonic.jaloc.impl.buffers;
+package com.tonic.jaloc.impl.ringbuffers;
 
-import com.tonic.jaloc.impl.arrays.PIntArray;
-import com.tonic.jaloc.impl.arrays.PIntWriter;
+import com.tonic.jaloc.impl.arrays.PByteArray;
+import com.tonic.jaloc.impl.arrays.PByteWriter;
 import com.tonic.jaloc.memory.SystemAllocator;
 import com.tonic.jaloc.memory.abs.AbstractPrimitiveRingBuffer;
 import com.tonic.jaloc.memory.iface.NativeAllocator;
 
 import java.util.NoSuchElementException;
 
-public final class PIntRingBuffer extends AbstractPrimitiveRingBuffer<PIntArray, PIntWriter> {
-    public PIntRingBuffer(long capacity) {
+public final class PByteRingBuffer extends AbstractPrimitiveRingBuffer<PByteArray, PByteWriter> {
+    public PByteRingBuffer(long capacity) {
         this(SystemAllocator.getInstance(), capacity);
     }
 
-    public PIntRingBuffer(NativeAllocator allocator, long capacity) {
-        super(allocator, new PIntArray(allocator, requireCapacity(capacity)));
+    public PByteRingBuffer(NativeAllocator allocator, long capacity) {
+        super(allocator, new PByteArray(allocator, requireCapacity(capacity)));
     }
 
     @Override
-    protected PIntArray createArray(NativeAllocator allocator, long capacity) {
-        return new PIntArray(allocator, capacity);
+    protected PByteArray createArray(NativeAllocator allocator, long capacity) {
+        return new PByteArray(allocator, capacity);
     }
 
-    public void enqueue(int value) {
+    public void enqueue(byte value) {
         if (size() == capacity()) {
             long index = headIndex();
             elements().set(index, value);
@@ -35,27 +35,27 @@ public final class PIntRingBuffer extends AbstractPrimitiveRingBuffer<PIntArray,
         commitTail();
     }
 
-    public void enqueueAll(int... values) {
+    public void enqueueAll(byte... values) {
         if (values == null) {
             throw new NullPointerException("values");
         }
 
-        for (int value : values) {
+        for (byte value : values) {
             enqueue(value);
         }
     }
 
-    public int dequeue() {
+    public byte dequeue() {
         if (isEmpty()) {
             throw new NoSuchElementException("Ring buffer is empty");
         }
         long index = headIndex();
-        int value = elements().get(index);
+        byte value = elements().get(index);
         advanceHead();
         return value;
     }
 
-    public int peek() {
+    public byte peek() {
         if (isEmpty()) {
             throw new NoSuchElementException("Ring buffer is empty");
         }
