@@ -17,10 +17,14 @@ public final class SystemAllocator implements NativeAllocator, AllocationOwner
     @Override
     public MemoryBlock allocate(long bytes, int alignment) {
         if (bytes < 0) {
-            throw new IllegalArgumentException("bytes must be positive");
+            throw new IllegalArgumentException("bytes cannot be negative");
         }
 
         UnsafeMemory.validateAlignment(alignment);
+
+        if (bytes == 0) {
+            return new MemoryBlock(new AllocationState(this, 0, 0, 0, 0, alignment));
+        }
 
         long padding = alignment - 1L;
         long reservedBytes = Math.addExact(bytes, padding);
