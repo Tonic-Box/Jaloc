@@ -38,11 +38,11 @@ public final class PDoubleHeap extends AbstractPrimitiveHeap<PDoubleArray, PDoub
             throw new NoSuchElementException("Heap is empty");
         }
         PDoubleArray heap = elements();
-        double root = heap.get(0);
-        double last = heap.get(size() - 1);
+        double root = heap.getUnchecked(0);
+        double last = heap.getUnchecked(size() - 1);
         decrementSize();
         if (size() != 0) {
-            heap.set(0, last);
+            heap.setUnchecked(0, last);
             siftDown(0);
         }
         return root;
@@ -52,37 +52,37 @@ public final class PDoubleHeap extends AbstractPrimitiveHeap<PDoubleArray, PDoub
         if (isEmpty()) {
             throw new NoSuchElementException("Heap is empty");
         }
-        return elements().get(0);
+        return elements().getUnchecked(0);
     }
 
     private void siftUp(long index) {
         PDoubleArray heap = elements();
-        double value = heap.get(index);
+        double value = heap.getUnchecked(index);
         while (index > 0) {
             long parent = (index - 1) >>> 1;
-            double parentValue = heap.get(parent);
+            double parentValue = heap.getUnchecked(parent);
             if (Double.compare(parentValue, value) <= 0) {
                 break;
             }
-            heap.set(index, parentValue);
+            heap.setUnchecked(index, parentValue);
             index = parent;
         }
-        heap.set(index, value);
+        heap.setUnchecked(index, value);
     }
 
     private void siftDown(long index) {
         PDoubleArray heap = elements();
         long count = size();
-        double value = heap.get(index);
+        double value = heap.getUnchecked(index);
         while (true) {
             long child = index * 2 + 1;
             if (child >= count) {
                 break;
             }
-            double childValue = heap.get(child);
+            double childValue = heap.getUnchecked(child);
             long right = child + 1;
             if (right < count) {
-                double rightValue = heap.get(right);
+                double rightValue = heap.getUnchecked(right);
                 if (Double.compare(rightValue, childValue) < 0) {
                     child = right;
                     childValue = rightValue;
@@ -91,9 +91,9 @@ public final class PDoubleHeap extends AbstractPrimitiveHeap<PDoubleArray, PDoub
             if (Double.compare(value, childValue) <= 0) {
                 break;
             }
-            heap.set(index, childValue);
+            heap.setUnchecked(index, childValue);
             index = child;
         }
-        heap.set(index, value);
+        heap.setUnchecked(index, value);
     }
 }

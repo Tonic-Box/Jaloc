@@ -45,14 +45,14 @@ public final class PByteSet extends AbstractNativeCollection<PLongArray, PLongWr
         long index = value & 0xFFL;
         long word = index >>> 6;
         long mask = 1L << index;
-        long current = elements().get(word);
+        long current = elements().getUnchecked(word);
 
         if ((current & mask) != 0)
         {
             return false;
         }
 
-        elements().set(word, current | mask);
+        elements().setUnchecked(word, current | mask);
         size(size() + 1);
         return true;
     }
@@ -62,14 +62,14 @@ public final class PByteSet extends AbstractNativeCollection<PLongArray, PLongWr
         long index = value & 0xFFL;
         long word = index >>> 6;
         long mask = 1L << index;
-        long current = elements().get(word);
+        long current = elements().getUnchecked(word);
 
         if ((current & mask) == 0)
         {
             return false;
         }
 
-        elements().set(word, current & ~mask);
+        elements().setUnchecked(word, current & ~mask);
         size(size() - 1);
         return true;
     }
@@ -78,18 +78,19 @@ public final class PByteSet extends AbstractNativeCollection<PLongArray, PLongWr
     {
         long index = value & 0xFFL;
 
-        return (elements().get(index >>> 6) & (1L << index)) != 0;
+        return (elements().getUnchecked(index >>> 6) & (1L << index)) != 0;
     }
 
     public void forEach(IntConsumer consumer)
     {
         Objects.requireNonNull(consumer, "consumer");
 
-        long words = capacity();
+        PLongArray table = elements();
+        long words = table.length();
 
         for (long word = 0; word < words; word++)
         {
-            long current = elements().get(word);
+            long current = table.getUnchecked(word);
 
             while (current != 0)
             {

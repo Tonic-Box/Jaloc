@@ -38,7 +38,7 @@ public final class PBitSet extends AbstractNativeCollection<PLongArray, PLongWri
 
         for (long i = 0; i < words; i++)
         {
-            destination.set(i, source.get(i));
+            destination.setUnchecked(i, source.getUnchecked(i));
         }
     }
 
@@ -48,7 +48,7 @@ public final class PBitSet extends AbstractNativeCollection<PLongArray, PLongWri
 
         ensureWordCapacity(word + 1);
 
-        elements().set(word, elements().get(word) | (1L << bit));
+        elements().setUnchecked(word, elements().getUnchecked(word) | (1L << bit));
 
         if (word >= size())
         {
@@ -65,7 +65,7 @@ public final class PBitSet extends AbstractNativeCollection<PLongArray, PLongWri
             return;
         }
 
-        elements().set(word, elements().get(word) & ~(1L << bit));
+        elements().setUnchecked(word, elements().getUnchecked(word) & ~(1L << bit));
     }
 
     public void flip(long bit)
@@ -74,7 +74,7 @@ public final class PBitSet extends AbstractNativeCollection<PLongArray, PLongWri
 
         ensureWordCapacity(word + 1);
 
-        elements().set(word, elements().get(word) ^ (1L << bit));
+        elements().setUnchecked(word, elements().getUnchecked(word) ^ (1L << bit));
 
         if (word >= size())
         {
@@ -91,17 +91,18 @@ public final class PBitSet extends AbstractNativeCollection<PLongArray, PLongWri
             return false;
         }
 
-        return (elements().get(word) & (1L << bit)) != 0;
+        return (elements().getUnchecked(word) & (1L << bit)) != 0;
     }
 
     public long cardinality()
     {
         long words = size();
+        PLongArray table = elements();
         long count = 0;
 
         for (long i = 0; i < words; i++)
         {
-            count += Long.bitCount(elements().get(i));
+            count += Long.bitCount(table.getUnchecked(i));
         }
 
         return count;
@@ -109,9 +110,11 @@ public final class PBitSet extends AbstractNativeCollection<PLongArray, PLongWri
 
     public long length()
     {
+        PLongArray table = elements();
+
         for (long word = size() - 1; word >= 0; word--)
         {
-            long value = elements().get(word);
+            long value = table.getUnchecked(word);
 
             if (value != 0)
             {
@@ -132,7 +135,8 @@ public final class PBitSet extends AbstractNativeCollection<PLongArray, PLongWri
             return -1;
         }
 
-        long current = elements().get(word) & (-1L << fromBit);
+        PLongArray table = elements();
+        long current = table.getUnchecked(word) & (-1L << fromBit);
 
         while (true)
         {
@@ -148,7 +152,7 @@ public final class PBitSet extends AbstractNativeCollection<PLongArray, PLongWri
                 return -1;
             }
 
-            current = elements().get(word);
+            current = table.getUnchecked(word);
         }
     }
 
@@ -158,12 +162,14 @@ public final class PBitSet extends AbstractNativeCollection<PLongArray, PLongWri
 
         long words = size();
         long otherWords = other.size();
+        PLongArray table = elements();
+        PLongArray otherTable = other.elements();
 
         for (long i = 0; i < words; i++)
         {
-            long value = i < otherWords ? other.elements().get(i) : 0;
+            long value = i < otherWords ? otherTable.getUnchecked(i) : 0;
 
-            elements().set(i, elements().get(i) & value);
+            table.setUnchecked(i, table.getUnchecked(i) & value);
         }
     }
 
@@ -175,9 +181,12 @@ public final class PBitSet extends AbstractNativeCollection<PLongArray, PLongWri
 
         ensureWordCapacity(otherWords);
 
+        PLongArray table = elements();
+        PLongArray otherTable = other.elements();
+
         for (long i = 0; i < otherWords; i++)
         {
-            elements().set(i, elements().get(i) | other.elements().get(i));
+            table.setUnchecked(i, table.getUnchecked(i) | otherTable.getUnchecked(i));
         }
 
         if (otherWords > size())
@@ -194,9 +203,12 @@ public final class PBitSet extends AbstractNativeCollection<PLongArray, PLongWri
 
         ensureWordCapacity(otherWords);
 
+        PLongArray table = elements();
+        PLongArray otherTable = other.elements();
+
         for (long i = 0; i < otherWords; i++)
         {
-            elements().set(i, elements().get(i) ^ other.elements().get(i));
+            table.setUnchecked(i, table.getUnchecked(i) ^ otherTable.getUnchecked(i));
         }
 
         if (otherWords > size())

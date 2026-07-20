@@ -38,11 +38,11 @@ public final class PByteHeap extends AbstractPrimitiveHeap<PByteArray, PByteWrit
             throw new NoSuchElementException("Heap is empty");
         }
         PByteArray heap = elements();
-        byte root = heap.get(0);
-        byte last = heap.get(size() - 1);
+        byte root = heap.getUnchecked(0);
+        byte last = heap.getUnchecked(size() - 1);
         decrementSize();
         if (size() != 0) {
-            heap.set(0, last);
+            heap.setUnchecked(0, last);
             siftDown(0);
         }
         return root;
@@ -52,37 +52,37 @@ public final class PByteHeap extends AbstractPrimitiveHeap<PByteArray, PByteWrit
         if (isEmpty()) {
             throw new NoSuchElementException("Heap is empty");
         }
-        return elements().get(0);
+        return elements().getUnchecked(0);
     }
 
     private void siftUp(long index) {
         PByteArray heap = elements();
-        byte value = heap.get(index);
+        byte value = heap.getUnchecked(index);
         while (index > 0) {
             long parent = (index - 1) >>> 1;
-            byte parentValue = heap.get(parent);
+            byte parentValue = heap.getUnchecked(parent);
             if (parentValue <= value) {
                 break;
             }
-            heap.set(index, parentValue);
+            heap.setUnchecked(index, parentValue);
             index = parent;
         }
-        heap.set(index, value);
+        heap.setUnchecked(index, value);
     }
 
     private void siftDown(long index) {
         PByteArray heap = elements();
         long count = size();
-        byte value = heap.get(index);
+        byte value = heap.getUnchecked(index);
         while (true) {
             long child = index * 2 + 1;
             if (child >= count) {
                 break;
             }
-            byte childValue = heap.get(child);
+            byte childValue = heap.getUnchecked(child);
             long right = child + 1;
             if (right < count) {
-                byte rightValue = heap.get(right);
+                byte rightValue = heap.getUnchecked(right);
                 if (rightValue < childValue) {
                     child = right;
                     childValue = rightValue;
@@ -91,9 +91,9 @@ public final class PByteHeap extends AbstractPrimitiveHeap<PByteArray, PByteWrit
             if (value <= childValue) {
                 break;
             }
-            heap.set(index, childValue);
+            heap.setUnchecked(index, childValue);
             index = child;
         }
-        heap.set(index, value);
+        heap.setUnchecked(index, value);
     }
 }

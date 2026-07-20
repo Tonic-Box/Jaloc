@@ -42,7 +42,7 @@ public final class PIntSet extends AbstractNativeCollection<PIntArray, PIntWrite
 
         for (long i = 0; i < sourceLength; i++)
         {
-            int value = source.get(i);
+            int value = source.getUnchecked(i);
 
             if (value == 0)
             {
@@ -51,12 +51,12 @@ public final class PIntSet extends AbstractNativeCollection<PIntArray, PIntWrite
 
             long position = mix(value) & mask;
 
-            while (destination.get(position) != 0)
+            while (destination.getUnchecked(position) != 0)
             {
                 position = (position + 1) & mask;
             }
 
-            destination.set(position, value);
+            destination.setUnchecked(position, value);
         }
     }
 
@@ -76,12 +76,13 @@ public final class PIntSet extends AbstractNativeCollection<PIntArray, PIntWrite
             return true;
         }
 
-        long mask = capacity() - 1;
+        PIntArray table = elements();
+        long mask = table.length() - 1;
         long position = mix(value) & mask;
 
         while (true)
         {
-            int current = elements().get(position);
+            int current = table.getUnchecked(position);
 
             if (current == 0)
             {
@@ -100,16 +101,17 @@ public final class PIntSet extends AbstractNativeCollection<PIntArray, PIntWrite
         {
             replaceArray(capacity() << 1);
 
-            mask = capacity() - 1;
+            table = elements();
+            mask = table.length() - 1;
             position = mix(value) & mask;
 
-            while (elements().get(position) != 0)
+            while (table.getUnchecked(position) != 0)
             {
                 position = (position + 1) & mask;
             }
         }
 
-        elements().set(position, value);
+        table.setUnchecked(position, value);
         size(size() + 1);
         return true;
     }
@@ -130,12 +132,13 @@ public final class PIntSet extends AbstractNativeCollection<PIntArray, PIntWrite
             return true;
         }
 
-        long mask = capacity() - 1;
+        PIntArray table = elements();
+        long mask = table.length() - 1;
         long position = mix(value) & mask;
 
         while (true)
         {
-            int current = elements().get(position);
+            int current = table.getUnchecked(position);
 
             if (current == 0)
             {
@@ -144,7 +147,7 @@ public final class PIntSet extends AbstractNativeCollection<PIntArray, PIntWrite
 
             if (current == value)
             {
-                shiftKeys(position, mask);
+                shiftKeys(table, position, mask);
                 size(size() - 1);
                 return true;
             }
@@ -162,12 +165,13 @@ public final class PIntSet extends AbstractNativeCollection<PIntArray, PIntWrite
             return containsZero;
         }
 
-        long mask = capacity() - 1;
+        PIntArray table = elements();
+        long mask = table.length() - 1;
         long position = mix(value) & mask;
 
         while (true)
         {
-            int current = elements().get(position);
+            int current = table.getUnchecked(position);
 
             if (current == 0)
             {
@@ -193,11 +197,12 @@ public final class PIntSet extends AbstractNativeCollection<PIntArray, PIntWrite
             consumer.accept(0);
         }
 
-        long slots = capacity();
+        PIntArray table = elements();
+        long slots = table.length();
 
         for (long i = 0; i < slots; i++)
         {
-            int current = elements().get(i);
+            int current = table.getUnchecked(i);
 
             if (current != 0)
             {
@@ -215,7 +220,7 @@ public final class PIntSet extends AbstractNativeCollection<PIntArray, PIntWrite
         size(0);
     }
 
-    private void shiftKeys(long position, long mask)
+    private void shiftKeys(PIntArray table, long position, long mask)
     {
         while (true)
         {
@@ -227,11 +232,11 @@ public final class PIntSet extends AbstractNativeCollection<PIntArray, PIntWrite
 
             while (true)
             {
-                current = elements().get(position);
+                current = table.getUnchecked(position);
 
                 if (current == 0)
                 {
-                    elements().set(last, 0);
+                    table.setUnchecked(last, 0);
                     return;
                 }
 
@@ -245,7 +250,7 @@ public final class PIntSet extends AbstractNativeCollection<PIntArray, PIntWrite
                 position = (position + 1) & mask;
             }
 
-            elements().set(last, current);
+            table.setUnchecked(last, current);
         }
     }
 

@@ -38,11 +38,11 @@ public final class PFloatHeap extends AbstractPrimitiveHeap<PFloatArray, PFloatW
             throw new NoSuchElementException("Heap is empty");
         }
         PFloatArray heap = elements();
-        float root = heap.get(0);
-        float last = heap.get(size() - 1);
+        float root = heap.getUnchecked(0);
+        float last = heap.getUnchecked(size() - 1);
         decrementSize();
         if (size() != 0) {
-            heap.set(0, last);
+            heap.setUnchecked(0, last);
             siftDown(0);
         }
         return root;
@@ -52,37 +52,37 @@ public final class PFloatHeap extends AbstractPrimitiveHeap<PFloatArray, PFloatW
         if (isEmpty()) {
             throw new NoSuchElementException("Heap is empty");
         }
-        return elements().get(0);
+        return elements().getUnchecked(0);
     }
 
     private void siftUp(long index) {
         PFloatArray heap = elements();
-        float value = heap.get(index);
+        float value = heap.getUnchecked(index);
         while (index > 0) {
             long parent = (index - 1) >>> 1;
-            float parentValue = heap.get(parent);
+            float parentValue = heap.getUnchecked(parent);
             if (Float.compare(parentValue, value) <= 0) {
                 break;
             }
-            heap.set(index, parentValue);
+            heap.setUnchecked(index, parentValue);
             index = parent;
         }
-        heap.set(index, value);
+        heap.setUnchecked(index, value);
     }
 
     private void siftDown(long index) {
         PFloatArray heap = elements();
         long count = size();
-        float value = heap.get(index);
+        float value = heap.getUnchecked(index);
         while (true) {
             long child = index * 2 + 1;
             if (child >= count) {
                 break;
             }
-            float childValue = heap.get(child);
+            float childValue = heap.getUnchecked(child);
             long right = child + 1;
             if (right < count) {
-                float rightValue = heap.get(right);
+                float rightValue = heap.getUnchecked(right);
                 if (Float.compare(rightValue, childValue) < 0) {
                     child = right;
                     childValue = rightValue;
@@ -91,9 +91,9 @@ public final class PFloatHeap extends AbstractPrimitiveHeap<PFloatArray, PFloatW
             if (Float.compare(value, childValue) <= 0) {
                 break;
             }
-            heap.set(index, childValue);
+            heap.setUnchecked(index, childValue);
             index = child;
         }
-        heap.set(index, value);
+        heap.setUnchecked(index, value);
     }
 }

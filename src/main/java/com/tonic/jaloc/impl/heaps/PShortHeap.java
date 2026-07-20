@@ -38,11 +38,11 @@ public final class PShortHeap extends AbstractPrimitiveHeap<PShortArray, PShortW
             throw new NoSuchElementException("Heap is empty");
         }
         PShortArray heap = elements();
-        short root = heap.get(0);
-        short last = heap.get(size() - 1);
+        short root = heap.getUnchecked(0);
+        short last = heap.getUnchecked(size() - 1);
         decrementSize();
         if (size() != 0) {
-            heap.set(0, last);
+            heap.setUnchecked(0, last);
             siftDown(0);
         }
         return root;
@@ -52,37 +52,37 @@ public final class PShortHeap extends AbstractPrimitiveHeap<PShortArray, PShortW
         if (isEmpty()) {
             throw new NoSuchElementException("Heap is empty");
         }
-        return elements().get(0);
+        return elements().getUnchecked(0);
     }
 
     private void siftUp(long index) {
         PShortArray heap = elements();
-        short value = heap.get(index);
+        short value = heap.getUnchecked(index);
         while (index > 0) {
             long parent = (index - 1) >>> 1;
-            short parentValue = heap.get(parent);
+            short parentValue = heap.getUnchecked(parent);
             if (parentValue <= value) {
                 break;
             }
-            heap.set(index, parentValue);
+            heap.setUnchecked(index, parentValue);
             index = parent;
         }
-        heap.set(index, value);
+        heap.setUnchecked(index, value);
     }
 
     private void siftDown(long index) {
         PShortArray heap = elements();
         long count = size();
-        short value = heap.get(index);
+        short value = heap.getUnchecked(index);
         while (true) {
             long child = index * 2 + 1;
             if (child >= count) {
                 break;
             }
-            short childValue = heap.get(child);
+            short childValue = heap.getUnchecked(child);
             long right = child + 1;
             if (right < count) {
-                short rightValue = heap.get(right);
+                short rightValue = heap.getUnchecked(right);
                 if (rightValue < childValue) {
                     child = right;
                     childValue = rightValue;
@@ -91,9 +91,9 @@ public final class PShortHeap extends AbstractPrimitiveHeap<PShortArray, PShortW
             if (value <= childValue) {
                 break;
             }
-            heap.set(index, childValue);
+            heap.setUnchecked(index, childValue);
             index = child;
         }
-        heap.set(index, value);
+        heap.setUnchecked(index, value);
     }
 }

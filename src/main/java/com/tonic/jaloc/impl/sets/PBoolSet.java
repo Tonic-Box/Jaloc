@@ -40,14 +40,14 @@ public final class PBoolSet extends AbstractNativeCollection<PLongArray, PLongWr
     public boolean add(boolean value)
     {
         long mask = 1L << (value ? 1 : 0);
-        long current = elements().get(0);
+        long current = elements().getUnchecked(0);
 
         if ((current & mask) != 0)
         {
             return false;
         }
 
-        elements().set(0, current | mask);
+        elements().setUnchecked(0, current | mask);
         size(size() + 1);
         return true;
     }
@@ -55,21 +55,21 @@ public final class PBoolSet extends AbstractNativeCollection<PLongArray, PLongWr
     public boolean remove(boolean value)
     {
         long mask = 1L << (value ? 1 : 0);
-        long current = elements().get(0);
+        long current = elements().getUnchecked(0);
 
         if ((current & mask) == 0)
         {
             return false;
         }
 
-        elements().set(0, current & ~mask);
+        elements().setUnchecked(0, current & ~mask);
         size(size() - 1);
         return true;
     }
 
     public boolean contains(boolean value)
     {
-        return (elements().get(0) & (1L << (value ? 1 : 0))) != 0;
+        return (elements().getUnchecked(0) & (1L << (value ? 1 : 0))) != 0;
     }
 
     public void clear()

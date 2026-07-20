@@ -43,13 +43,13 @@ public final class PBoolHeap extends AbstractPrimitiveHeap<PBoolArray, PBoolWrit
             throw new NoSuchElementException("Heap is empty");
         }
         PBoolArray heap = elements();
-        boolean root = heap.get(0);
+        boolean root = heap.getUnchecked(0);
         long lastIndex = size() - 1;
-        boolean last = heap.get(lastIndex);
-        heap.set(lastIndex, false);
+        boolean last = heap.getUnchecked(lastIndex);
+        heap.setUnchecked(lastIndex, false);
         decrementSize();
         if (size() != 0) {
-            heap.set(0, last);
+            heap.setUnchecked(0, last);
             siftDown(0);
         }
         return root;
@@ -60,39 +60,39 @@ public final class PBoolHeap extends AbstractPrimitiveHeap<PBoolArray, PBoolWrit
         if (isEmpty()) {
             throw new NoSuchElementException("Heap is empty");
         }
-        return elements().get(0);
+        return elements().getUnchecked(0);
     }
 
     private void siftUp(long index)
     {
         PBoolArray heap = elements();
-        boolean value = heap.get(index);
+        boolean value = heap.getUnchecked(index);
         while (index > 0) {
             long parent = (index - 1) >>> 1;
-            boolean parentValue = heap.get(parent);
+            boolean parentValue = heap.getUnchecked(parent);
             if (Boolean.compare(parentValue, value) <= 0) {
                 break;
             }
-            heap.set(index, parentValue);
+            heap.setUnchecked(index, parentValue);
             index = parent;
         }
-        heap.set(index, value);
+        heap.setUnchecked(index, value);
     }
 
     private void siftDown(long index)
     {
         PBoolArray heap = elements();
         long count = size();
-        boolean value = heap.get(index);
+        boolean value = heap.getUnchecked(index);
         while (true) {
             long child = index * 2 + 1;
             if (child >= count) {
                 break;
             }
-            boolean childValue = heap.get(child);
+            boolean childValue = heap.getUnchecked(child);
             long right = child + 1;
             if (right < count) {
-                boolean rightValue = heap.get(right);
+                boolean rightValue = heap.getUnchecked(right);
                 if (Boolean.compare(rightValue, childValue) < 0) {
                     child = right;
                     childValue = rightValue;
@@ -101,9 +101,9 @@ public final class PBoolHeap extends AbstractPrimitiveHeap<PBoolArray, PBoolWrit
             if (Boolean.compare(value, childValue) <= 0) {
                 break;
             }
-            heap.set(index, childValue);
+            heap.setUnchecked(index, childValue);
             index = child;
         }
-        heap.set(index, value);
+        heap.setUnchecked(index, value);
     }
 }

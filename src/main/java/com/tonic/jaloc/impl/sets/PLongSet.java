@@ -42,7 +42,7 @@ public final class PLongSet extends AbstractNativeCollection<PLongArray, PLongWr
 
         for (long i = 0; i < sourceLength; i++)
         {
-            long value = source.get(i);
+            long value = source.getUnchecked(i);
 
             if (value == 0)
             {
@@ -51,12 +51,12 @@ public final class PLongSet extends AbstractNativeCollection<PLongArray, PLongWr
 
             long position = mix(value) & mask;
 
-            while (destination.get(position) != 0)
+            while (destination.getUnchecked(position) != 0)
             {
                 position = (position + 1) & mask;
             }
 
-            destination.set(position, value);
+            destination.setUnchecked(position, value);
         }
     }
 
@@ -76,12 +76,13 @@ public final class PLongSet extends AbstractNativeCollection<PLongArray, PLongWr
             return true;
         }
 
-        long mask = capacity() - 1;
+        PLongArray table = elements();
+        long mask = table.length() - 1;
         long position = mix(value) & mask;
 
         while (true)
         {
-            long current = elements().get(position);
+            long current = table.getUnchecked(position);
 
             if (current == 0)
             {
@@ -100,16 +101,17 @@ public final class PLongSet extends AbstractNativeCollection<PLongArray, PLongWr
         {
             replaceArray(capacity() << 1);
 
-            mask = capacity() - 1;
+            table = elements();
+            mask = table.length() - 1;
             position = mix(value) & mask;
 
-            while (elements().get(position) != 0)
+            while (table.getUnchecked(position) != 0)
             {
                 position = (position + 1) & mask;
             }
         }
 
-        elements().set(position, value);
+        table.setUnchecked(position, value);
         size(size() + 1);
         return true;
     }
@@ -130,12 +132,13 @@ public final class PLongSet extends AbstractNativeCollection<PLongArray, PLongWr
             return true;
         }
 
-        long mask = capacity() - 1;
+        PLongArray table = elements();
+        long mask = table.length() - 1;
         long position = mix(value) & mask;
 
         while (true)
         {
-            long current = elements().get(position);
+            long current = table.getUnchecked(position);
 
             if (current == 0)
             {
@@ -144,7 +147,7 @@ public final class PLongSet extends AbstractNativeCollection<PLongArray, PLongWr
 
             if (current == value)
             {
-                shiftKeys(position, mask);
+                shiftKeys(table, position, mask);
                 size(size() - 1);
                 return true;
             }
@@ -162,12 +165,13 @@ public final class PLongSet extends AbstractNativeCollection<PLongArray, PLongWr
             return containsZero;
         }
 
-        long mask = capacity() - 1;
+        PLongArray table = elements();
+        long mask = table.length() - 1;
         long position = mix(value) & mask;
 
         while (true)
         {
-            long current = elements().get(position);
+            long current = table.getUnchecked(position);
 
             if (current == 0)
             {
@@ -193,11 +197,12 @@ public final class PLongSet extends AbstractNativeCollection<PLongArray, PLongWr
             consumer.accept(0);
         }
 
-        long slots = capacity();
+        PLongArray table = elements();
+        long slots = table.length();
 
         for (long i = 0; i < slots; i++)
         {
-            long current = elements().get(i);
+            long current = table.getUnchecked(i);
 
             if (current != 0)
             {
@@ -215,7 +220,7 @@ public final class PLongSet extends AbstractNativeCollection<PLongArray, PLongWr
         size(0);
     }
 
-    private void shiftKeys(long position, long mask)
+    private void shiftKeys(PLongArray table, long position, long mask)
     {
         while (true)
         {
@@ -227,11 +232,11 @@ public final class PLongSet extends AbstractNativeCollection<PLongArray, PLongWr
 
             while (true)
             {
-                current = elements().get(position);
+                current = table.getUnchecked(position);
 
                 if (current == 0)
                 {
-                    elements().set(last, 0);
+                    table.setUnchecked(last, 0);
                     return;
                 }
 
@@ -245,7 +250,7 @@ public final class PLongSet extends AbstractNativeCollection<PLongArray, PLongWr
                 position = (position + 1) & mask;
             }
 
-            elements().set(last, current);
+            table.setUnchecked(last, current);
         }
     }
 
