@@ -305,3 +305,60 @@ table.striped > tbody > tr:nth-child(even) {
 table.striped > tbody > tr:nth-child(odd) {
   background-color: var(--panel);
 }
+
+.siteBar {
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 1000;
+  height: 37px;
+  box-sizing: border-box;
+  background: #0d111a;
+  border-bottom: 1px solid var(--panel-border);
+  padding: 9px 18px;
+  font-family: "Cascadia Code", "JetBrains Mono", "Fira Code", Consolas, "SF Mono", monospace;
+  font-size: 13px;
+  line-height: 19px;
+}
+
+.withSiteBar .siteBar {
+  display: block;
+}
+
+.withSiteBar .fixedNav {
+  top: 37px;
+}
+
+.withSiteBar .navPadding {
+  margin-top: 37px;
+}
+
+.withSiteBar .mainContainer {
+  top: 37px;
+  height: calc(100% - 37px);
+}
+
+.withSiteBar a[name]:before, .withSiteBar a[name]:target,
+.withSiteBar a[id]:before, .withSiteBar a[id]:target {
+  padding-top: 166px;
+  margin-top: -166px;
+}
+
+.siteBarPrompt {
+  color: var(--green);
+  margin-right: 1.5em;
+}
+
+.siteBar a.siteBarLink {
+  color: var(--purple);
+  margin-right: 1.5em;
+  text-decoration: none;
+}
+
+.siteBar a.siteBarLink:hover {
+  color: var(--cyan);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
