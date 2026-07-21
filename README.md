@@ -1,8 +1,11 @@
 # Jaloc
-A primitive collections library for Java
+A true primitive collocations library for Java 8+ backed by manual native memory management.
 
 ### Requirements
 - Java 8+
+
+### Documentation
+- [JavaDocs](https://jaloc.tonicbox.dev)
 
 ### Structure
 There are currently the following collection family implementations for all Java primitives as well as for user defined structs.
@@ -17,9 +20,6 @@ There are currently the following collection family implementations for all Java
 - **Ring** Buffer implementations can be found in [.../impl/ringbuffers/](./src/main/java/com/tonic/jaloc/impl/ringbuffers)
 - **Set** implementations can be found in [.../impl/sets/](./src/main/java/com/tonic/jaloc/impl/sets)
 - **Stack** implementations can be found in [.../impl/stacks/](./src/main/java/com/tonic/jaloc/impl/stacks)
-
-### Examples
-Idk, will get to it soon, look at [Main.java](./src/main/java/com/tonic/jaloc/demo/Main.java) for an example I guess for now. The example there showcases how to work with `structs`.
 
 ### Notes of Interest
 This library facilitates true native collections though the use of `sun.misc.Unsafe`. 
