@@ -1,0 +1,17 @@
+com.tonic.jaloc.impl.array2ds
+com.tonic.jaloc.impl.arrays
+com.tonic.jaloc.impl.arrays.struct
+com.tonic.jaloc.impl.dequeues
+com.tonic.jaloc.impl.fixedqueues
+com.tonic.jaloc.impl.heaps
+com.tonic.jaloc.impl.lists
+com.tonic.jaloc.impl.maps
+com.tonic.jaloc.impl.queues
+com.tonic.jaloc.impl.ringbuffers
+com.tonic.jaloc.impl.sets
+com.tonic.jaloc.impl.stacks
+com.tonic.jaloc.memory
+com.tonic.jaloc.memory.abs
+com.tonic.jaloc.memory.data
+com.tonic.jaloc.memory.data.struct
+com.tonic.jaloc.memory.iface
