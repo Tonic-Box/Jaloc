@@ -115,7 +115,7 @@ public final class PByteList extends AbstractPrimitiveList<PByteArray, PByteWrit
     public byte get(long index)
     {
         checkElementIndex(index);
-        return elementsUnchecked().getUnchecked(index);
+        return UnsafeMemory.getByte(elementsBase() + index);
     }
 
     /**
@@ -130,8 +130,11 @@ public final class PByteList extends AbstractPrimitiveList<PByteArray, PByteWrit
     public byte set(long index, byte value)
     {
         checkElementIndex(index);
-        byte previous = elementsUnchecked().getUnchecked(index);
-        elementsUnchecked().setUnchecked(index, value);
+
+        long address = elementsBase() + index;
+        byte previous = UnsafeMemory.getByte(address);
+
+        UnsafeMemory.putByte(address, value);
         return previous;
     }
 

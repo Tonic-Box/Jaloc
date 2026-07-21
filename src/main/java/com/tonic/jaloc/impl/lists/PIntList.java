@@ -114,7 +114,7 @@ public final class PIntList extends AbstractPrimitiveList<PIntArray, PIntWriter>
     public int get(long index)
     {
         checkElementIndex(index);
-        return elementsUnchecked().getUnchecked(index);
+        return UnsafeMemory.getInt(elementsBase() + (index << 2));
     }
 
     /**
@@ -129,8 +129,11 @@ public final class PIntList extends AbstractPrimitiveList<PIntArray, PIntWriter>
     public int set(long index, int value)
     {
         checkElementIndex(index);
-        int previous = elementsUnchecked().getUnchecked(index);
-        elementsUnchecked().setUnchecked(index, value);
+
+        long address = elementsBase() + (index << 2);
+        int previous = UnsafeMemory.getInt(address);
+
+        UnsafeMemory.putInt(address, value);
         return previous;
     }
 

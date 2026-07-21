@@ -115,7 +115,7 @@ public final class PCharList extends AbstractPrimitiveList<PCharArray, PCharWrit
     public char get(long index)
     {
         checkElementIndex(index);
-        return elementsUnchecked().getUnchecked(index);
+        return UnsafeMemory.getChar(elementsBase() + (index << 1));
     }
 
     /**
@@ -130,8 +130,11 @@ public final class PCharList extends AbstractPrimitiveList<PCharArray, PCharWrit
     public char set(long index, char value)
     {
         checkElementIndex(index);
-        char previous = elementsUnchecked().getUnchecked(index);
-        elementsUnchecked().setUnchecked(index, value);
+
+        long address = elementsBase() + (index << 1);
+        char previous = UnsafeMemory.getChar(address);
+
+        UnsafeMemory.putChar(address, value);
         return previous;
     }
 

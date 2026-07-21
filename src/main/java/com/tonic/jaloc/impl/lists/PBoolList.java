@@ -94,7 +94,7 @@ public final class PBoolList extends AbstractPrimitiveList<PBoolArray, PBoolWrit
     public boolean get(long index)
     {
         checkElementIndex(index);
-        return elementsUnchecked().getUnchecked(index);
+        return (UnsafeMemory.getByte(elementsBase() + (index >>> 3)) & (1 << (int) (index & 7L))) != 0;
     }
 
     /**
@@ -109,9 +109,13 @@ public final class PBoolList extends AbstractPrimitiveList<PBoolArray, PBoolWrit
     public boolean set(long index, boolean value)
     {
         checkElementIndex(index);
-        boolean previous = elementsUnchecked().getUnchecked(index);
-        elementsUnchecked().setUnchecked(index, value);
-        return previous;
+
+        long address = elementsBase() + (index >>> 3);
+        int mask = 1 << (int) (index & 7L);
+        byte current = UnsafeMemory.getByte(address);
+
+        UnsafeMemory.putByte(address, (byte) (value ? current | mask : current & ~mask));
+        return (current & mask) != 0;
     }
 
     /**

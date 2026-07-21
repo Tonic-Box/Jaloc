@@ -115,7 +115,7 @@ public final class PShortList extends AbstractPrimitiveList<PShortArray, PShortW
     public short get(long index)
     {
         checkElementIndex(index);
-        return elementsUnchecked().getUnchecked(index);
+        return UnsafeMemory.getShort(elementsBase() + (index << 1));
     }
 
     /**
@@ -130,8 +130,11 @@ public final class PShortList extends AbstractPrimitiveList<PShortArray, PShortW
     public short set(long index, short value)
     {
         checkElementIndex(index);
-        short previous = elementsUnchecked().getUnchecked(index);
-        elementsUnchecked().setUnchecked(index, value);
+
+        long address = elementsBase() + (index << 1);
+        short previous = UnsafeMemory.getShort(address);
+
+        UnsafeMemory.putShort(address, value);
         return previous;
     }
 

@@ -115,7 +115,7 @@ public final class PDoubleList extends AbstractPrimitiveList<PDoubleArray, PDoub
     public double get(long index)
     {
         checkElementIndex(index);
-        return elementsUnchecked().getUnchecked(index);
+        return UnsafeMemory.getDouble(elementsBase() + (index << 3));
     }
 
     /**
@@ -130,8 +130,11 @@ public final class PDoubleList extends AbstractPrimitiveList<PDoubleArray, PDoub
     public double set(long index, double value)
     {
         checkElementIndex(index);
-        double previous = elementsUnchecked().getUnchecked(index);
-        elementsUnchecked().setUnchecked(index, value);
+
+        long address = elementsBase() + (index << 3);
+        double previous = UnsafeMemory.getDouble(address);
+
+        UnsafeMemory.putDouble(address, value);
         return previous;
     }
 

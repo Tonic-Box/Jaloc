@@ -115,7 +115,7 @@ public final class PFloatList extends AbstractPrimitiveList<PFloatArray, PFloatW
     public float get(long index)
     {
         checkElementIndex(index);
-        return elementsUnchecked().getUnchecked(index);
+        return UnsafeMemory.getFloat(elementsBase() + (index << 2));
     }
 
     /**
@@ -130,8 +130,11 @@ public final class PFloatList extends AbstractPrimitiveList<PFloatArray, PFloatW
     public float set(long index, float value)
     {
         checkElementIndex(index);
-        float previous = elementsUnchecked().getUnchecked(index);
-        elementsUnchecked().setUnchecked(index, value);
+
+        long address = elementsBase() + (index << 2);
+        float previous = UnsafeMemory.getFloat(address);
+
+        UnsafeMemory.putFloat(address, value);
         return previous;
     }
 

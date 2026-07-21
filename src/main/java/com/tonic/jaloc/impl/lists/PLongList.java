@@ -115,7 +115,7 @@ public final class PLongList extends AbstractPrimitiveList<PLongArray, PLongWrit
     public long get(long index)
     {
         checkElementIndex(index);
-        return elementsUnchecked().getUnchecked(index);
+        return UnsafeMemory.getLong(elementsBase() + (index << 3));
     }
 
     /**
@@ -130,8 +130,11 @@ public final class PLongList extends AbstractPrimitiveList<PLongArray, PLongWrit
     public long set(long index, long value)
     {
         checkElementIndex(index);
-        long previous = elementsUnchecked().getUnchecked(index);
-        elementsUnchecked().setUnchecked(index, value);
+
+        long address = elementsBase() + (index << 3);
+        long previous = UnsafeMemory.getLong(address);
+
+        UnsafeMemory.putLong(address, value);
         return previous;
     }
 
