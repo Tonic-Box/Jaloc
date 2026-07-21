@@ -98,7 +98,7 @@ public final class PByteHeap extends AbstractPrimitiveHeap<PByteArray, PByteWrit
         PByteArray heap = elements();
         byte value = heap.getUnchecked(index);
         while (index > 0) {
-            long parent = (index - 1) >>> 1;
+            long parent = (index - 1) >>> 2;
             byte parentValue = heap.getUnchecked(parent);
             if (parentValue <= value) {
                 break;
@@ -114,17 +114,17 @@ public final class PByteHeap extends AbstractPrimitiveHeap<PByteArray, PByteWrit
         long count = sizeUnchecked();
         byte value = heap.getUnchecked(index);
         while (true) {
-            long child = index * 2 + 1;
+            long child = (index << 2) + 1;
             if (child >= count) {
                 break;
             }
             byte childValue = heap.getUnchecked(child);
-            long right = child + 1;
-            if (right < count) {
-                byte rightValue = heap.getUnchecked(right);
-                if (rightValue < childValue) {
-                    child = right;
-                    childValue = rightValue;
+            long limit = Math.min(child + 4, count);
+            for (long next = child + 1; next < limit; next++) {
+                byte nextValue = heap.getUnchecked(next);
+                if (nextValue < childValue) {
+                    child = next;
+                    childValue = nextValue;
                 }
             }
             if (value <= childValue) {

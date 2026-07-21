@@ -98,7 +98,7 @@ public final class PLongHeap extends AbstractPrimitiveHeap<PLongArray, PLongWrit
         PLongArray heap = elements();
         long value = heap.getUnchecked(index);
         while (index > 0) {
-            long parent = (index - 1) >>> 1;
+            long parent = (index - 1) >>> 2;
             long parentValue = heap.getUnchecked(parent);
             if (parentValue <= value) {
                 break;
@@ -114,17 +114,17 @@ public final class PLongHeap extends AbstractPrimitiveHeap<PLongArray, PLongWrit
         long count = sizeUnchecked();
         long value = heap.getUnchecked(index);
         while (true) {
-            long child = index * 2 + 1;
+            long child = (index << 2) + 1;
             if (child >= count) {
                 break;
             }
             long childValue = heap.getUnchecked(child);
-            long right = child + 1;
-            if (right < count) {
-                long rightValue = heap.getUnchecked(right);
-                if (rightValue < childValue) {
-                    child = right;
-                    childValue = rightValue;
+            long limit = Math.min(child + 4, count);
+            for (long next = child + 1; next < limit; next++) {
+                long nextValue = heap.getUnchecked(next);
+                if (nextValue < childValue) {
+                    child = next;
+                    childValue = nextValue;
                 }
             }
             if (value <= childValue) {

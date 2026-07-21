@@ -98,7 +98,7 @@ public final class PDoubleHeap extends AbstractPrimitiveHeap<PDoubleArray, PDoub
         PDoubleArray heap = elements();
         double value = heap.getUnchecked(index);
         while (index > 0) {
-            long parent = (index - 1) >>> 1;
+            long parent = (index - 1) >>> 2;
             double parentValue = heap.getUnchecked(parent);
             if (Double.compare(parentValue, value) <= 0) {
                 break;
@@ -114,17 +114,17 @@ public final class PDoubleHeap extends AbstractPrimitiveHeap<PDoubleArray, PDoub
         long count = sizeUnchecked();
         double value = heap.getUnchecked(index);
         while (true) {
-            long child = index * 2 + 1;
+            long child = (index << 2) + 1;
             if (child >= count) {
                 break;
             }
             double childValue = heap.getUnchecked(child);
-            long right = child + 1;
-            if (right < count) {
-                double rightValue = heap.getUnchecked(right);
-                if (Double.compare(rightValue, childValue) < 0) {
-                    child = right;
-                    childValue = rightValue;
+            long limit = Math.min(child + 4, count);
+            for (long next = child + 1; next < limit; next++) {
+                double nextValue = heap.getUnchecked(next);
+                if (Double.compare(nextValue, childValue) < 0) {
+                    child = next;
+                    childValue = nextValue;
                 }
             }
             if (Double.compare(value, childValue) <= 0) {

@@ -98,7 +98,7 @@ public final class PFloatHeap extends AbstractPrimitiveHeap<PFloatArray, PFloatW
         PFloatArray heap = elements();
         float value = heap.getUnchecked(index);
         while (index > 0) {
-            long parent = (index - 1) >>> 1;
+            long parent = (index - 1) >>> 2;
             float parentValue = heap.getUnchecked(parent);
             if (Float.compare(parentValue, value) <= 0) {
                 break;
@@ -114,17 +114,17 @@ public final class PFloatHeap extends AbstractPrimitiveHeap<PFloatArray, PFloatW
         long count = sizeUnchecked();
         float value = heap.getUnchecked(index);
         while (true) {
-            long child = index * 2 + 1;
+            long child = (index << 2) + 1;
             if (child >= count) {
                 break;
             }
             float childValue = heap.getUnchecked(child);
-            long right = child + 1;
-            if (right < count) {
-                float rightValue = heap.getUnchecked(right);
-                if (Float.compare(rightValue, childValue) < 0) {
-                    child = right;
-                    childValue = rightValue;
+            long limit = Math.min(child + 4, count);
+            for (long next = child + 1; next < limit; next++) {
+                float nextValue = heap.getUnchecked(next);
+                if (Float.compare(nextValue, childValue) < 0) {
+                    child = next;
+                    childValue = nextValue;
                 }
             }
             if (Float.compare(value, childValue) <= 0) {
