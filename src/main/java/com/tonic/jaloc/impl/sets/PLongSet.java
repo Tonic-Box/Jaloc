@@ -5,6 +5,7 @@ import com.tonic.jaloc.impl.arrays.PLongWriter;
 import com.tonic.jaloc.memory.SystemAllocator;
 import com.tonic.jaloc.memory.abs.AbstractNativeCollection;
 import com.tonic.jaloc.memory.iface.NativeAllocator;
+import com.tonic.jaloc.memory.internal.UnsafeMemory;
 
 import java.util.Objects;
 import java.util.function.LongConsumer;
@@ -15,6 +16,9 @@ import java.util.function.LongConsumer;
 public final class PLongSet extends AbstractNativeCollection<PLongArray, PLongWriter>
 {
     private boolean containsZero;
+    private long tableBase;
+    private long tableMask;
+    private long growLimit;
 
     /**
      * Creates an empty set on the system allocator.
@@ -45,6 +49,10 @@ public final class PLongSet extends AbstractNativeCollection<PLongArray, PLongWr
     public PLongSet(NativeAllocator allocator, long expectedElements)
     {
         super(allocator, new PLongArray(allocator, tableSize(expectedElements)));
+
+        this.tableBase = elementsBaseAddress();
+        this.tableMask = elementsUnchecked().length() - 1;
+        this.growLimit = loadLimit(tableMask + 1);
     }
 
     @Override
@@ -102,13 +110,13 @@ public final class PLongSet extends AbstractNativeCollection<PLongArray, PLongWr
             return true;
         }
 
-        PLongArray table = elements();
-        long mask = table.length() - 1;
+        long base = tableBase;
+        long mask = tableMask;
         long position = mix(value) & mask;
 
         while (true)
         {
-            long current = table.getUnchecked(position);
+            long current = UnsafeMemory.getLong(base + (position << 3));
 
             if (current == 0)
             {
@@ -123,21 +131,25 @@ public final class PLongSet extends AbstractNativeCollection<PLongArray, PLongWr
             position = (position + 1) & mask;
         }
 
-        if (occupancy() + 1 > loadLimit(mask + 1))
+        if (occupancy() + 1 > growLimit)
         {
             replaceArray((mask + 1) << 1);
 
-            table = elements();
-            mask = table.length() - 1;
+            tableBase = elementsBaseAddress();
+            tableMask = elementsUnchecked().length() - 1;
+            growLimit = loadLimit(tableMask + 1);
+
+            base = tableBase;
+            mask = tableMask;
             position = mix(value) & mask;
 
-            while (table.getUnchecked(position) != 0)
+            while (UnsafeMemory.getLong(base + (position << 3)) != 0)
             {
                 position = (position + 1) & mask;
             }
         }
 
-        table.setUnchecked(position, value);
+        UnsafeMemory.putLong(base + (position << 3), value);
         size(sizeUnchecked() + 1);
         return true;
     }
@@ -165,13 +177,13 @@ public final class PLongSet extends AbstractNativeCollection<PLongArray, PLongWr
             return true;
         }
 
-        PLongArray table = elements();
-        long mask = table.length() - 1;
+        long base = tableBase;
+        long mask = tableMask;
         long position = mix(value) & mask;
 
         while (true)
         {
-            long current = table.getUnchecked(position);
+            long current = UnsafeMemory.getLong(base + (position << 3));
 
             if (current == 0)
             {
@@ -180,7 +192,7 @@ public final class PLongSet extends AbstractNativeCollection<PLongArray, PLongWr
 
             if (current == value)
             {
-                shiftKeys(table, position, mask);
+                shiftKeys(position);
                 size(sizeUnchecked() - 1);
                 return true;
             }
@@ -205,13 +217,13 @@ public final class PLongSet extends AbstractNativeCollection<PLongArray, PLongWr
             return containsZero;
         }
 
-        PLongArray table = elements();
-        long mask = table.length() - 1;
+        long base = tableBase;
+        long mask = tableMask;
         long position = mix(value) & mask;
 
         while (true)
         {
-            long current = table.getUnchecked(position);
+            long current = UnsafeMemory.getLong(base + (position << 3));
 
             if (current == 0)
             {
@@ -244,12 +256,12 @@ public final class PLongSet extends AbstractNativeCollection<PLongArray, PLongWr
             consumer.accept(0);
         }
 
-        PLongArray table = elements();
-        long slots = table.length();
+        long base = tableBase;
+        long slots = tableMask + 1;
 
         for (long i = 0; i < slots; i++)
         {
-            long current = table.getUnchecked(i);
+            long current = UnsafeMemory.getLong(base + (i << 3));
 
             if (current != 0)
             {
@@ -272,8 +284,11 @@ public final class PLongSet extends AbstractNativeCollection<PLongArray, PLongWr
         size(0);
     }
 
-    private void shiftKeys(PLongArray table, long position, long mask)
+    private void shiftKeys(long position)
     {
+        long base = tableBase;
+        long mask = tableMask;
+
         while (true)
         {
             long last = position;
@@ -284,11 +299,11 @@ public final class PLongSet extends AbstractNativeCollection<PLongArray, PLongWr
 
             while (true)
             {
-                current = table.getUnchecked(position);
+                current = UnsafeMemory.getLong(base + (position << 3));
 
                 if (current == 0)
                 {
-                    table.setUnchecked(last, 0);
+                    UnsafeMemory.putLong(base + (last << 3), 0);
                     return;
                 }
 
@@ -302,7 +317,7 @@ public final class PLongSet extends AbstractNativeCollection<PLongArray, PLongWr
                 position = (position + 1) & mask;
             }
 
-            table.setUnchecked(last, current);
+            UnsafeMemory.putLong(base + (last << 3), current);
         }
     }
 
