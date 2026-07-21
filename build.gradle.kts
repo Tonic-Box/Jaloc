@@ -91,8 +91,8 @@ tasks.register<Javadoc>("docSite") {
             into(docsDir)
         }
         val linksBar = docSiteLinksBar(file("doc-assets/links-bar.html"), project.name.lowercase())
-        val barInjection = "<script type=\"text/javascript\">if (window == top) document.documentElement.className += \" withSiteBar\";</script>\n$linksBar"
         val bodyTag = Regex("<body[^>]*>")
+        val framesRedirect = Regex("<script type=\"text/javascript\">\\s*if \\(targetPage == \"\" \\|\\| targetPage == \"undefined\"\\)\\s*window\\.location\\.replace\\('overview-summary\\.html'\\);\\s*</script>")
         var framesetSeen = false
         docsDir.walkTopDown().filter { it.isFile && it.extension == "html" && it.name != "site-bar.html" }.forEach { page ->
             var content = page.readText(Charsets.UTF_8)
@@ -107,7 +107,12 @@ tasks.register<Javadoc>("docSite") {
                 content = docSiteWrapFrameset(content)
                 framesetSeen = true
             } else if (!page.name.endsWith("-frame.html") && !content.contains("class=\"siteBar\"")) {
+                val layoutClass = if (content.contains("class=\"fixedNav\"")) "withSiteBar fixedNavLayout" else "withSiteBar"
+                val barInjection = "<script type=\"text/javascript\">if (window == top) document.documentElement.className += \" $layoutClass\";</script>\n$linksBar"
                 content = bodyTag.replaceFirst(content, "$0\n" + Regex.escapeReplacement(barInjection))
+            }
+            if (content.contains("class=\"mainContainer\"")) {
+                content = framesRedirect.replace(content, "")
             }
             page.writeText(content, Charsets.UTF_8)
         }

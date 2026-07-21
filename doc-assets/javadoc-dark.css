@@ -327,12 +327,18 @@ table.striped > tbody > tr:nth-child(odd) {
   display: block;
 }
 
-.withSiteBar .fixedNav {
-  top: 37px;
+.withSiteBar body {
+  margin-top: 37px;
 }
 
-.withSiteBar .navPadding {
-  margin-top: 37px;
+.withSiteBar a[name]:before, .withSiteBar a[name]:target,
+.withSiteBar a[id]:before, .withSiteBar a[id]:target {
+  padding-top: 37px;
+  margin-top: -37px;
+}
+
+.fixedNavLayout .fixedNav {
+  top: 37px;
 }
 
 .withSiteBar .mainContainer {
@@ -340,8 +346,8 @@ table.striped > tbody > tr:nth-child(odd) {
   height: calc(100% - 37px);
 }
 
-.withSiteBar a[name]:before, .withSiteBar a[name]:target,
-.withSiteBar a[id]:before, .withSiteBar a[id]:target {
+.fixedNavLayout a[name]:before, .fixedNavLayout a[name]:target,
+.fixedNavLayout a[id]:before, .fixedNavLayout a[id]:target {
   padding-top: 166px;
   margin-top: -166px;
 }
