@@ -8,6 +8,7 @@ import com.tonic.jaloc.memory.iface.NativeAllocator;
 import com.tonic.jaloc.memory.internal.UnsafeMemory;
 
 import java.util.Objects;
+import java.util.function.LongConsumer;
 
 /**
  * A growable native bitset over 64-bit words; reads past the end are false.
@@ -148,6 +149,182 @@ public final class PBitSet extends AbstractNativeCollection<PLongArray, PLongWri
     }
 
     /**
+     * Sets fromBit inclusive to toBit exclusive, growing if needed.
+     *
+     * @param fromBit the range start, inclusive
+     * @param toBit the range end, exclusive
+     * @throws IndexOutOfBoundsException if fromBit is negative or toBit is less than fromBit
+     * @throws IllegalStateException if closed
+     */
+    public void set(long fromBit, long toBit)
+    {
+        ensureOpen();
+
+        if (fromBit < 0 || toBit < fromBit)
+        {
+            throw new IndexOutOfBoundsException("fromBit=" + fromBit + ", toBit=" + toBit);
+        }
+
+        if (fromBit == toBit)
+        {
+            return;
+        }
+
+        long firstWord = fromBit >>> 6;
+        long lastWord = (toBit - 1) >>> 6;
+
+        if (lastWord >= wordCapacity)
+        {
+            growWords(lastWord + 1);
+        }
+
+        long firstMask = -1L << (fromBit & 63);
+        long lastMask = (toBit & 63) == 0 ? -1L : (1L << (toBit & 63)) - 1;
+
+        if (firstWord == lastWord)
+        {
+            long address = wordsBase + (firstWord << 3);
+
+            UnsafeMemory.putLong(address, UnsafeMemory.getLong(address) | (firstMask & lastMask));
+        }
+        else
+        {
+            long firstAddress = wordsBase + (firstWord << 3);
+
+            UnsafeMemory.putLong(firstAddress, UnsafeMemory.getLong(firstAddress) | firstMask);
+
+            if (lastWord - firstWord > 1)
+            {
+                UnsafeMemory.fill(firstAddress + Long.BYTES, (lastWord - firstWord - 1) << 3, (byte) 0xFF);
+            }
+
+            long lastAddress = wordsBase + (lastWord << 3);
+
+            UnsafeMemory.putLong(lastAddress, UnsafeMemory.getLong(lastAddress) | lastMask);
+        }
+
+        if (lastWord >= sizeUnchecked())
+        {
+            size(lastWord + 1);
+        }
+    }
+
+    /**
+     * Clears fromBit inclusive to toBit exclusive; past the end is a no-op.
+     *
+     * @param fromBit the range start, inclusive
+     * @param toBit the range end, exclusive
+     * @throws IndexOutOfBoundsException if fromBit is negative or toBit is less than fromBit
+     * @throws IllegalStateException if closed
+     */
+    public void clear(long fromBit, long toBit)
+    {
+        ensureOpen();
+
+        if (fromBit < 0 || toBit < fromBit)
+        {
+            throw new IndexOutOfBoundsException("fromBit=" + fromBit + ", toBit=" + toBit);
+        }
+
+        long to = Math.min(toBit, sizeUnchecked() << 6);
+
+        if (fromBit >= to)
+        {
+            return;
+        }
+
+        long firstWord = fromBit >>> 6;
+        long lastWord = (to - 1) >>> 6;
+        long firstMask = -1L << (fromBit & 63);
+        long lastMask = (to & 63) == 0 ? -1L : (1L << (to & 63)) - 1;
+
+        if (firstWord == lastWord)
+        {
+            long address = wordsBase + (firstWord << 3);
+
+            UnsafeMemory.putLong(address, UnsafeMemory.getLong(address) & ~(firstMask & lastMask));
+        }
+        else
+        {
+            long firstAddress = wordsBase + (firstWord << 3);
+
+            UnsafeMemory.putLong(firstAddress, UnsafeMemory.getLong(firstAddress) & ~firstMask);
+
+            if (lastWord - firstWord > 1)
+            {
+                UnsafeMemory.clear(firstAddress + Long.BYTES, (lastWord - firstWord - 1) << 3);
+            }
+
+            long lastAddress = wordsBase + (lastWord << 3);
+
+            UnsafeMemory.putLong(lastAddress, UnsafeMemory.getLong(lastAddress) & ~lastMask);
+        }
+    }
+
+    /**
+     * Flips fromBit inclusive to toBit exclusive, growing if needed.
+     *
+     * @param fromBit the range start, inclusive
+     * @param toBit the range end, exclusive
+     * @throws IndexOutOfBoundsException if fromBit is negative or toBit is less than fromBit
+     * @throws IllegalStateException if closed
+     */
+    public void flip(long fromBit, long toBit)
+    {
+        ensureOpen();
+
+        if (fromBit < 0 || toBit < fromBit)
+        {
+            throw new IndexOutOfBoundsException("fromBit=" + fromBit + ", toBit=" + toBit);
+        }
+
+        if (fromBit == toBit)
+        {
+            return;
+        }
+
+        long firstWord = fromBit >>> 6;
+        long lastWord = (toBit - 1) >>> 6;
+
+        if (lastWord >= wordCapacity)
+        {
+            growWords(lastWord + 1);
+        }
+
+        long firstMask = -1L << (fromBit & 63);
+        long lastMask = (toBit & 63) == 0 ? -1L : (1L << (toBit & 63)) - 1;
+
+        if (firstWord == lastWord)
+        {
+            long address = wordsBase + (firstWord << 3);
+
+            UnsafeMemory.putLong(address, UnsafeMemory.getLong(address) ^ (firstMask & lastMask));
+        }
+        else
+        {
+            long firstAddress = wordsBase + (firstWord << 3);
+
+            UnsafeMemory.putLong(firstAddress, UnsafeMemory.getLong(firstAddress) ^ firstMask);
+
+            for (long word = firstWord + 1; word < lastWord; word++)
+            {
+                long address = wordsBase + (word << 3);
+
+                UnsafeMemory.putLong(address, ~UnsafeMemory.getLong(address));
+            }
+
+            long lastAddress = wordsBase + (lastWord << 3);
+
+            UnsafeMemory.putLong(lastAddress, UnsafeMemory.getLong(lastAddress) ^ lastMask);
+        }
+
+        if (lastWord >= sizeUnchecked())
+        {
+            size(lastWord + 1);
+        }
+    }
+
+    /**
      * Reads bit; past the end is false.
      *
      * @param bit the bit index
@@ -246,6 +423,32 @@ public final class PBitSet extends AbstractNativeCollection<PLongArray, PLongWri
             }
 
             current = UnsafeMemory.getLong(wordsBase + (word << 3));
+        }
+    }
+
+    /**
+     * Emits every set bit in ascending order.
+     *
+     * @param consumer the receiver
+     * @throws NullPointerException if consumer is null
+     * @throws IllegalStateException if closed
+     */
+    public void forEachSetBit(LongConsumer consumer)
+    {
+        Objects.requireNonNull(consumer, "consumer");
+        ensureOpen();
+
+        long words = sizeUnchecked();
+
+        for (long word = 0; word < words; word++)
+        {
+            long current = UnsafeMemory.getLong(wordsBase + (word << 3));
+
+            while (current != 0)
+            {
+                consumer.accept((word << 6) + Long.numberOfTrailingZeros(current));
+                current &= current - 1;
+            }
         }
     }
 
