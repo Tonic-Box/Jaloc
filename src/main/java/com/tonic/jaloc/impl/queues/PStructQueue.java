@@ -12,7 +12,7 @@ import java.util.Objects;
 import java.util.function.Consumer;
 
 /**
- * A growable native struct FIFO queue on a ring; elements are accessed through views.
+ * A growable native struct FIFO queue on a ring; elements are accessed through views, and any capacity change invalidates outstanding views.
  */
 public final class PStructQueue<T extends PStruct> extends AbstractNativeRing<PStructArray<T>, PStructWriter<T>>
 {

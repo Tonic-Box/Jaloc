@@ -89,7 +89,7 @@ public final class PStructRingBuffer<T extends PStruct> extends AbstractNativeRi
     }
 
     /**
-     * Enqueues an element, overwriting the oldest when full, and initializes it; on the overwrite path a throwing initializer leaves a zeroed entry.
+     * Enqueues an element, removing the oldest first when full, and initializes it; a throwing initializer rolls back the insert.
      *
      * @param initializer fills the fresh element
      * @return the view
@@ -102,23 +102,8 @@ public final class PStructRingBuffer<T extends PStruct> extends AbstractNativeRi
 
         if (size() == capacity())
         {
-            long index = headIndex();
-
-            elements().clearStruct(index);
-            rotateHead();
-
-            T struct = elements().at(index);
-
-            try
-            {
-                initializer.accept(struct);
-                return struct;
-            }
-            catch (RuntimeException | Error e)
-            {
-                struct.clear();
-                throw e;
-            }
+            elements().clearStruct(headIndex());
+            advanceHead();
         }
 
         long index = reserveTail();

@@ -15,7 +15,7 @@ import java.util.Objects;
 import java.util.function.Consumer;
 
 /**
- * A growable native struct list; elements are accessed through views.
+ * A growable native struct list; elements are accessed through views, and any capacity change invalidates outstanding views.
  */
 public final class PStructList<T extends PStruct> extends AbstractNativeList<PStructArray<T>, PStructWriter<T>> implements Iterable<T>
 {

@@ -11,7 +11,7 @@ import java.util.Objects;
 import java.util.function.Consumer;
 
 /**
- * A native primitive-to-struct hash map over struct entries keyed by a layout field; K is declaration metadata only.
+ * A native primitive-to-struct hash map over struct entries keyed by a layout field; K is declaration metadata only, and any growth invalidates outstanding views.
  */
 public final class PStructMap<K, V extends PStruct> extends AbstractNativeMap<V>
 {

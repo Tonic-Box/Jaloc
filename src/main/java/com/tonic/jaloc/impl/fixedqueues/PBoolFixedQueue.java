@@ -114,7 +114,6 @@ public final class PBoolFixedQueue extends AbstractPrimitiveFixedQueue<PBoolArra
         }
         long index = headIndex();
         boolean value = elementsUnchecked().getUnchecked(index);
-        elementsUnchecked().setUnchecked(index, false);
         advanceHead();
         return value;
     }

@@ -121,7 +121,6 @@ public final class PBoolDeque extends AbstractPrimitiveDeque<PBoolArray, PBoolWr
         }
         long index = headIndex();
         boolean value = elementsUnchecked().getUnchecked(index);
-        elementsUnchecked().setUnchecked(index, false);
         advanceHead();
         return value;
     }
@@ -140,7 +139,6 @@ public final class PBoolDeque extends AbstractPrimitiveDeque<PBoolArray, PBoolWr
         }
         long index = tailIndex();
         boolean value = elementsUnchecked().getUnchecked(index);
-        elementsUnchecked().setUnchecked(index, false);
         shrinkTail();
         return value;
     }

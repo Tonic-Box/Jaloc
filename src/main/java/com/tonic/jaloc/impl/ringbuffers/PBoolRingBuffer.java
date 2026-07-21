@@ -90,7 +90,6 @@ public final class PBoolRingBuffer extends AbstractPrimitiveRingBuffer<PBoolArra
         }
         long index = headIndex();
         boolean value = elementsUnchecked().getUnchecked(index);
-        elementsUnchecked().setUnchecked(index, false);
         advanceHead();
         return value;
     }
