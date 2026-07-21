@@ -108,7 +108,132 @@ public final class PFloatArray extends AbstractPrimitiveArray<PFloatWriter>
     public void sort(long fromIndex, long toIndex)
     {
         checkRange(fromIndex, toIndex);
-        quicksort(fromIndex, toIndex - 1);
+
+        if (toIndex - fromIndex < 2048)
+        {
+            quicksort(fromIndex, toIndex - 1);
+            return;
+        }
+
+        long limit = partitionNaN(fromIndex, toIndex);
+
+        if (limit - fromIndex < 2048)
+        {
+            quicksort(fromIndex, limit - 1);
+            return;
+        }
+
+        radixSort(fromIndex, limit);
+    }
+
+    private long partitionNaN(long fromIndex, long toIndex)
+    {
+        long limit = toIndex;
+        long i = fromIndex;
+
+        while (i < limit)
+        {
+            float value = getUnchecked(i);
+
+            if (value != value)
+            {
+                limit--;
+                setUnchecked(i, getUnchecked(limit));
+                setUnchecked(limit, value);
+            }
+            else
+            {
+                i++;
+            }
+        }
+
+        return limit;
+    }
+
+    private void radixSort(long fromIndex, long toIndex)
+    {
+        long length = toIndex - fromIndex;
+        long source = baseAddress() + fromIndex * Float.BYTES;
+        long scratch = UnsafeMemory.allocate(length * Float.BYTES);
+
+        try
+        {
+            long[] counts = new long[4 * 256];
+
+            for (long i = 0; i < length; i++)
+            {
+                int bits = UnsafeMemory.getInt(source + i * Float.BYTES);
+                int value = bits ^ ((bits >> 31) | 0x80000000);
+
+                UnsafeMemory.putInt(source + i * Float.BYTES, value);
+                counts[value & 0xFF]++;
+                counts[256 + ((value >>> 8) & 0xFF)]++;
+                counts[512 + ((value >>> 16) & 0xFF)]++;
+                counts[768 + ((value >>> 24) & 0xFF)]++;
+            }
+
+            long from = source;
+            long to = scratch;
+
+            for (int pass = 0; pass < 4; pass++)
+            {
+                int bucketBase = pass << 8;
+
+                if (trivialPass(counts, bucketBase, length))
+                {
+                    continue;
+                }
+
+                long[] offsets = new long[256];
+                long sum = 0;
+
+                for (int bucket = 0; bucket < 256; bucket++)
+                {
+                    offsets[bucket] = sum;
+                    sum += counts[bucketBase + bucket];
+                }
+
+                int shift = pass << 3;
+
+                for (long i = 0; i < length; i++)
+                {
+                    int value = UnsafeMemory.getInt(from + i * Float.BYTES);
+                    int digit = (value >>> shift) & 0xFF;
+
+                    UnsafeMemory.putInt(to + offsets[digit] * Float.BYTES, value);
+                    offsets[digit]++;
+                }
+
+                long swap = from;
+
+                from = to;
+                to = swap;
+            }
+
+            for (long i = 0; i < length; i++)
+            {
+                int value = UnsafeMemory.getInt(from + i * Float.BYTES);
+
+                UnsafeMemory.putInt(source + i * Float.BYTES, value ^ ((~value >> 31) | 0x80000000));
+            }
+        }
+        finally
+        {
+            UnsafeMemory.free(scratch);
+        }
+    }
+
+    private static boolean trivialPass(long[] counts, int bucketBase, long length)
+    {
+        for (int bucket = 0; bucket < 256; bucket++)
+        {
+            if (counts[bucketBase + bucket] == length)
+            {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     /**
