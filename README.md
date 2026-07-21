@@ -6,6 +6,7 @@ A true primitive collocations library for Java 8+ backed by manual native memory
 
 ### Documentation
 - [JavaDocs](https://jaloc.tonicbox.dev)
+- [Benchmarks](./BENCHMARKS.md)
 
 ### Structure
 There are currently the following collection family implementations for all Java primitives as well as for user defined structs.
