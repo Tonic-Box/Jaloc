@@ -8,6 +8,8 @@ import com.tonic.jaloc.memory.iface.NativeAllocator;
 import com.tonic.jaloc.memory.internal.UnsafeMemory;
 
 import java.util.NoSuchElementException;
+import java.util.Objects;
+import java.util.function.IntConsumer;
 
 /**
  * A growable native byte list.
@@ -150,6 +152,38 @@ public final class PByteList extends AbstractPrimitiveList<PByteArray, PByteWrit
         byte previous = UnsafeMemory.getByte(elementsBase() + (s - 1));
         size(s - 1);
         return previous;
+    }
+
+    /**
+     * Emits each element first to last.
+     *
+     * @param consumer the receiver
+     * @throws NullPointerException if consumer is null
+     * @throws IllegalStateException if closed
+     */
+    public void forEach(IntConsumer consumer)
+    {
+        Objects.requireNonNull(consumer, "consumer");
+        ensureOpen();
+
+        long base = elementsBase();
+        long s = sizeUnchecked();
+        byte[] buffer = new byte[(int) Math.min(1024, s)];
+        long index = 0;
+
+        while (index < s)
+        {
+            int chunk = (int) Math.min(buffer.length, s - index);
+
+            UnsafeMemory.copyToHeap(base + index, buffer, UnsafeMemory.BYTE_ARRAY_BASE, chunk);
+
+            for (int i = 0; i < chunk; i++)
+            {
+                consumer.accept(buffer[i]);
+            }
+
+            index += chunk;
+        }
     }
 
     /**

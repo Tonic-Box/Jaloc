@@ -8,6 +8,8 @@ import com.tonic.jaloc.memory.iface.NativeAllocator;
 import com.tonic.jaloc.memory.internal.UnsafeMemory;
 
 import java.util.NoSuchElementException;
+import java.util.Objects;
+import java.util.function.DoubleConsumer;
 
 /**
  * A growable native float list.
@@ -150,6 +152,38 @@ public final class PFloatList extends AbstractPrimitiveList<PFloatArray, PFloatW
         float previous = UnsafeMemory.getFloat(elementsBase() + ((s - 1) << 2));
         size(s - 1);
         return previous;
+    }
+
+    /**
+     * Emits each element first to last.
+     *
+     * @param consumer the receiver
+     * @throws NullPointerException if consumer is null
+     * @throws IllegalStateException if closed
+     */
+    public void forEach(DoubleConsumer consumer)
+    {
+        Objects.requireNonNull(consumer, "consumer");
+        ensureOpen();
+
+        long base = elementsBase();
+        long s = sizeUnchecked();
+        float[] buffer = new float[(int) Math.min(1024, s)];
+        long index = 0;
+
+        while (index < s)
+        {
+            int chunk = (int) Math.min(buffer.length, s - index);
+
+            UnsafeMemory.copyToHeap(base + (index << 2), buffer, UnsafeMemory.FLOAT_ARRAY_BASE, (long) chunk << 2);
+
+            for (int i = 0; i < chunk; i++)
+            {
+                consumer.accept(buffer[i]);
+            }
+
+            index += chunk;
+        }
     }
 
     /**

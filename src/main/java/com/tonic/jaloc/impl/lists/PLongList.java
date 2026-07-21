@@ -8,6 +8,8 @@ import com.tonic.jaloc.memory.iface.NativeAllocator;
 import com.tonic.jaloc.memory.internal.UnsafeMemory;
 
 import java.util.NoSuchElementException;
+import java.util.Objects;
+import java.util.function.LongConsumer;
 
 /**
  * A growable native long list.
@@ -150,6 +152,38 @@ public final class PLongList extends AbstractPrimitiveList<PLongArray, PLongWrit
         long previous = UnsafeMemory.getLong(elementsBase() + ((s - 1) << 3));
         size(s - 1);
         return previous;
+    }
+
+    /**
+     * Emits each element first to last.
+     *
+     * @param consumer the receiver
+     * @throws NullPointerException if consumer is null
+     * @throws IllegalStateException if closed
+     */
+    public void forEach(LongConsumer consumer)
+    {
+        Objects.requireNonNull(consumer, "consumer");
+        ensureOpen();
+
+        long base = elementsBase();
+        long s = sizeUnchecked();
+        long[] buffer = new long[(int) Math.min(1024, s)];
+        long index = 0;
+
+        while (index < s)
+        {
+            int chunk = (int) Math.min(buffer.length, s - index);
+
+            UnsafeMemory.copyToHeap(base + (index << 3), buffer, UnsafeMemory.LONG_ARRAY_BASE, (long) chunk << 3);
+
+            for (int i = 0; i < chunk; i++)
+            {
+                consumer.accept(buffer[i]);
+            }
+
+            index += chunk;
+        }
     }
 
     /**

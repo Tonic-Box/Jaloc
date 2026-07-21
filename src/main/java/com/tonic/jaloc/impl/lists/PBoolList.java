@@ -5,6 +5,7 @@ import com.tonic.jaloc.impl.arrays.PBoolWriter;
 import com.tonic.jaloc.memory.SystemAllocator;
 import com.tonic.jaloc.memory.abs.AbstractPrimitiveList;
 import com.tonic.jaloc.memory.iface.NativeAllocator;
+import com.tonic.jaloc.memory.internal.UnsafeMemory;
 
 import java.util.NoSuchElementException;
 import java.util.Objects;
@@ -131,5 +132,89 @@ public final class PBoolList extends AbstractPrimitiveList<PBoolArray, PBoolWrit
         elementsUnchecked().setUnchecked(s - 1, false);
         size(s - 1);
         return previous;
+    }
+
+    /**
+     * Counts true elements.
+     *
+     * @return the number of true elements
+     * @throws IllegalStateException if closed
+     */
+    public long popCount()
+    {
+        ensureOpen();
+
+        long base = elementsBase();
+        long bytes = (sizeUnchecked() + 7) >>> 3;
+        long count = 0;
+        long index = 0;
+
+        while (index + 8 <= bytes)
+        {
+            count += Long.bitCount(UnsafeMemory.getLong(base + index));
+            index += 8;
+        }
+
+        while (index < bytes)
+        {
+            count += Integer.bitCount(UnsafeMemory.getByte(base + index) & 0xFF);
+            index++;
+        }
+
+        return count;
+    }
+
+    /**
+     * Counts true elements from fromIndex inclusive to toIndex exclusive.
+     *
+     * @param fromIndex the range start, inclusive
+     * @param toIndex the range end, exclusive
+     * @return the number of true elements in the range
+     * @throws IndexOutOfBoundsException if the range is out of bounds
+     * @throws IllegalStateException if closed
+     */
+    public long popCount(long fromIndex, long toIndex)
+    {
+        ensureOpen();
+
+        long s = sizeUnchecked();
+
+        if (fromIndex < 0 || toIndex < fromIndex || toIndex > s)
+        {
+            throw new IndexOutOfBoundsException("fromIndex=" + fromIndex + ", toIndex=" + toIndex + ", size=" + s);
+        }
+
+        if (fromIndex == toIndex)
+        {
+            return 0;
+        }
+
+        long base = elementsBase();
+        long firstByte = fromIndex >>> 3;
+        long lastByte = (toIndex - 1) >>> 3;
+        int firstMask = (0xFF << (fromIndex & 7)) & 0xFF;
+        int lastMask = (toIndex & 7) == 0 ? 0xFF : (1 << (toIndex & 7)) - 1;
+
+        if (firstByte == lastByte)
+        {
+            return Integer.bitCount(UnsafeMemory.getByte(base + firstByte) & firstMask & lastMask);
+        }
+
+        long count = Integer.bitCount(UnsafeMemory.getByte(base + firstByte) & firstMask);
+        long index = firstByte + 1;
+
+        while (index + 8 <= lastByte)
+        {
+            count += Long.bitCount(UnsafeMemory.getLong(base + index));
+            index += 8;
+        }
+
+        while (index < lastByte)
+        {
+            count += Integer.bitCount(UnsafeMemory.getByte(base + index) & 0xFF);
+            index++;
+        }
+
+        return count + Integer.bitCount(UnsafeMemory.getByte(base + lastByte) & lastMask);
     }
 }

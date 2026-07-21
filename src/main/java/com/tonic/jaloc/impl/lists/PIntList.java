@@ -8,6 +8,8 @@ import com.tonic.jaloc.memory.iface.NativeAllocator;
 import com.tonic.jaloc.memory.internal.UnsafeMemory;
 
 import java.util.NoSuchElementException;
+import java.util.Objects;
+import java.util.function.IntConsumer;
 
 /**
  * A growable native int list.
@@ -149,6 +151,38 @@ public final class PIntList extends AbstractPrimitiveList<PIntArray, PIntWriter>
         int previous = UnsafeMemory.getInt(elementsBase() + ((s - 1) << 2));
         size(s - 1);
         return previous;
+    }
+
+    /**
+     * Emits each element first to last.
+     *
+     * @param consumer the receiver
+     * @throws NullPointerException if consumer is null
+     * @throws IllegalStateException if closed
+     */
+    public void forEach(IntConsumer consumer)
+    {
+        Objects.requireNonNull(consumer, "consumer");
+        ensureOpen();
+
+        long base = elementsBase();
+        long s = sizeUnchecked();
+        int[] buffer = new int[(int) Math.min(1024, s)];
+        long index = 0;
+
+        while (index < s)
+        {
+            int chunk = (int) Math.min(buffer.length, s - index);
+
+            UnsafeMemory.copyToHeap(base + (index << 2), buffer, UnsafeMemory.INT_ARRAY_BASE, (long) chunk << 2);
+
+            for (int i = 0; i < chunk; i++)
+            {
+                consumer.accept(buffer[i]);
+            }
+
+            index += chunk;
+        }
     }
 
     /**
