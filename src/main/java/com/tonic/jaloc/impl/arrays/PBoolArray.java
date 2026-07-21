@@ -6,13 +6,29 @@ import com.tonic.jaloc.memory.data.ElementSize;
 import com.tonic.jaloc.memory.iface.NativeAllocator;
 import com.tonic.jaloc.memory.internal.UnsafeMemory;
 
+/**
+ * A fixed-length native bool array, bit-packed eight per byte.
+ */
 public final class PBoolArray extends AbstractPrimitiveArray<PBoolWriter>
 {
+    /**
+     * Allocates length elements on the system allocator, zeroed.
+     *
+     * @param length the element count
+     * @throws IllegalArgumentException if length is negative
+     */
     public PBoolArray(long length)
     {
         this(SystemAllocator.getInstance(), length);
     }
 
+    /**
+     * Allocates length elements on the given allocator, zeroed.
+     *
+     * @param allocator the allocator to source memory from
+     * @param length the element count
+     * @throws IllegalArgumentException if length is negative
+     */
     public PBoolArray(NativeAllocator allocator, long length)
     {
         super(allocator, ElementSize.BYTE, length, packedByteSize(length));
@@ -39,24 +55,52 @@ public final class PBoolArray extends AbstractPrimitiveArray<PBoolWriter>
         return (length >>> 3) + ((length & 7L) == 0 ? 0 : 1);
     }
 
+    /**
+     * Reads the element at index.
+     *
+     * @param index the element index
+     * @return the element
+     * @throws IndexOutOfBoundsException if index is out of range
+     * @throws IllegalStateException if closed
+     */
     public boolean get(long index)
     {
         checkIndex(index);
         return getUnchecked(index);
     }
 
+    /**
+     * Writes the element at index.
+     *
+     * @param index the element index
+     * @param value the value to store
+     * @throws IndexOutOfBoundsException if index is out of range
+     * @throws IllegalStateException if closed
+     */
     public void set(long index, boolean value)
     {
         checkIndex(index);
         setUnchecked(index, value);
     }
 
+    /**
+     * Reads the element at index with no liveness or bounds check; the caller must have proven both.
+     *
+     * @param index the element index
+     * @return the element
+     */
     public boolean getUnchecked(long index)
     {
         byte packed = UnsafeMemory.getByte(baseAddress() + byteOffset(index));
         return (packed & bitMask(index)) != 0;
     }
 
+    /**
+     * Writes the element at index with no liveness or bounds check; the caller must have proven both.
+     *
+     * @param index the element index
+     * @param value the value to store
+     */
     public void setUnchecked(long index, boolean value)
     {
         long address = baseAddress() + byteOffset(index);

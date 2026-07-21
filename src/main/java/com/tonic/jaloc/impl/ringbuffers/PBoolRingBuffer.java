@@ -9,13 +9,29 @@ import com.tonic.jaloc.memory.iface.NativeAllocator;
 import java.util.NoSuchElementException;
 import java.util.Objects;
 
+/**
+ * A fixed-capacity native bool ring buffer; enqueueing when full overwrites the oldest element.
+ */
 public final class PBoolRingBuffer extends AbstractPrimitiveRingBuffer<PBoolArray, PBoolWriter>
 {
+    /**
+     * Allocates a buffer of the given capacity on the system allocator.
+     *
+     * @param capacity the fixed capacity
+     * @throws IllegalArgumentException if capacity is not positive
+     */
     public PBoolRingBuffer(long capacity)
     {
         this(SystemAllocator.getInstance(), capacity);
     }
 
+    /**
+     * Allocates a buffer of the given capacity on the given allocator.
+     *
+     * @param allocator the allocator to source memory from
+     * @param capacity the fixed capacity
+     * @throws IllegalArgumentException if capacity is not positive
+     */
     public PBoolRingBuffer(NativeAllocator allocator, long capacity) {
         super(allocator, new PBoolArray(allocator, requireCapacity(capacity)));
     }
@@ -25,6 +41,12 @@ public final class PBoolRingBuffer extends AbstractPrimitiveRingBuffer<PBoolArra
         return new PBoolArray(allocator, capacity);
     }
 
+    /**
+     * Enqueues value at the tail, overwriting the oldest element when full.
+     *
+     * @param value the value to enqueue
+     * @throws IllegalStateException if closed
+     */
     public void enqueue(boolean value)
     {
         if (size() == capacity()) {
@@ -39,6 +61,13 @@ public final class PBoolRingBuffer extends AbstractPrimitiveRingBuffer<PBoolArra
         commitTail();
     }
 
+    /**
+     * Enqueues values left to right; only the last capacity values survive overflow.
+     *
+     * @param values the values to enqueue
+     * @throws NullPointerException if values is null
+     * @throws IllegalStateException if closed
+     */
     public void enqueueAll(boolean... values)
     {
         Objects.requireNonNull(values, "values");
@@ -47,6 +76,13 @@ public final class PBoolRingBuffer extends AbstractPrimitiveRingBuffer<PBoolArra
         }
     }
 
+    /**
+     * Removes and returns the head element.
+     *
+     * @return the removed element
+     * @throws NoSuchElementException if empty
+     * @throws IllegalStateException if closed
+     */
     public boolean dequeue()
     {
         if (isEmpty()) {
@@ -59,6 +95,13 @@ public final class PBoolRingBuffer extends AbstractPrimitiveRingBuffer<PBoolArra
         return value;
     }
 
+    /**
+     * Reads the head element without removing it.
+     *
+     * @return the head element
+     * @throws NoSuchElementException if empty
+     * @throws IllegalStateException if closed
+     */
     public boolean peek()
     {
         if (isEmpty()) {

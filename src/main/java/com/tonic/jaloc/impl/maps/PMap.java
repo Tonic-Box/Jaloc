@@ -16,6 +16,9 @@ import java.util.Objects;
 import java.util.function.DoubleConsumer;
 import java.util.function.LongConsumer;
 
+/**
+ * A native primitive-to-primitive hash map; the StructType pair fixes the key and value types, K and V are declaration metadata only.
+ */
 public final class PMap<K, V> extends AbstractNativeMap<PMap.Slot>
 {
     private static final int VALUE_BYTE = 0;
@@ -30,16 +33,40 @@ public final class PMap<K, V> extends AbstractNativeMap<PMap.Slot>
     private final int valueKind;
     private final boolean integralValue;
 
+    /**
+     * Creates an empty map for the given key and value types on the system allocator.
+     *
+     * @param keyType the key type, any StructType but BOOLEAN
+     * @param valueType the value type
+     * @throws IllegalArgumentException if keyType is BOOLEAN
+     */
     public PMap(StructType keyType, StructType valueType)
     {
         this(SystemAllocator.getInstance(), keyType, valueType, 0);
     }
 
+    /**
+     * Creates an empty map presized for expectedElements on the system allocator.
+     *
+     * @param keyType the key type, any StructType but BOOLEAN
+     * @param valueType the value type
+     * @param expectedElements presizes the table
+     * @throws IllegalArgumentException if keyType is BOOLEAN or expectedElements is negative
+     */
     public PMap(StructType keyType, StructType valueType, long expectedElements)
     {
         this(SystemAllocator.getInstance(), keyType, valueType, expectedElements);
     }
 
+    /**
+     * Creates an empty map presized for expectedElements on the given allocator.
+     *
+     * @param allocator the allocator to source memory from
+     * @param keyType the key type, any StructType but BOOLEAN
+     * @param valueType the value type
+     * @param expectedElements presizes the table
+     * @throws IllegalArgumentException if keyType is BOOLEAN or expectedElements is negative
+     */
     public PMap(NativeAllocator allocator, StructType keyType, StructType valueType, long expectedElements)
     {
         super(Objects.requireNonNull(allocator, "allocator"), new PStructArray<>(allocator, Slot::new, buildLayout(keyType, valueType), tableLength(expectedElements)), "key");
@@ -57,6 +84,14 @@ public final class PMap<K, V> extends AbstractNativeMap<PMap.Slot>
         return new PStructArray<>(allocator, Slot::new, layout(), capacity);
     }
 
+    /**
+     * Maps key to value, replacing any existing mapping.
+     *
+     * @param key the key
+     * @param value the value
+     * @throws IllegalArgumentException if key or value does not fit its declared type
+     * @throws IllegalStateException if closed
+     */
     public void put(long key, long value)
     {
         ensureOpen();
@@ -64,6 +99,14 @@ public final class PMap<K, V> extends AbstractNativeMap<PMap.Slot>
         writeIntegralValue(insertKey(integralKeyBits(key)), value);
     }
 
+    /**
+     * Maps key to value, replacing any existing mapping.
+     *
+     * @param key the key
+     * @param value the value
+     * @throws IllegalArgumentException if key or value does not fit its declared type
+     * @throws IllegalStateException if closed
+     */
     public void put(long key, double value)
     {
         ensureOpen();
@@ -71,6 +114,14 @@ public final class PMap<K, V> extends AbstractNativeMap<PMap.Slot>
         writeFloatingValue(insertKey(integralKeyBits(key)), value);
     }
 
+    /**
+     * Maps key to value, replacing any existing mapping.
+     *
+     * @param key the key
+     * @param value the value
+     * @throws IllegalArgumentException if key or value does not fit its declared type
+     * @throws IllegalStateException if closed
+     */
     public void put(long key, boolean value)
     {
         ensureOpen();
@@ -78,6 +129,14 @@ public final class PMap<K, V> extends AbstractNativeMap<PMap.Slot>
         UnsafeMemory.putByte(valueAddress(insertKey(integralKeyBits(key))), value ? (byte) 1 : (byte) 0);
     }
 
+    /**
+     * Maps key to value, replacing any existing mapping.
+     *
+     * @param key the key
+     * @param value the value
+     * @throws IllegalArgumentException if key or value does not fit its declared type
+     * @throws IllegalStateException if closed
+     */
     public void put(double key, long value)
     {
         ensureOpen();
@@ -85,6 +144,14 @@ public final class PMap<K, V> extends AbstractNativeMap<PMap.Slot>
         writeIntegralValue(insertKey(floatingKeyBits(key)), value);
     }
 
+    /**
+     * Maps key to value, replacing any existing mapping.
+     *
+     * @param key the key
+     * @param value the value
+     * @throws IllegalArgumentException if key or value does not fit its declared type
+     * @throws IllegalStateException if closed
+     */
     public void put(double key, double value)
     {
         ensureOpen();
@@ -92,6 +159,14 @@ public final class PMap<K, V> extends AbstractNativeMap<PMap.Slot>
         writeFloatingValue(insertKey(floatingKeyBits(key)), value);
     }
 
+    /**
+     * Maps key to value, replacing any existing mapping.
+     *
+     * @param key the key
+     * @param value the value
+     * @throws IllegalArgumentException if key or value does not fit its declared type
+     * @throws IllegalStateException if closed
+     */
     public void put(double key, boolean value)
     {
         ensureOpen();
@@ -99,6 +174,15 @@ public final class PMap<K, V> extends AbstractNativeMap<PMap.Slot>
         UnsafeMemory.putByte(valueAddress(insertKey(floatingKeyBits(key))), value ? (byte) 1 : (byte) 0);
     }
 
+    /**
+     * Reads the value for key.
+     *
+     * @param key the key
+     * @return the value
+     * @throws NoSuchElementException if key is absent
+     * @throws IllegalArgumentException on key or value type mismatch
+     * @throws IllegalStateException if closed
+     */
     public byte getByte(long key)
     {
         ensureOpen();
@@ -106,6 +190,15 @@ public final class PMap<K, V> extends AbstractNativeMap<PMap.Slot>
         return UnsafeMemory.getByte(valueAddress(requireSlot(integralKeyBits(key), key)));
     }
 
+    /**
+     * Reads the value for key.
+     *
+     * @param key the key
+     * @return the value
+     * @throws NoSuchElementException if key is absent
+     * @throws IllegalArgumentException on key or value type mismatch
+     * @throws IllegalStateException if closed
+     */
     public byte getByte(double key)
     {
         ensureOpen();
@@ -113,6 +206,15 @@ public final class PMap<K, V> extends AbstractNativeMap<PMap.Slot>
         return UnsafeMemory.getByte(valueAddress(requireSlot(floatingKeyBits(key), key)));
     }
 
+    /**
+     * Reads the value for key.
+     *
+     * @param key the key
+     * @return the value
+     * @throws NoSuchElementException if key is absent
+     * @throws IllegalArgumentException on key or value type mismatch
+     * @throws IllegalStateException if closed
+     */
     public short getShort(long key)
     {
         ensureOpen();
@@ -120,6 +222,15 @@ public final class PMap<K, V> extends AbstractNativeMap<PMap.Slot>
         return UnsafeMemory.getShort(valueAddress(requireSlot(integralKeyBits(key), key)));
     }
 
+    /**
+     * Reads the value for key.
+     *
+     * @param key the key
+     * @return the value
+     * @throws NoSuchElementException if key is absent
+     * @throws IllegalArgumentException on key or value type mismatch
+     * @throws IllegalStateException if closed
+     */
     public short getShort(double key)
     {
         ensureOpen();
@@ -127,6 +238,15 @@ public final class PMap<K, V> extends AbstractNativeMap<PMap.Slot>
         return UnsafeMemory.getShort(valueAddress(requireSlot(floatingKeyBits(key), key)));
     }
 
+    /**
+     * Reads the value for key.
+     *
+     * @param key the key
+     * @return the value
+     * @throws NoSuchElementException if key is absent
+     * @throws IllegalArgumentException on key or value type mismatch
+     * @throws IllegalStateException if closed
+     */
     public char getChar(long key)
     {
         ensureOpen();
@@ -134,6 +254,15 @@ public final class PMap<K, V> extends AbstractNativeMap<PMap.Slot>
         return UnsafeMemory.getChar(valueAddress(requireSlot(integralKeyBits(key), key)));
     }
 
+    /**
+     * Reads the value for key.
+     *
+     * @param key the key
+     * @return the value
+     * @throws NoSuchElementException if key is absent
+     * @throws IllegalArgumentException on key or value type mismatch
+     * @throws IllegalStateException if closed
+     */
     public char getChar(double key)
     {
         ensureOpen();
@@ -141,6 +270,15 @@ public final class PMap<K, V> extends AbstractNativeMap<PMap.Slot>
         return UnsafeMemory.getChar(valueAddress(requireSlot(floatingKeyBits(key), key)));
     }
 
+    /**
+     * Reads the value for key.
+     *
+     * @param key the key
+     * @return the value
+     * @throws NoSuchElementException if key is absent
+     * @throws IllegalArgumentException on key or value type mismatch
+     * @throws IllegalStateException if closed
+     */
     public int getInt(long key)
     {
         ensureOpen();
@@ -148,6 +286,15 @@ public final class PMap<K, V> extends AbstractNativeMap<PMap.Slot>
         return UnsafeMemory.getInt(valueAddress(requireSlot(integralKeyBits(key), key)));
     }
 
+    /**
+     * Reads the value for key.
+     *
+     * @param key the key
+     * @return the value
+     * @throws NoSuchElementException if key is absent
+     * @throws IllegalArgumentException on key or value type mismatch
+     * @throws IllegalStateException if closed
+     */
     public int getInt(double key)
     {
         ensureOpen();
@@ -155,6 +302,15 @@ public final class PMap<K, V> extends AbstractNativeMap<PMap.Slot>
         return UnsafeMemory.getInt(valueAddress(requireSlot(floatingKeyBits(key), key)));
     }
 
+    /**
+     * Reads the value for key.
+     *
+     * @param key the key
+     * @return the value
+     * @throws NoSuchElementException if key is absent
+     * @throws IllegalArgumentException on key or value type mismatch
+     * @throws IllegalStateException if closed
+     */
     public long getLong(long key)
     {
         ensureOpen();
@@ -162,6 +318,15 @@ public final class PMap<K, V> extends AbstractNativeMap<PMap.Slot>
         return UnsafeMemory.getLong(valueAddress(requireSlot(integralKeyBits(key), key)));
     }
 
+    /**
+     * Reads the value for key.
+     *
+     * @param key the key
+     * @return the value
+     * @throws NoSuchElementException if key is absent
+     * @throws IllegalArgumentException on key or value type mismatch
+     * @throws IllegalStateException if closed
+     */
     public long getLong(double key)
     {
         ensureOpen();
@@ -169,6 +334,15 @@ public final class PMap<K, V> extends AbstractNativeMap<PMap.Slot>
         return UnsafeMemory.getLong(valueAddress(requireSlot(floatingKeyBits(key), key)));
     }
 
+    /**
+     * Reads the value for key.
+     *
+     * @param key the key
+     * @return the value
+     * @throws NoSuchElementException if key is absent
+     * @throws IllegalArgumentException on key or value type mismatch
+     * @throws IllegalStateException if closed
+     */
     public float getFloat(long key)
     {
         ensureOpen();
@@ -176,6 +350,15 @@ public final class PMap<K, V> extends AbstractNativeMap<PMap.Slot>
         return UnsafeMemory.getFloat(valueAddress(requireSlot(integralKeyBits(key), key)));
     }
 
+    /**
+     * Reads the value for key.
+     *
+     * @param key the key
+     * @return the value
+     * @throws NoSuchElementException if key is absent
+     * @throws IllegalArgumentException on key or value type mismatch
+     * @throws IllegalStateException if closed
+     */
     public float getFloat(double key)
     {
         ensureOpen();
@@ -183,6 +366,15 @@ public final class PMap<K, V> extends AbstractNativeMap<PMap.Slot>
         return UnsafeMemory.getFloat(valueAddress(requireSlot(floatingKeyBits(key), key)));
     }
 
+    /**
+     * Reads the value for key.
+     *
+     * @param key the key
+     * @return the value
+     * @throws NoSuchElementException if key is absent
+     * @throws IllegalArgumentException on key or value type mismatch
+     * @throws IllegalStateException if closed
+     */
     public double getDouble(long key)
     {
         ensureOpen();
@@ -190,6 +382,15 @@ public final class PMap<K, V> extends AbstractNativeMap<PMap.Slot>
         return UnsafeMemory.getDouble(valueAddress(requireSlot(integralKeyBits(key), key)));
     }
 
+    /**
+     * Reads the value for key.
+     *
+     * @param key the key
+     * @return the value
+     * @throws NoSuchElementException if key is absent
+     * @throws IllegalArgumentException on key or value type mismatch
+     * @throws IllegalStateException if closed
+     */
     public double getDouble(double key)
     {
         ensureOpen();
@@ -197,6 +398,15 @@ public final class PMap<K, V> extends AbstractNativeMap<PMap.Slot>
         return UnsafeMemory.getDouble(valueAddress(requireSlot(floatingKeyBits(key), key)));
     }
 
+    /**
+     * Reads the value for key.
+     *
+     * @param key the key
+     * @return the value
+     * @throws NoSuchElementException if key is absent
+     * @throws IllegalArgumentException on key or value type mismatch
+     * @throws IllegalStateException if closed
+     */
     public boolean getBool(long key)
     {
         ensureOpen();
@@ -204,6 +414,15 @@ public final class PMap<K, V> extends AbstractNativeMap<PMap.Slot>
         return UnsafeMemory.getByte(valueAddress(requireSlot(integralKeyBits(key), key))) != 0;
     }
 
+    /**
+     * Reads the value for key.
+     *
+     * @param key the key
+     * @return the value
+     * @throws NoSuchElementException if key is absent
+     * @throws IllegalArgumentException on key or value type mismatch
+     * @throws IllegalStateException if closed
+     */
     public boolean getBool(double key)
     {
         ensureOpen();
@@ -211,6 +430,15 @@ public final class PMap<K, V> extends AbstractNativeMap<PMap.Slot>
         return UnsafeMemory.getByte(valueAddress(requireSlot(floatingKeyBits(key), key))) != 0;
     }
 
+    /**
+     * Reads the value for key, or defaultValue when absent.
+     *
+     * @param key the key
+     * @param defaultValue the fallback
+     * @return the value, or defaultValue
+     * @throws IllegalArgumentException on key or value type mismatch
+     * @throws IllegalStateException if closed
+     */
     public long getOrDefault(long key, long defaultValue)
     {
         ensureOpen();
@@ -221,6 +449,15 @@ public final class PMap<K, V> extends AbstractNativeMap<PMap.Slot>
         return slot < 0 ? defaultValue : readIntegralValue(slot);
     }
 
+    /**
+     * Reads the value for key, or defaultValue when absent.
+     *
+     * @param key the key
+     * @param defaultValue the fallback
+     * @return the value, or defaultValue
+     * @throws IllegalArgumentException on key or value type mismatch
+     * @throws IllegalStateException if closed
+     */
     public long getOrDefault(double key, long defaultValue)
     {
         ensureOpen();
@@ -231,6 +468,15 @@ public final class PMap<K, V> extends AbstractNativeMap<PMap.Slot>
         return slot < 0 ? defaultValue : readIntegralValue(slot);
     }
 
+    /**
+     * Reads the value for key, or defaultValue when absent.
+     *
+     * @param key the key
+     * @param defaultValue the fallback
+     * @return the value, or defaultValue
+     * @throws IllegalArgumentException on key or value type mismatch
+     * @throws IllegalStateException if closed
+     */
     public double getOrDefault(long key, double defaultValue)
     {
         ensureOpen();
@@ -241,6 +487,15 @@ public final class PMap<K, V> extends AbstractNativeMap<PMap.Slot>
         return slot < 0 ? defaultValue : readFloatingValue(slot);
     }
 
+    /**
+     * Reads the value for key, or defaultValue when absent.
+     *
+     * @param key the key
+     * @param defaultValue the fallback
+     * @return the value, or defaultValue
+     * @throws IllegalArgumentException on key or value type mismatch
+     * @throws IllegalStateException if closed
+     */
     public double getOrDefault(double key, double defaultValue)
     {
         ensureOpen();
@@ -251,6 +506,15 @@ public final class PMap<K, V> extends AbstractNativeMap<PMap.Slot>
         return slot < 0 ? defaultValue : readFloatingValue(slot);
     }
 
+    /**
+     * Reads the value for key, or defaultValue when absent.
+     *
+     * @param key the key
+     * @param defaultValue the fallback
+     * @return the value, or defaultValue
+     * @throws IllegalArgumentException on key or value type mismatch
+     * @throws IllegalStateException if closed
+     */
     public boolean getOrDefault(long key, boolean defaultValue)
     {
         ensureOpen();
@@ -261,6 +525,15 @@ public final class PMap<K, V> extends AbstractNativeMap<PMap.Slot>
         return slot < 0 ? defaultValue : UnsafeMemory.getByte(valueAddress(slot)) != 0;
     }
 
+    /**
+     * Reads the value for key, or defaultValue when absent.
+     *
+     * @param key the key
+     * @param defaultValue the fallback
+     * @return the value, or defaultValue
+     * @throws IllegalArgumentException on key or value type mismatch
+     * @throws IllegalStateException if closed
+     */
     public boolean getOrDefault(double key, boolean defaultValue)
     {
         ensureOpen();
@@ -271,6 +544,14 @@ public final class PMap<K, V> extends AbstractNativeMap<PMap.Slot>
         return slot < 0 ? defaultValue : UnsafeMemory.getByte(valueAddress(slot)) != 0;
     }
 
+    /**
+     * Tests whether key is present.
+     *
+     * @param key the key
+     * @return true if present
+     * @throws IllegalArgumentException on key type mismatch
+     * @throws IllegalStateException if closed
+     */
     public boolean containsKey(long key)
     {
         ensureOpen();
@@ -278,6 +559,14 @@ public final class PMap<K, V> extends AbstractNativeMap<PMap.Slot>
         return findKey(integralKeyBits(key)) >= 0;
     }
 
+    /**
+     * Tests whether key is present.
+     *
+     * @param key the key
+     * @return true if present
+     * @throws IllegalArgumentException on key type mismatch
+     * @throws IllegalStateException if closed
+     */
     public boolean containsKey(double key)
     {
         ensureOpen();
@@ -285,6 +574,14 @@ public final class PMap<K, V> extends AbstractNativeMap<PMap.Slot>
         return findKey(floatingKeyBits(key)) >= 0;
     }
 
+    /**
+     * Removes the mapping for key.
+     *
+     * @param key the key
+     * @return true if the map changed
+     * @throws IllegalArgumentException on key type mismatch
+     * @throws IllegalStateException if closed
+     */
     public boolean remove(long key)
     {
         ensureOpen();
@@ -294,6 +591,14 @@ public final class PMap<K, V> extends AbstractNativeMap<PMap.Slot>
         return bits == 0 ? removeZero() : removeSlot(bits);
     }
 
+    /**
+     * Removes the mapping for key.
+     *
+     * @param key the key
+     * @return true if the map changed
+     * @throws IllegalArgumentException on key type mismatch
+     * @throws IllegalStateException if closed
+     */
     public boolean remove(double key)
     {
         ensureOpen();
@@ -303,6 +608,14 @@ public final class PMap<K, V> extends AbstractNativeMap<PMap.Slot>
         return bits == 0 ? removeZero() : removeSlot(bits);
     }
 
+    /**
+     * Emits every key; integral-keyed maps only.
+     *
+     * @param consumer the receiver
+     * @throws NullPointerException if consumer is null
+     * @throws IllegalArgumentException if the key type is floating
+     * @throws IllegalStateException if closed
+     */
     public void forEachKey(LongConsumer consumer)
     {
         Objects.requireNonNull(consumer, "consumer");
@@ -327,6 +640,14 @@ public final class PMap<K, V> extends AbstractNativeMap<PMap.Slot>
         }
     }
 
+    /**
+     * Emits every key; floating-keyed maps only.
+     *
+     * @param consumer the receiver
+     * @throws NullPointerException if consumer is null
+     * @throws IllegalArgumentException if the key type is integral
+     * @throws IllegalStateException if closed
+     */
     public void forEachKey(DoubleConsumer consumer)
     {
         Objects.requireNonNull(consumer, "consumer");

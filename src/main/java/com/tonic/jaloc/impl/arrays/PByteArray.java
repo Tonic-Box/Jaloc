@@ -5,31 +5,75 @@ import com.tonic.jaloc.memory.data.ElementSize;
 import com.tonic.jaloc.memory.iface.NativeAllocator;
 import com.tonic.jaloc.memory.internal.UnsafeMemory;
 
+/**
+ * A fixed-length native byte array.
+ */
 public final class PByteArray extends AbstractPrimitiveArray<PByteWriter>
 {
+    /**
+     * Allocates length elements on the system allocator, zeroed.
+     *
+     * @param length the element count
+     * @throws IllegalArgumentException if length is negative
+     */
     public PByteArray(long length) {
         super(ElementSize.BYTE, length);
     }
 
+    /**
+     * Allocates length elements on the given allocator, zeroed.
+     *
+     * @param allocator the allocator to source memory from
+     * @param length the element count
+     * @throws IllegalArgumentException if length is negative
+     */
     public PByteArray(NativeAllocator allocator, long length) {
         super(allocator, ElementSize.BYTE, length);
     }
 
+    /**
+     * Reads the element at index.
+     *
+     * @param index the element index
+     * @return the element
+     * @throws IndexOutOfBoundsException if index is out of range
+     * @throws IllegalStateException if closed
+     */
     public byte get(long index)
     {
         return readByte(index);
     }
 
+    /**
+     * Writes the element at index.
+     *
+     * @param index the element index
+     * @param value the value to store
+     * @throws IndexOutOfBoundsException if index is out of range
+     * @throws IllegalStateException if closed
+     */
     public void set(long index, byte value)
     {
         writeByte(index, value);
     }
 
+    /**
+     * Reads the element at index with no liveness or bounds check; the caller must have proven both.
+     *
+     * @param index the element index
+     * @return the element
+     */
     public byte getUnchecked(long index)
     {
         return readByteUnchecked(index);
     }
 
+    /**
+     * Writes the element at index with no liveness or bounds check; the caller must have proven both.
+     *
+     * @param index the element index
+     * @param value the value to store
+     */
     public void setUnchecked(long index, byte value)
     {
         writeByteUnchecked(index, value);
@@ -41,11 +85,24 @@ public final class PByteArray extends AbstractPrimitiveArray<PByteWriter>
         return new PByteWriter(this);
     }
 
+    /**
+     * Sorts the whole array ascending.
+     *
+     * @throws IllegalStateException if closed
+     */
     public void sort()
     {
         sort(0, length());
     }
 
+    /**
+     * Sorts fromIndex inclusive to toIndex exclusive, ascending.
+     *
+     * @param fromIndex the range start, inclusive
+     * @param toIndex the range end, exclusive
+     * @throws IndexOutOfBoundsException if the range is out of bounds
+     * @throws IllegalStateException if closed
+     */
     public void sort(long fromIndex, long toIndex)
     {
         checkRange(fromIndex, toIndex);
@@ -84,11 +141,28 @@ public final class PByteArray extends AbstractPrimitiveArray<PByteWriter>
         }
     }
 
+    /**
+     * Binary searches the whole array; content must be sorted.
+     *
+     * @param value the value to find
+     * @return the matching index, or -(insertionPoint + 1) if absent
+     * @throws IllegalStateException if closed
+     */
     public long binarySearch(byte value)
     {
         return binarySearch(0, length(), value);
     }
 
+    /**
+     * Binary searches fromIndex inclusive to toIndex exclusive; content must be sorted.
+     *
+     * @param fromIndex the range start, inclusive
+     * @param toIndex the range end, exclusive
+     * @param value the value to find
+     * @return the matching index, or -(insertionPoint + 1) if absent
+     * @throws IndexOutOfBoundsException if the range is out of bounds
+     * @throws IllegalStateException if closed
+     */
     public long binarySearch(long fromIndex, long toIndex, byte value)
     {
         checkRange(fromIndex, toIndex);

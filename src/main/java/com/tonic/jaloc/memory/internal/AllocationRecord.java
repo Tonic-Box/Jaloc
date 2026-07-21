@@ -2,6 +2,9 @@ package com.tonic.jaloc.memory.internal;
 
 import com.tonic.jaloc.memory.iface.AllocationOwner;
 
+/**
+ * The allocation facts and closed flag shared between state and cleaner.
+ */
 public final class AllocationRecord
 {
     private final AllocationOwner owner;
@@ -13,6 +16,15 @@ public final class AllocationRecord
     private boolean closed;
     private NativeCleaner.Registration registration;
 
+    /**
+     * Records one allocation.
+     *
+     * @param owner the releasing owner
+     * @param rawAddress the raw allocation address
+     * @param size the payload size
+     * @param reservedBytes the reserved size including alignment padding
+     * @param alignment the alignment
+     */
     public AllocationRecord(AllocationOwner owner, long rawAddress, long size, long reservedBytes, int alignment) {
         this.owner = owner;
         this.rawAddress = rawAddress;
@@ -21,6 +33,9 @@ public final class AllocationRecord
         this.alignment = alignment;
     }
 
+    /**
+     * @return the raw allocation address
+     */
     public long rawAddress() {
         return rawAddress;
     }

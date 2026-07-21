@@ -7,6 +7,9 @@ import com.tonic.jaloc.memory.internal.UnsafeMemory;
 
 import java.util.Objects;
 
+/**
+ * A native array of fixed-width elements with checked and unchecked access.
+ */
 public abstract class AbstractPrimitiveArray<W extends AbstractArrayWriter> extends AbstractNativeArray<W>
 {
     private final ElementSize elementSize;
@@ -28,6 +31,9 @@ public abstract class AbstractPrimitiveArray<W extends AbstractArrayWriter> exte
         this.elementSize = elementSize;
     }
 
+    /**
+     * @return the element width
+     */
     public final ElementSize elementSize()
     {
         return elementSize;

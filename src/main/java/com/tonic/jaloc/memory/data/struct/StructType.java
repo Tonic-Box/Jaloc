@@ -1,5 +1,8 @@
 package com.tonic.jaloc.memory.data.struct;
 
+/**
+ * Struct field types with their sizes and alignments.
+ */
 public enum StructType {
     BOOLEAN(1, 1),
     BYTE(1, 1),
@@ -19,11 +22,17 @@ public enum StructType {
         this.alignment = alignment;
     }
 
+    /**
+     * @return the width in bytes
+     */
     public int getSize()
     {
         return size;
     }
 
+    /**
+     * @return the natural alignment
+     */
     public int getAlignment()
     {
         return alignment;

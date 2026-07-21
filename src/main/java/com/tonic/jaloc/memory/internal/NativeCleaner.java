@@ -5,6 +5,9 @@ import java.lang.ref.ReferenceQueue;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
+/**
+ * A reachability backstop that frees allocations whose state was never closed, warning on stderr; -Djaloc.debug=true captures allocation sites.
+ */
 public final class NativeCleaner
 {
     private static final boolean DEBUG = Boolean.getBoolean("jaloc.debug");
@@ -22,6 +25,12 @@ public final class NativeCleaner
     private NativeCleaner() {
     }
 
+    /**
+     * Registers an allocation with the cleaner.
+     *
+     * @param state the reachability referent
+     * @param record the cleanup payload
+     */
     public static void register(AllocationState state, AllocationRecord record) {
         Throwable allocationSite = DEBUG ? new Throwable("Allocation site") : null;
 

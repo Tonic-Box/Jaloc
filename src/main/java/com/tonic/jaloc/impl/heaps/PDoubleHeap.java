@@ -8,15 +8,34 @@ import com.tonic.jaloc.memory.iface.NativeAllocator;
 
 import java.util.NoSuchElementException;
 
+/**
+ * A growable native double min-heap.
+ */
 public final class PDoubleHeap extends AbstractPrimitiveHeap<PDoubleArray, PDoubleWriter> {
+    /**
+     * Creates an empty heap with zero capacity on the system allocator.
+     */
     public PDoubleHeap() {
         this(0);
     }
 
+    /**
+     * Creates an empty heap with the given starting capacity on the system allocator.
+     *
+     * @param initialCapacity the starting capacity
+     * @throws IllegalArgumentException if initialCapacity is negative
+     */
     public PDoubleHeap(long initialCapacity) {
         this(SystemAllocator.getInstance(), initialCapacity);
     }
 
+    /**
+     * Creates an empty heap with the given starting capacity on the given allocator.
+     *
+     * @param allocator the allocator to source memory from
+     * @param initialCapacity the starting capacity
+     * @throws IllegalArgumentException if initialCapacity is negative
+     */
     public PDoubleHeap(NativeAllocator allocator, long initialCapacity) {
         super(allocator, new PDoubleArray(allocator, initialCapacity));
     }
@@ -26,6 +45,12 @@ public final class PDoubleHeap extends AbstractPrimitiveHeap<PDoubleArray, PDoub
         return new PDoubleArray(allocator, capacity);
     }
 
+    /**
+     * Pushes value, growing if needed.
+     *
+     * @param value the value to push
+     * @throws IllegalStateException if closed
+     */
     public void push(double value) {
         PDoubleWriter writer = appendWriter(1);
         writer.put(value);
@@ -33,6 +58,13 @@ public final class PDoubleHeap extends AbstractPrimitiveHeap<PDoubleArray, PDoub
         siftUp(sizeUnchecked() - 1);
     }
 
+    /**
+     * Removes and returns the smallest element.
+     *
+     * @return the removed element
+     * @throws NoSuchElementException if empty
+     * @throws IllegalStateException if closed
+     */
     public double pop() {
         if (isEmpty()) {
             throw new NoSuchElementException("Heap is empty");
@@ -48,6 +80,13 @@ public final class PDoubleHeap extends AbstractPrimitiveHeap<PDoubleArray, PDoub
         return root;
     }
 
+    /**
+     * Reads the smallest element without removing it.
+     *
+     * @return the smallest element
+     * @throws NoSuchElementException if empty
+     * @throws IllegalStateException if closed
+     */
     public double peek() {
         if (isEmpty()) {
             throw new NoSuchElementException("Heap is empty");

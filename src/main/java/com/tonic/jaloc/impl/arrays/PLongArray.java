@@ -5,33 +5,77 @@ import com.tonic.jaloc.memory.data.ElementSize;
 import com.tonic.jaloc.memory.iface.NativeAllocator;
 import com.tonic.jaloc.memory.internal.UnsafeMemory;
 
+/**
+ * A fixed-length native long array.
+ */
 public final class PLongArray extends AbstractPrimitiveArray<PLongWriter>
 {
+    /**
+     * Allocates length elements on the system allocator, zeroed.
+     *
+     * @param length the element count
+     * @throws IllegalArgumentException if length is negative
+     */
     public PLongArray(long length)
     {
         super(ElementSize.QWORD, length);
     }
 
+    /**
+     * Allocates length elements on the given allocator, zeroed.
+     *
+     * @param allocator the allocator to source memory from
+     * @param length the element count
+     * @throws IllegalArgumentException if length is negative
+     */
     public PLongArray(NativeAllocator allocator, long length)
     {
         super(allocator, ElementSize.QWORD, length);
     }
 
+    /**
+     * Reads the element at index.
+     *
+     * @param index the element index
+     * @return the element
+     * @throws IndexOutOfBoundsException if index is out of range
+     * @throws IllegalStateException if closed
+     */
     public long get(long index)
     {
         return readLong(index);
     }
 
+    /**
+     * Writes the element at index.
+     *
+     * @param index the element index
+     * @param value the value to store
+     * @throws IndexOutOfBoundsException if index is out of range
+     * @throws IllegalStateException if closed
+     */
     public void set(long index, long value)
     {
         writeLong(index, value);
     }
 
+    /**
+     * Reads the element at index with no liveness or bounds check; the caller must have proven both.
+     *
+     * @param index the element index
+     * @return the element
+     */
     public long getUnchecked(long index)
     {
         return readLongUnchecked(index);
     }
 
+    /**
+     * Writes the element at index with no liveness or bounds check; the caller must have proven both.
+     *
+     * @param index the element index
+     * @param value the value to store
+     */
     public void setUnchecked(long index, long value)
     {
         writeLongUnchecked(index, value);
@@ -43,11 +87,24 @@ public final class PLongArray extends AbstractPrimitiveArray<PLongWriter>
         return new PLongWriter(this);
     }
 
+    /**
+     * Sorts the whole array ascending.
+     *
+     * @throws IllegalStateException if closed
+     */
     public void sort()
     {
         sort(0, length());
     }
 
+    /**
+     * Sorts fromIndex inclusive to toIndex exclusive, ascending.
+     *
+     * @param fromIndex the range start, inclusive
+     * @param toIndex the range end, exclusive
+     * @throws IndexOutOfBoundsException if the range is out of bounds
+     * @throws IllegalStateException if closed
+     */
     public void sort(long fromIndex, long toIndex)
     {
         checkRange(fromIndex, toIndex);
@@ -146,11 +203,28 @@ public final class PLongArray extends AbstractPrimitiveArray<PLongWriter>
         return false;
     }
 
+    /**
+     * Binary searches the whole array; content must be sorted.
+     *
+     * @param value the value to find
+     * @return the matching index, or -(insertionPoint + 1) if absent
+     * @throws IllegalStateException if closed
+     */
     public long binarySearch(long value)
     {
         return binarySearch(0, length(), value);
     }
 
+    /**
+     * Binary searches fromIndex inclusive to toIndex exclusive; content must be sorted.
+     *
+     * @param fromIndex the range start, inclusive
+     * @param toIndex the range end, exclusive
+     * @param value the value to find
+     * @return the matching index, or -(insertionPoint + 1) if absent
+     * @throws IndexOutOfBoundsException if the range is out of bounds
+     * @throws IllegalStateException if closed
+     */
     public long binarySearch(long fromIndex, long toIndex, long value)
     {
         checkRange(fromIndex, toIndex);

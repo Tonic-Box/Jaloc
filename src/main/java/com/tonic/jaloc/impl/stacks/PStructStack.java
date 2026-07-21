@@ -11,21 +11,47 @@ import java.util.NoSuchElementException;
 import java.util.Objects;
 import java.util.function.Consumer;
 
+/**
+ * A growable native struct stack; elements are accessed through views.
+ */
 public final class PStructStack<T extends PStruct> extends AbstractNativeList<PStructArray<T>, PStructWriter<T>>
 {
     private final StructLayout layout;
     private final StructViewFactory<T> viewFactory;
 
+    /**
+     * Creates an empty stack with zero capacity on the system allocator.
+     *
+     * @param layout the entry layout
+     * @param viewFactory creates the entry views
+     */
     public PStructStack(StructLayout layout, StructViewFactory<T> viewFactory)
     {
         this(SystemAllocator.getInstance(), layout, viewFactory, 0);
     }
 
+    /**
+     * Creates an empty stack with the given starting capacity on the system allocator.
+     *
+     * @param layout the entry layout
+     * @param viewFactory creates the entry views
+     * @param initialCapacity the starting capacity
+     * @throws IllegalArgumentException if initialCapacity is negative
+     */
     public PStructStack(StructLayout layout, StructViewFactory<T> viewFactory, long initialCapacity)
     {
         this(SystemAllocator.getInstance(), layout, viewFactory, initialCapacity);
     }
 
+    /**
+     * Creates an empty stack with the given starting capacity on the given allocator.
+     *
+     * @param allocator the allocator to source memory from
+     * @param layout the entry layout
+     * @param viewFactory creates the entry views
+     * @param initialCapacity the starting capacity
+     * @throws IllegalArgumentException if initialCapacity is negative
+     */
     public PStructStack(NativeAllocator allocator, StructLayout layout, StructViewFactory<T> viewFactory, long initialCapacity)
     {
         super(Objects.requireNonNull(allocator, "allocator"), new PStructArray<>(allocator, viewFactory, layout, initialCapacity));
@@ -34,6 +60,9 @@ public final class PStructStack<T extends PStruct> extends AbstractNativeList<PS
         this.viewFactory = viewFactory;
     }
 
+    /**
+     * @return the entry layout
+     */
     public StructLayout layout()
     {
         return layout;
@@ -45,6 +74,12 @@ public final class PStructStack<T extends PStruct> extends AbstractNativeList<PS
         return new PStructArray<>(allocator, viewFactory, layout, capacity);
     }
 
+    /**
+     * Pushes a zeroed element and returns its view.
+     *
+     * @return the view
+     * @throws IllegalStateException if closed
+     */
     public T push()
     {
         PStructWriter<T> writer = appendWriter(1);
@@ -54,6 +89,14 @@ public final class PStructStack<T extends PStruct> extends AbstractNativeList<PS
         return struct;
     }
 
+    /**
+     * Pushes an element, initializes it, and returns its view; a throwing initializer rolls back.
+     *
+     * @param initializer fills the fresh element
+     * @return the view
+     * @throws NullPointerException if initializer is null
+     * @throws IllegalStateException if closed
+     */
     public T push(Consumer<? super T> initializer)
     {
         Objects.requireNonNull(initializer, "initializer");
@@ -75,6 +118,13 @@ public final class PStructStack<T extends PStruct> extends AbstractNativeList<PS
         }
     }
 
+    /**
+     * Creates a view of the top element.
+     *
+     * @return the view
+     * @throws NoSuchElementException if empty
+     * @throws IllegalStateException if closed
+     */
     public T peek()
     {
         if (isEmpty())
@@ -85,6 +135,12 @@ public final class PStructStack<T extends PStruct> extends AbstractNativeList<PS
         return elements().at(size() - 1);
     }
 
+    /**
+     * Removes the top element, zeroing its slot.
+     *
+     * @throws NoSuchElementException if empty
+     * @throws IllegalStateException if closed
+     */
     public void pop()
     {
         if (isEmpty())

@@ -6,6 +6,9 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * An immutable field layout with computed offsets, stride, and alignment.
+ */
 public final class StructLayout
 {
     private final Object identity;
@@ -25,11 +28,21 @@ public final class StructLayout
         this.alignment = alignment;
     }
 
+    /**
+     * @return a fresh builder
+     */
     public static Builder builder()
     {
         return new Builder();
     }
 
+    /**
+     * Looks up a field by name.
+     *
+     * @param name the field name
+     * @return the field
+     * @throws IllegalArgumentException if unknown
+     */
     public StructField field(String name)
     {
         StructField field = fieldsByName.get(name);
@@ -40,26 +53,46 @@ public final class StructLayout
         return field;
     }
 
+    /**
+     * @return the fields in declaration order
+     */
     public List<StructField> fields()
     {
         return fields;
     }
 
+    /**
+     * @return the unpadded field span in bytes
+     */
     public long size()
     {
         return size;
     }
 
+    /**
+     * @return the aligned per-element stride in bytes
+     */
     public long stride()
     {
         return stride;
     }
 
+    /**
+     * @return the layout alignment
+     */
     public int alignment()
     {
         return alignment;
     }
 
+    /**
+     * Rejects foreign fields and type mismatches.
+     *
+     * @param field the field to validate
+     * @param expectedType the required type
+     * @throws NullPointerException if field is null
+     * @throws IllegalArgumentException if field is foreign or the wrong type
+     */
     public void validateField(StructField field, StructType expectedType)
     {
         if (field == null)
@@ -76,6 +109,9 @@ public final class StructLayout
         }
     }
 
+    /**
+     * Accumulates fields in declaration order; single use.
+     */
     public static final class Builder
     {
         private final Object identity = new Object();
@@ -88,46 +124,116 @@ public final class StructLayout
         {
         }
 
+        /**
+         * Adds a BOOL field.
+         *
+         * @param name the field name
+         * @return this builder
+         * @throws IllegalArgumentException if name is empty or duplicate
+         * @throws IllegalStateException if already built
+         */
         public Builder boolField(String name)
         {
             return add(name, StructType.BOOLEAN);
         }
 
+        /**
+         * Adds a BYTE field.
+         *
+         * @param name the field name
+         * @return this builder
+         * @throws IllegalArgumentException if name is empty or duplicate
+         * @throws IllegalStateException if already built
+         */
         public Builder byteField(String name)
         {
             return add(name, StructType.BYTE);
         }
 
+        /**
+         * Adds a SHORT field.
+         *
+         * @param name the field name
+         * @return this builder
+         * @throws IllegalArgumentException if name is empty or duplicate
+         * @throws IllegalStateException if already built
+         */
         public Builder shortField(String name)
         {
             return add(name, StructType.SHORT);
         }
 
+        /**
+         * Adds a CHAR field.
+         *
+         * @param name the field name
+         * @return this builder
+         * @throws IllegalArgumentException if name is empty or duplicate
+         * @throws IllegalStateException if already built
+         */
         public Builder charField(String name)
         {
             return add(name, StructType.CHAR);
         }
 
+        /**
+         * Adds a INT field.
+         *
+         * @param name the field name
+         * @return this builder
+         * @throws IllegalArgumentException if name is empty or duplicate
+         * @throws IllegalStateException if already built
+         */
         public Builder intField(String name)
         {
             return add(name, StructType.INT);
         }
 
+        /**
+         * Adds a LONG field.
+         *
+         * @param name the field name
+         * @return this builder
+         * @throws IllegalArgumentException if name is empty or duplicate
+         * @throws IllegalStateException if already built
+         */
         public Builder longField(String name)
         {
             return add(name, StructType.LONG);
         }
 
+        /**
+         * Adds a FLOAT field.
+         *
+         * @param name the field name
+         * @return this builder
+         * @throws IllegalArgumentException if name is empty or duplicate
+         * @throws IllegalStateException if already built
+         */
         public Builder floatField(String name)
         {
             return add(name, StructType.FLOAT);
         }
 
+        /**
+         * Adds a DOUBLE field.
+         *
+         * @param name the field name
+         * @return this builder
+         * @throws IllegalArgumentException if name is empty or duplicate
+         * @throws IllegalStateException if already built
+         */
         public Builder doubleField(String name)
         {
             return add(name, StructType.DOUBLE);
         }
 
+        /**
+         * Builds the layout.
+         *
+         * @return the layout
+         * @throws IllegalStateException if already built or no fields were added
+         */
         public StructLayout build()
         {
             ensureNotBuilt();

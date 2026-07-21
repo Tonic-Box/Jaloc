@@ -8,15 +8,34 @@ import com.tonic.jaloc.memory.iface.NativeAllocator;
 
 import java.util.NoSuchElementException;
 
+/**
+ * A growable native long stack.
+ */
 public final class PLongStack extends AbstractPrimitiveStack<PLongArray, PLongWriter> {
+    /**
+     * Creates an empty stack with zero capacity on the system allocator.
+     */
     public PLongStack() {
         this(0);
     }
 
+    /**
+     * Creates an empty stack with the given starting capacity on the system allocator.
+     *
+     * @param initialCapacity the starting capacity
+     * @throws IllegalArgumentException if initialCapacity is negative
+     */
     public PLongStack(long initialCapacity) {
         this(SystemAllocator.getInstance(), initialCapacity);
     }
 
+    /**
+     * Creates an empty stack with the given starting capacity on the given allocator.
+     *
+     * @param allocator the allocator to source memory from
+     * @param initialCapacity the starting capacity
+     * @throws IllegalArgumentException if initialCapacity is negative
+     */
     public PLongStack(NativeAllocator allocator, long initialCapacity) {
         super(allocator, new PLongArray(allocator, initialCapacity));
     }
@@ -26,12 +45,25 @@ public final class PLongStack extends AbstractPrimitiveStack<PLongArray, PLongWr
         return new PLongArray(allocator, capacity);
     }
 
+    /**
+     * Pushes value on top, growing if needed.
+     *
+     * @param value the value to push
+     * @throws IllegalStateException if closed
+     */
     public void push(long value) {
         PLongWriter writer = appendWriter(1);
         writer.put(value);
         commitWriter();
     }
 
+    /**
+     * Pushes values left to right; the last one ends up on top.
+     *
+     * @param values the values to push
+     * @throws NullPointerException if values is null
+     * @throws IllegalStateException if closed
+     */
     public void pushAll(long... values) {
         if (values == null) {
             throw new NullPointerException("values");
@@ -50,6 +82,13 @@ public final class PLongStack extends AbstractPrimitiveStack<PLongArray, PLongWr
         commitWriter();
     }
 
+    /**
+     * Removes and returns the top element.
+     *
+     * @return the removed element
+     * @throws NoSuchElementException if empty
+     * @throws IllegalStateException if closed
+     */
     public long pop() {
         if (isEmpty()) {
             throw new NoSuchElementException("Stack is empty");
@@ -60,6 +99,13 @@ public final class PLongStack extends AbstractPrimitiveStack<PLongArray, PLongWr
         return value;
     }
 
+    /**
+     * Reads the top element without removing it.
+     *
+     * @return the top element
+     * @throws NoSuchElementException if empty
+     * @throws IllegalStateException if closed
+     */
     public long peek() {
         if (isEmpty()) {
             throw new NoSuchElementException("Stack is empty");

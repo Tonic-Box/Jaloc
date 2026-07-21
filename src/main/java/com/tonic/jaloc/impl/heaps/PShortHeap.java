@@ -8,15 +8,34 @@ import com.tonic.jaloc.memory.iface.NativeAllocator;
 
 import java.util.NoSuchElementException;
 
+/**
+ * A growable native short min-heap.
+ */
 public final class PShortHeap extends AbstractPrimitiveHeap<PShortArray, PShortWriter> {
+    /**
+     * Creates an empty heap with zero capacity on the system allocator.
+     */
     public PShortHeap() {
         this(0);
     }
 
+    /**
+     * Creates an empty heap with the given starting capacity on the system allocator.
+     *
+     * @param initialCapacity the starting capacity
+     * @throws IllegalArgumentException if initialCapacity is negative
+     */
     public PShortHeap(long initialCapacity) {
         this(SystemAllocator.getInstance(), initialCapacity);
     }
 
+    /**
+     * Creates an empty heap with the given starting capacity on the given allocator.
+     *
+     * @param allocator the allocator to source memory from
+     * @param initialCapacity the starting capacity
+     * @throws IllegalArgumentException if initialCapacity is negative
+     */
     public PShortHeap(NativeAllocator allocator, long initialCapacity) {
         super(allocator, new PShortArray(allocator, initialCapacity));
     }
@@ -26,6 +45,12 @@ public final class PShortHeap extends AbstractPrimitiveHeap<PShortArray, PShortW
         return new PShortArray(allocator, capacity);
     }
 
+    /**
+     * Pushes value, growing if needed.
+     *
+     * @param value the value to push
+     * @throws IllegalStateException if closed
+     */
     public void push(short value) {
         PShortWriter writer = appendWriter(1);
         writer.put(value);
@@ -33,6 +58,13 @@ public final class PShortHeap extends AbstractPrimitiveHeap<PShortArray, PShortW
         siftUp(sizeUnchecked() - 1);
     }
 
+    /**
+     * Removes and returns the smallest element.
+     *
+     * @return the removed element
+     * @throws NoSuchElementException if empty
+     * @throws IllegalStateException if closed
+     */
     public short pop() {
         if (isEmpty()) {
             throw new NoSuchElementException("Heap is empty");
@@ -48,6 +80,13 @@ public final class PShortHeap extends AbstractPrimitiveHeap<PShortArray, PShortW
         return root;
     }
 
+    /**
+     * Reads the smallest element without removing it.
+     *
+     * @return the smallest element
+     * @throws NoSuchElementException if empty
+     * @throws IllegalStateException if closed
+     */
     public short peek() {
         if (isEmpty()) {
             throw new NoSuchElementException("Heap is empty");

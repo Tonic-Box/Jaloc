@@ -6,6 +6,9 @@ import java.lang.invoke.MethodHandle;
 import java.lang.invoke.MethodHandles;
 import java.lang.reflect.Method;
 
+/**
+ * A wrapper class to facilitate calling sun.misc.Unsafe methods without triggering a spam of JVM warnings.
+ */
 public final class UnsafeMemory
 {
     private static final Object UNSAFE = UnsafeAccess.getUnsafe();
@@ -52,6 +55,13 @@ public final class UnsafeMemory
     {
     }
 
+    /**
+     * Allocates bytes of native memory.
+     *
+     * @param bytes the size, must be positive
+     * @return the address
+     * @throws IllegalArgumentException if bytes is not positive
+     */
     public static long allocate(long bytes)
     {
         if (bytes <= 0)
@@ -69,6 +79,11 @@ public final class UnsafeMemory
         }
     }
 
+    /**
+     * Frees address; zero is a no-op.
+     *
+     * @param address the address to free
+     */
     public static void free(long address)
     {
         if (address == 0)
@@ -86,11 +101,26 @@ public final class UnsafeMemory
         }
     }
 
+    /**
+     * Zeroes bytes at address.
+     *
+     * @param address the start address
+     * @param bytes the byte count
+     * @throws IllegalArgumentException if bytes is negative
+     */
     public static void clear(long address, long bytes)
     {
         fill(address, bytes, (byte) 0);
     }
 
+    /**
+     * Fills bytes at address with value.
+     *
+     * @param address the start address
+     * @param bytes the byte count
+     * @param value the fill byte
+     * @throws IllegalArgumentException if bytes is negative
+     */
     public static void fill(long address, long bytes, byte value)
     {
         if (bytes < 0)
@@ -113,6 +143,14 @@ public final class UnsafeMemory
         }
     }
 
+    /**
+     * Copies bytes from source to destination.
+     *
+     * @param source the source address
+     * @param destination the destination address
+     * @param bytes the byte count
+     * @throws IllegalArgumentException if bytes is negative
+     */
     public static void copy(long source, long destination, long bytes)
     {
         if (bytes < 0)
@@ -135,6 +173,12 @@ public final class UnsafeMemory
         }
     }
 
+    /**
+     * Reads the byte at address.
+     *
+     * @param address the address
+     * @return the value
+     */
     public static byte getByte(long address)
     {
         try
@@ -147,6 +191,12 @@ public final class UnsafeMemory
         }
     }
 
+    /**
+     * Writes the byte at address.
+     *
+     * @param address the address
+     * @param value the value to store
+     */
     public static void putByte(long address, byte value)
     {
         try
@@ -159,6 +209,12 @@ public final class UnsafeMemory
         }
     }
 
+    /**
+     * Reads the short at address.
+     *
+     * @param address the address
+     * @return the value
+     */
     public static short getShort(long address)
     {
         try
@@ -171,6 +227,12 @@ public final class UnsafeMemory
         }
     }
 
+    /**
+     * Writes the short at address.
+     *
+     * @param address the address
+     * @param value the value to store
+     */
     public static void putShort(long address, short value)
     {
         try
@@ -183,6 +245,12 @@ public final class UnsafeMemory
         }
     }
 
+    /**
+     * Reads the char at address.
+     *
+     * @param address the address
+     * @return the value
+     */
     public static char getChar(long address)
     {
         try
@@ -195,6 +263,12 @@ public final class UnsafeMemory
         }
     }
 
+    /**
+     * Writes the char at address.
+     *
+     * @param address the address
+     * @param value the value to store
+     */
     public static void putChar(long address, char value)
     {
         try
@@ -207,6 +281,12 @@ public final class UnsafeMemory
         }
     }
 
+    /**
+     * Reads the int at address.
+     *
+     * @param address the address
+     * @return the value
+     */
     public static int getInt(long address)
     {
         try
@@ -219,6 +299,12 @@ public final class UnsafeMemory
         }
     }
 
+    /**
+     * Writes the int at address.
+     *
+     * @param address the address
+     * @param value the value to store
+     */
     public static void putInt(long address, int value)
     {
         try
@@ -231,6 +317,12 @@ public final class UnsafeMemory
         }
     }
 
+    /**
+     * Reads the long at address.
+     *
+     * @param address the address
+     * @return the value
+     */
     public static long getLong(long address)
     {
         try
@@ -243,6 +335,12 @@ public final class UnsafeMemory
         }
     }
 
+    /**
+     * Writes the long at address.
+     *
+     * @param address the address
+     * @param value the value to store
+     */
     public static void putLong(long address, long value)
     {
         try
@@ -255,6 +353,12 @@ public final class UnsafeMemory
         }
     }
 
+    /**
+     * Reads the float at address.
+     *
+     * @param address the address
+     * @return the value
+     */
     public static float getFloat(long address)
     {
         try
@@ -267,6 +371,12 @@ public final class UnsafeMemory
         }
     }
 
+    /**
+     * Writes the float at address.
+     *
+     * @param address the address
+     * @param value the value to store
+     */
     public static void putFloat(long address, float value)
     {
         try
@@ -279,6 +389,12 @@ public final class UnsafeMemory
         }
     }
 
+    /**
+     * Reads the double at address.
+     *
+     * @param address the address
+     * @return the value
+     */
     public static double getDouble(long address)
     {
         try
@@ -291,6 +407,12 @@ public final class UnsafeMemory
         }
     }
 
+    /**
+     * Writes the double at address.
+     *
+     * @param address the address
+     * @param value the value to store
+     */
     public static void putDouble(long address, double value)
     {
         try
@@ -303,6 +425,14 @@ public final class UnsafeMemory
         }
     }
 
+    /**
+     * Rounds address up to alignment.
+     *
+     * @param address the address
+     * @param alignment a positive power of two
+     * @return the aligned address
+     * @throws IllegalArgumentException if alignment is invalid or the result overflows
+     */
     public static long alignUp(long address, int alignment)
     {
         validateAlignment(alignment);
@@ -319,6 +449,12 @@ public final class UnsafeMemory
         }
     }
 
+    /**
+     * Rejects non-power-of-two alignments.
+     *
+     * @param alignment the alignment to validate
+     * @throws IllegalArgumentException if alignment is not a positive power of two
+     */
     public static void validateAlignment(int alignment)
     {
         if (alignment <= 0 || (alignment & (alignment - 1)) != 0)

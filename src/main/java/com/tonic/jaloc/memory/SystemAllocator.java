@@ -3,6 +3,9 @@ package com.tonic.jaloc.memory;
 import com.tonic.jaloc.memory.iface.*;
 import com.tonic.jaloc.memory.internal.*;
 
+/**
+ * A singleton allocator for aligned native memory.
+ */
 public final class SystemAllocator implements NativeAllocator, AllocationOwner
 {
     private static final SystemAllocator INSTANCE = new SystemAllocator();
@@ -10,6 +13,9 @@ public final class SystemAllocator implements NativeAllocator, AllocationOwner
     private SystemAllocator() {
     }
 
+    /**
+     * @return the singleton
+     */
     public static SystemAllocator getInstance() {
         return INSTANCE;
     }

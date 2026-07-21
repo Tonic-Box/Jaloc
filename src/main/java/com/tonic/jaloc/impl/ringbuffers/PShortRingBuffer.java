@@ -8,11 +8,27 @@ import com.tonic.jaloc.memory.iface.NativeAllocator;
 
 import java.util.NoSuchElementException;
 
+/**
+ * A fixed-capacity native short ring buffer; enqueueing when full overwrites the oldest element.
+ */
 public final class PShortRingBuffer extends AbstractPrimitiveRingBuffer<PShortArray, PShortWriter> {
+    /**
+     * Allocates a buffer of the given capacity on the system allocator.
+     *
+     * @param capacity the fixed capacity
+     * @throws IllegalArgumentException if capacity is not positive
+     */
     public PShortRingBuffer(long capacity) {
         this(SystemAllocator.getInstance(), capacity);
     }
 
+    /**
+     * Allocates a buffer of the given capacity on the given allocator.
+     *
+     * @param allocator the allocator to source memory from
+     * @param capacity the fixed capacity
+     * @throws IllegalArgumentException if capacity is not positive
+     */
     public PShortRingBuffer(NativeAllocator allocator, long capacity) {
         super(allocator, new PShortArray(allocator, requireCapacity(capacity)));
     }
@@ -22,6 +38,12 @@ public final class PShortRingBuffer extends AbstractPrimitiveRingBuffer<PShortAr
         return new PShortArray(allocator, capacity);
     }
 
+    /**
+     * Enqueues value at the tail, overwriting the oldest element when full.
+     *
+     * @param value the value to enqueue
+     * @throws IllegalStateException if closed
+     */
     public void enqueue(short value) {
         if (size() == capacity()) {
             long index = headIndex();
@@ -35,6 +57,13 @@ public final class PShortRingBuffer extends AbstractPrimitiveRingBuffer<PShortAr
         commitTail();
     }
 
+    /**
+     * Enqueues values left to right; only the last capacity values survive overflow.
+     *
+     * @param values the values to enqueue
+     * @throws NullPointerException if values is null
+     * @throws IllegalStateException if closed
+     */
     public void enqueueAll(short... values) {
         if (values == null) {
             throw new NullPointerException("values");
@@ -45,6 +74,13 @@ public final class PShortRingBuffer extends AbstractPrimitiveRingBuffer<PShortAr
         }
     }
 
+    /**
+     * Removes and returns the head element.
+     *
+     * @return the removed element
+     * @throws NoSuchElementException if empty
+     * @throws IllegalStateException if closed
+     */
     public short dequeue() {
         if (isEmpty()) {
             throw new NoSuchElementException("Ring buffer is empty");
@@ -55,6 +91,13 @@ public final class PShortRingBuffer extends AbstractPrimitiveRingBuffer<PShortAr
         return value;
     }
 
+    /**
+     * Reads the head element without removing it.
+     *
+     * @return the head element
+     * @throws NoSuchElementException if empty
+     * @throws IllegalStateException if closed
+     */
     public short peek() {
         if (isEmpty()) {
             throw new NoSuchElementException("Ring buffer is empty");

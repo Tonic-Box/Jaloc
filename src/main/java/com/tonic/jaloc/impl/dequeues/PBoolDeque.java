@@ -8,18 +8,37 @@ import com.tonic.jaloc.memory.iface.NativeAllocator;
 
 import java.util.NoSuchElementException;
 
+/**
+ * A growable native bool deque over a bit-packed ring.
+ */
 public final class PBoolDeque extends AbstractPrimitiveDeque<PBoolArray, PBoolWriter>
 {
+    /**
+     * Creates an empty deque with zero capacity on the system allocator.
+     */
     public PBoolDeque()
     {
         this(0);
     }
 
+    /**
+     * Creates an empty deque with the given starting capacity on the system allocator.
+     *
+     * @param initialCapacity the starting capacity
+     * @throws IllegalArgumentException if initialCapacity is negative
+     */
     public PBoolDeque(long initialCapacity)
     {
         this(SystemAllocator.getInstance(), initialCapacity);
     }
 
+    /**
+     * Creates an empty deque with the given starting capacity on the given allocator.
+     *
+     * @param allocator the allocator to source memory from
+     * @param initialCapacity the starting capacity
+     * @throws IllegalArgumentException if initialCapacity is negative
+     */
     public PBoolDeque(NativeAllocator allocator, long initialCapacity) {
         super(allocator, new PBoolArray(allocator, initialCapacity));
     }
@@ -40,16 +59,34 @@ public final class PBoolDeque extends AbstractPrimitiveDeque<PBoolArray, PBoolWr
         }
     }
 
+    /**
+     * Grows capacity to at least requiredCapacity.
+     *
+     * @param requiredCapacity the minimum capacity
+     * @throws IllegalArgumentException if requiredCapacity is negative
+     * @throws IllegalStateException if closed
+     */
     public void ensureCapacity(long requiredCapacity)
     {
         ensureRingCapacity(requiredCapacity);
     }
 
+    /**
+     * Shrinks capacity to the current size.
+     *
+     * @throws IllegalStateException if closed
+     */
     public void trimToSize()
     {
         trimRing();
     }
 
+    /**
+     * Adds value at the head, growing if needed.
+     *
+     * @param value the value to add
+     * @throws IllegalStateException if closed
+     */
     public void addFirst(boolean value)
     {
         long index = reserveHead();
@@ -57,6 +94,12 @@ public final class PBoolDeque extends AbstractPrimitiveDeque<PBoolArray, PBoolWr
         commitHead();
     }
 
+    /**
+     * Adds value at the tail, growing if needed.
+     *
+     * @param value the value to add
+     * @throws IllegalStateException if closed
+     */
     public void addLast(boolean value)
     {
         long index = reserveTail();
@@ -64,6 +107,13 @@ public final class PBoolDeque extends AbstractPrimitiveDeque<PBoolArray, PBoolWr
         commitTail();
     }
 
+    /**
+     * Removes and returns the head element.
+     *
+     * @return the removed element
+     * @throws NoSuchElementException if empty
+     * @throws IllegalStateException if closed
+     */
     public boolean removeFirst()
     {
         if (isEmpty()) {
@@ -76,6 +126,13 @@ public final class PBoolDeque extends AbstractPrimitiveDeque<PBoolArray, PBoolWr
         return value;
     }
 
+    /**
+     * Removes and returns the tail element.
+     *
+     * @return the removed element
+     * @throws NoSuchElementException if empty
+     * @throws IllegalStateException if closed
+     */
     public boolean removeLast()
     {
         if (isEmpty()) {
@@ -88,6 +145,13 @@ public final class PBoolDeque extends AbstractPrimitiveDeque<PBoolArray, PBoolWr
         return value;
     }
 
+    /**
+     * Reads the head element without removing it.
+     *
+     * @return the head element
+     * @throws NoSuchElementException if empty
+     * @throws IllegalStateException if closed
+     */
     public boolean peekFirst()
     {
         if (isEmpty()) {
@@ -96,6 +160,13 @@ public final class PBoolDeque extends AbstractPrimitiveDeque<PBoolArray, PBoolWr
         return elementsUnchecked().getUnchecked(headIndex());
     }
 
+    /**
+     * Reads the tail element without removing it.
+     *
+     * @return the tail element
+     * @throws NoSuchElementException if empty
+     * @throws IllegalStateException if closed
+     */
     public boolean peekLast()
     {
         if (isEmpty()) {

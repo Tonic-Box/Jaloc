@@ -9,15 +9,26 @@ import com.tonic.jaloc.memory.iface.NativeAllocator;
 import java.util.Objects;
 import java.util.function.IntConsumer;
 
+/**
+ * A byte set over a fixed 256-bit direct-indexed bitmap.
+ */
 public final class PByteSet extends AbstractNativeCollection<PLongArray, PLongWriter>
 {
     private static final long WORDS = 4;
 
+    /**
+     * Creates an empty set on the system allocator.
+     */
     public PByteSet()
     {
         this(SystemAllocator.getInstance());
     }
 
+    /**
+     * Creates an empty set on the given allocator.
+     *
+     * @param allocator the allocator to source memory from
+     */
     public PByteSet(NativeAllocator allocator)
     {
         super(allocator, new PLongArray(allocator, WORDS));
@@ -40,6 +51,13 @@ public final class PByteSet extends AbstractNativeCollection<PLongArray, PLongWr
         }
     }
 
+    /**
+     * Adds value.
+     *
+     * @param value the value to add
+     * @return true if the set changed
+     * @throws IllegalStateException if closed
+     */
     public boolean add(byte value)
     {
         long index = value & 0xFFL;
@@ -57,6 +75,13 @@ public final class PByteSet extends AbstractNativeCollection<PLongArray, PLongWr
         return true;
     }
 
+    /**
+     * Removes value.
+     *
+     * @param value the value to remove
+     * @return true if the set changed
+     * @throws IllegalStateException if closed
+     */
     public boolean remove(byte value)
     {
         long index = value & 0xFFL;
@@ -74,6 +99,13 @@ public final class PByteSet extends AbstractNativeCollection<PLongArray, PLongWr
         return true;
     }
 
+    /**
+     * Tests whether value is present.
+     *
+     * @param value the value to test
+     * @return true if present
+     * @throws IllegalStateException if closed
+     */
     public boolean contains(byte value)
     {
         long index = value & 0xFFL;
@@ -81,6 +113,13 @@ public final class PByteSet extends AbstractNativeCollection<PLongArray, PLongWr
         return (elements().getUnchecked(index >>> 6) & (1L << index)) != 0;
     }
 
+    /**
+     * Emits each present value in ascending order.
+     *
+     * @param consumer the receiver
+     * @throws NullPointerException if consumer is null
+     * @throws IllegalStateException if closed
+     */
     public void forEach(IntConsumer consumer)
     {
         Objects.requireNonNull(consumer, "consumer");
@@ -102,6 +141,11 @@ public final class PByteSet extends AbstractNativeCollection<PLongArray, PLongWr
         }
     }
 
+    /**
+     * Empties the set.
+     *
+     * @throws IllegalStateException if closed
+     */
     public void clear()
     {
         ensureOpen();

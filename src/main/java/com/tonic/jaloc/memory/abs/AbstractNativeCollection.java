@@ -4,6 +4,9 @@ import com.tonic.jaloc.memory.iface.NativeAllocator;
 
 import java.util.Objects;
 
+/**
+ * The base of all native collections: allocator, backing array, size, and lifecycle.
+ */
 public abstract class AbstractNativeCollection<A extends AbstractNativeArray<W>, W extends AbstractArrayWriter> implements AutoCloseable
 {
     private static final long DEFAULT_CAPACITY = 8;
@@ -25,23 +28,38 @@ public abstract class AbstractNativeCollection<A extends AbstractNativeArray<W>,
 
     protected abstract void migrateElements(A source, A destination);
 
+    /**
+     * @return the element count
+     * @throws IllegalStateException if closed
+     */
     public final long size()
     {
         ensureOpen();
         return size;
     }
 
+    /**
+     * @return true if no elements are present
+     * @throws IllegalStateException if closed
+     */
     public final boolean isEmpty()
     {
         return size() == 0;
     }
 
+    /**
+     * @return the backing array length
+     * @throws IllegalStateException if closed
+     */
     public final long capacity()
     {
         ensureOpen();
         return array.length();
     }
 
+    /**
+     * @return true until closed
+     */
     public boolean isOpen()
     {
         return open && array.isOpen();
@@ -145,6 +163,9 @@ public abstract class AbstractNativeCollection<A extends AbstractNativeArray<W>,
         }
     }
 
+    /**
+     * Releases the backing native memory. Safe to call more than once.
+     */
     @Override
     public final void close()
     {

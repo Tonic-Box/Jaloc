@@ -8,11 +8,27 @@ import com.tonic.jaloc.memory.iface.NativeAllocator;
 
 import java.util.NoSuchElementException;
 
+/**
+ * A fixed-capacity native int FIFO queue that rejects when full.
+ */
 public final class PIntFixedQueue extends AbstractPrimitiveFixedQueue<PIntArray, PIntWriter> {
+    /**
+     * Allocates a queue of the given capacity on the system allocator.
+     *
+     * @param capacity the fixed capacity
+     * @throws IllegalArgumentException if capacity is not positive
+     */
     public PIntFixedQueue(long capacity) {
         this(SystemAllocator.getInstance(), capacity);
     }
 
+    /**
+     * Allocates a queue of the given capacity on the given allocator.
+     *
+     * @param allocator the allocator to source memory from
+     * @param capacity the fixed capacity
+     * @throws IllegalArgumentException if capacity is not positive
+     */
     public PIntFixedQueue(NativeAllocator allocator, long capacity) {
         super(allocator, new PIntArray(allocator, requireCapacity(capacity)));
     }
@@ -22,6 +38,12 @@ public final class PIntFixedQueue extends AbstractPrimitiveFixedQueue<PIntArray,
         return new PIntArray(allocator, capacity);
     }
 
+    /**
+     * Enqueues value at the tail.
+     *
+     * @param value the value to enqueue
+     * @throws IllegalStateException if full or closed
+     */
     public void enqueue(int value) {
         if (size() == capacity()) {
             throw new IllegalStateException("Queue is full");
@@ -32,6 +54,13 @@ public final class PIntFixedQueue extends AbstractPrimitiveFixedQueue<PIntArray,
         commitTail();
     }
 
+    /**
+     * Enqueues value at the tail if room remains.
+     *
+     * @param value the value to enqueue
+     * @return true if accepted, false if full
+     * @throws IllegalStateException if closed
+     */
     public boolean offer(int value) {
         if (size() == capacity()) {
             return false;
@@ -43,6 +72,13 @@ public final class PIntFixedQueue extends AbstractPrimitiveFixedQueue<PIntArray,
         return true;
     }
 
+    /**
+     * Enqueues values left to right, all or nothing.
+     *
+     * @param values the values to enqueue
+     * @throws NullPointerException if values is null
+     * @throws IllegalStateException if the values do not all fit, or if closed
+     */
     public void enqueueAll(int... values) {
         if (values == null) {
             throw new NullPointerException("values");
@@ -63,6 +99,13 @@ public final class PIntFixedQueue extends AbstractPrimitiveFixedQueue<PIntArray,
         }
     }
 
+    /**
+     * Removes and returns the head element.
+     *
+     * @return the removed element
+     * @throws NoSuchElementException if empty
+     * @throws IllegalStateException if closed
+     */
     public int dequeue() {
         if (isEmpty()) {
             throw new NoSuchElementException("Queue is empty");
@@ -73,6 +116,13 @@ public final class PIntFixedQueue extends AbstractPrimitiveFixedQueue<PIntArray,
         return value;
     }
 
+    /**
+     * Reads the head element without removing it.
+     *
+     * @return the head element
+     * @throws NoSuchElementException if empty
+     * @throws IllegalStateException if closed
+     */
     public int peek() {
         if (isEmpty()) {
             throw new NoSuchElementException("Queue is empty");

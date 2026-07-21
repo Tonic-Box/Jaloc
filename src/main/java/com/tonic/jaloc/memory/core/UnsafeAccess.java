@@ -2,6 +2,9 @@ package com.tonic.jaloc.memory.core;
 
 import java.lang.reflect.Field;
 
+/**
+ * A utility class to access the sun.misc.Unsafe instance reflectively.
+ */
 public final class UnsafeAccess
 {
     private static final Object UNSAFE = acquireUnsafe();
@@ -25,6 +28,9 @@ public final class UnsafeAccess
         }
     }
 
+    /**
+     * @return the Unsafe instance, typed as Object
+     */
     public static Object getUnsafe()
     {
         return UNSAFE;

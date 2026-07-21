@@ -9,6 +9,9 @@ import com.tonic.jaloc.memory.data.struct.StructType;
 import com.tonic.jaloc.memory.iface.NativeAllocator;
 import com.tonic.jaloc.memory.internal.UnsafeMemory;
 
+/**
+ * The struct-entry hash engine behind the maps: open addressing over a keyed layout with a reserved zero-key slot.
+ */
 public abstract class AbstractNativeMap<T extends PStruct> extends AbstractNativeCollection<PStructArray<T>, PStructWriter<T>>
 {
     private static final int KEY_BYTE = 0;
@@ -46,6 +49,9 @@ public abstract class AbstractNativeMap<T extends PStruct> extends AbstractNativ
         this.tableMask = initialArray.length() - 2;
     }
 
+    /**
+     * @return the entry layout
+     */
     public final StructLayout layout()
     {
         return layout;
@@ -84,6 +90,11 @@ public abstract class AbstractNativeMap<T extends PStruct> extends AbstractNativ
         }
     }
 
+    /**
+     * Empties the map.
+     *
+     * @throws IllegalStateException if closed
+     */
     public void clear()
     {
         ensureOpen();

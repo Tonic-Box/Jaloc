@@ -1,5 +1,8 @@
 package com.tonic.jaloc.memory.data.struct;
 
+/**
+ * One field's name, type, and offset within a layout.
+ */
 public final class StructField {
 
     private final Object layoutIdentity;
@@ -14,14 +17,23 @@ public final class StructField {
         this.offset = offset;
     }
 
+    /**
+     * @return the field name
+     */
     public String getName() {
         return name;
     }
 
+    /**
+     * @return the field type
+     */
     public StructType getType() {
         return type;
     }
 
+    /**
+     * @return the byte offset within the struct
+     */
     public long getOffset() {
         return offset;
     }

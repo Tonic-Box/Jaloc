@@ -2,6 +2,9 @@ package com.tonic.jaloc.memory.abs;
 
 import com.tonic.jaloc.memory.iface.NativeAllocator;
 
+/**
+ * The contiguous-storage engine behind lists, stacks, and heaps.
+ */
 public abstract class AbstractNativeList<A extends AbstractNativeArray<W>, W extends AbstractArrayWriter> extends AbstractNativeCollection<A, W>
 {
     private W writer;
@@ -13,6 +16,11 @@ public abstract class AbstractNativeList<A extends AbstractNativeArray<W>, W ext
         this.writer = initialArray.writer();
     }
 
+    /**
+     * Zeroes the live range and empties the collection.
+     *
+     * @throws IllegalStateException if closed
+     */
     public final void clear()
     {
         ensureOpen();
@@ -26,6 +34,13 @@ public abstract class AbstractNativeList<A extends AbstractNativeArray<W>, W ext
         writer.position(0);
     }
 
+    /**
+     * Grows capacity to at least requiredCapacity.
+     *
+     * @param requiredCapacity the minimum capacity
+     * @throws IllegalArgumentException if requiredCapacity is negative
+     * @throws IllegalStateException if closed
+     */
     public final void ensureCapacity(long requiredCapacity)
     {
         ensureOpen();
@@ -44,6 +59,11 @@ public abstract class AbstractNativeList<A extends AbstractNativeArray<W>, W ext
         writer = elements().writer(size());
     }
 
+    /**
+     * Shrinks capacity to the current size.
+     *
+     * @throws IllegalStateException if closed
+     */
     public final void trimToSize()
     {
         ensureOpen();

@@ -9,20 +9,39 @@ import com.tonic.jaloc.memory.iface.NativeAllocator;
 import java.util.Objects;
 import java.util.function.IntConsumer;
 
+/**
+ * A growable native int hash set with open addressing and backward-shift deletion.
+ */
 public final class PIntSet extends AbstractNativeCollection<PIntArray, PIntWriter>
 {
     private boolean containsZero;
 
+    /**
+     * Creates an empty set on the system allocator.
+     */
     public PIntSet()
     {
         this(0);
     }
 
+    /**
+     * Creates an empty set presized for expectedElements on the system allocator.
+     *
+     * @param expectedElements presizes the table
+     * @throws IllegalArgumentException if expectedElements is negative
+     */
     public PIntSet(long expectedElements)
     {
         this(SystemAllocator.getInstance(), expectedElements);
     }
 
+    /**
+     * Creates an empty set presized for expectedElements on the given allocator.
+     *
+     * @param allocator the allocator to source memory from
+     * @param expectedElements presizes the table
+     * @throws IllegalArgumentException if expectedElements is negative
+     */
     public PIntSet(NativeAllocator allocator, long expectedElements)
     {
         super(allocator, new PIntArray(allocator, tableSize(expectedElements)));
@@ -60,6 +79,13 @@ public final class PIntSet extends AbstractNativeCollection<PIntArray, PIntWrite
         }
     }
 
+    /**
+     * Adds value.
+     *
+     * @param value the value to add
+     * @return true if the set changed
+     * @throws IllegalStateException if closed
+     */
     public boolean add(int value)
     {
         ensureOpen();
@@ -116,6 +142,13 @@ public final class PIntSet extends AbstractNativeCollection<PIntArray, PIntWrite
         return true;
     }
 
+    /**
+     * Removes value.
+     *
+     * @param value the value to remove
+     * @return true if the set changed
+     * @throws IllegalStateException if closed
+     */
     public boolean remove(int value)
     {
         ensureOpen();
@@ -156,6 +189,13 @@ public final class PIntSet extends AbstractNativeCollection<PIntArray, PIntWrite
         }
     }
 
+    /**
+     * Tests whether value is present.
+     *
+     * @param value the value to test
+     * @return true if present
+     * @throws IllegalStateException if closed
+     */
     public boolean contains(int value)
     {
         ensureOpen();
@@ -187,6 +227,13 @@ public final class PIntSet extends AbstractNativeCollection<PIntArray, PIntWrite
         }
     }
 
+    /**
+     * Emits each present value in no particular order.
+     *
+     * @param consumer the receiver
+     * @throws NullPointerException if consumer is null
+     * @throws IllegalStateException if closed
+     */
     public void forEach(IntConsumer consumer)
     {
         Objects.requireNonNull(consumer, "consumer");
@@ -211,6 +258,11 @@ public final class PIntSet extends AbstractNativeCollection<PIntArray, PIntWrite
         }
     }
 
+    /**
+     * Empties the set.
+     *
+     * @throws IllegalStateException if closed
+     */
     public void clear()
     {
         ensureOpen();

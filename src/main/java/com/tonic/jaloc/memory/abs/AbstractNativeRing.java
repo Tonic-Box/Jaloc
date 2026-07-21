@@ -2,6 +2,9 @@ package com.tonic.jaloc.memory.abs;
 
 import com.tonic.jaloc.memory.iface.NativeAllocator;
 
+/**
+ * The ring engine behind queues, deques, and buffers: wraparound head and tail over one array.
+ */
 public abstract class AbstractNativeRing<A extends AbstractNativeArray<W>, W extends AbstractArrayWriter> extends AbstractNativeCollection<A, W>
 {
     private long head;
@@ -154,6 +157,11 @@ public abstract class AbstractNativeRing<A extends AbstractNativeArray<W>, W ext
         }
     }
 
+    /**
+     * Empties the ring and zeroes its storage.
+     *
+     * @throws IllegalStateException if closed
+     */
     public final void clear()
     {
         ensureOpen();

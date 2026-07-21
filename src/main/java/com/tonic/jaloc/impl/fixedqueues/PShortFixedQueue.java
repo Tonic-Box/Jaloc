@@ -8,11 +8,27 @@ import com.tonic.jaloc.memory.iface.NativeAllocator;
 
 import java.util.NoSuchElementException;
 
+/**
+ * A fixed-capacity native short FIFO queue that rejects when full.
+ */
 public final class PShortFixedQueue extends AbstractPrimitiveFixedQueue<PShortArray, PShortWriter> {
+    /**
+     * Allocates a queue of the given capacity on the system allocator.
+     *
+     * @param capacity the fixed capacity
+     * @throws IllegalArgumentException if capacity is not positive
+     */
     public PShortFixedQueue(long capacity) {
         this(SystemAllocator.getInstance(), capacity);
     }
 
+    /**
+     * Allocates a queue of the given capacity on the given allocator.
+     *
+     * @param allocator the allocator to source memory from
+     * @param capacity the fixed capacity
+     * @throws IllegalArgumentException if capacity is not positive
+     */
     public PShortFixedQueue(NativeAllocator allocator, long capacity) {
         super(allocator, new PShortArray(allocator, requireCapacity(capacity)));
     }
@@ -22,6 +38,12 @@ public final class PShortFixedQueue extends AbstractPrimitiveFixedQueue<PShortAr
         return new PShortArray(allocator, capacity);
     }
 
+    /**
+     * Enqueues value at the tail.
+     *
+     * @param value the value to enqueue
+     * @throws IllegalStateException if full or closed
+     */
     public void enqueue(short value) {
         if (size() == capacity()) {
             throw new IllegalStateException("Queue is full");
@@ -32,6 +54,13 @@ public final class PShortFixedQueue extends AbstractPrimitiveFixedQueue<PShortAr
         commitTail();
     }
 
+    /**
+     * Enqueues value at the tail if room remains.
+     *
+     * @param value the value to enqueue
+     * @return true if accepted, false if full
+     * @throws IllegalStateException if closed
+     */
     public boolean offer(short value) {
         if (size() == capacity()) {
             return false;
@@ -43,6 +72,13 @@ public final class PShortFixedQueue extends AbstractPrimitiveFixedQueue<PShortAr
         return true;
     }
 
+    /**
+     * Enqueues values left to right, all or nothing.
+     *
+     * @param values the values to enqueue
+     * @throws NullPointerException if values is null
+     * @throws IllegalStateException if the values do not all fit, or if closed
+     */
     public void enqueueAll(short... values) {
         if (values == null) {
             throw new NullPointerException("values");
@@ -63,6 +99,13 @@ public final class PShortFixedQueue extends AbstractPrimitiveFixedQueue<PShortAr
         }
     }
 
+    /**
+     * Removes and returns the head element.
+     *
+     * @return the removed element
+     * @throws NoSuchElementException if empty
+     * @throws IllegalStateException if closed
+     */
     public short dequeue() {
         if (isEmpty()) {
             throw new NoSuchElementException("Queue is empty");
@@ -73,6 +116,13 @@ public final class PShortFixedQueue extends AbstractPrimitiveFixedQueue<PShortAr
         return value;
     }
 
+    /**
+     * Reads the head element without removing it.
+     *
+     * @return the head element
+     * @throws NoSuchElementException if empty
+     * @throws IllegalStateException if closed
+     */
     public short peek() {
         if (isEmpty()) {
             throw new NoSuchElementException("Queue is empty");

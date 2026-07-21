@@ -9,20 +9,39 @@ import com.tonic.jaloc.memory.iface.NativeAllocator;
 import java.util.Objects;
 import java.util.function.LongConsumer;
 
+/**
+ * A growable native long hash set with open addressing and backward-shift deletion.
+ */
 public final class PLongSet extends AbstractNativeCollection<PLongArray, PLongWriter>
 {
     private boolean containsZero;
 
+    /**
+     * Creates an empty set on the system allocator.
+     */
     public PLongSet()
     {
         this(0);
     }
 
+    /**
+     * Creates an empty set presized for expectedElements on the system allocator.
+     *
+     * @param expectedElements presizes the table
+     * @throws IllegalArgumentException if expectedElements is negative
+     */
     public PLongSet(long expectedElements)
     {
         this(SystemAllocator.getInstance(), expectedElements);
     }
 
+    /**
+     * Creates an empty set presized for expectedElements on the given allocator.
+     *
+     * @param allocator the allocator to source memory from
+     * @param expectedElements presizes the table
+     * @throws IllegalArgumentException if expectedElements is negative
+     */
     public PLongSet(NativeAllocator allocator, long expectedElements)
     {
         super(allocator, new PLongArray(allocator, tableSize(expectedElements)));
@@ -60,6 +79,13 @@ public final class PLongSet extends AbstractNativeCollection<PLongArray, PLongWr
         }
     }
 
+    /**
+     * Adds value.
+     *
+     * @param value the value to add
+     * @return true if the set changed
+     * @throws IllegalStateException if closed
+     */
     public boolean add(long value)
     {
         ensureOpen();
@@ -116,6 +142,13 @@ public final class PLongSet extends AbstractNativeCollection<PLongArray, PLongWr
         return true;
     }
 
+    /**
+     * Removes value.
+     *
+     * @param value the value to remove
+     * @return true if the set changed
+     * @throws IllegalStateException if closed
+     */
     public boolean remove(long value)
     {
         ensureOpen();
@@ -156,6 +189,13 @@ public final class PLongSet extends AbstractNativeCollection<PLongArray, PLongWr
         }
     }
 
+    /**
+     * Tests whether value is present.
+     *
+     * @param value the value to test
+     * @return true if present
+     * @throws IllegalStateException if closed
+     */
     public boolean contains(long value)
     {
         ensureOpen();
@@ -187,6 +227,13 @@ public final class PLongSet extends AbstractNativeCollection<PLongArray, PLongWr
         }
     }
 
+    /**
+     * Emits each present value in no particular order.
+     *
+     * @param consumer the receiver
+     * @throws NullPointerException if consumer is null
+     * @throws IllegalStateException if closed
+     */
     public void forEach(LongConsumer consumer)
     {
         Objects.requireNonNull(consumer, "consumer");
@@ -211,6 +258,11 @@ public final class PLongSet extends AbstractNativeCollection<PLongArray, PLongWr
         }
     }
 
+    /**
+     * Empties the set.
+     *
+     * @throws IllegalStateException if closed
+     */
     public void clear()
     {
         ensureOpen();

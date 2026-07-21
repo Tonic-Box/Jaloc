@@ -7,6 +7,9 @@ import com.tonic.jaloc.memory.internal.MemoryRegion;
 
 import java.util.Objects;
 
+/**
+ * The base of all native arrays: one aligned allocation, cached base address, and lifecycle.
+ */
 public abstract class AbstractNativeArray<W extends AbstractArrayWriter> implements AutoCloseable
 {
     private final long length;
@@ -62,37 +65,72 @@ public abstract class AbstractNativeArray<W extends AbstractArrayWriter> impleme
         this.baseAddress = allocatedAddress;
     }
 
+    /**
+     * @return the element count
+     */
     public final long length()
     {
         return length;
     }
 
+    /**
+     * @return the allocation payload size in bytes
+     */
     public final long byteSize()
     {
         return byteSize;
     }
 
+    /**
+     * @return true until closed
+     */
     public final boolean isOpen()
     {
         return block.isOpen();
     }
 
+    /**
+     * @return true if length is zero
+     */
     public final boolean isEmpty()
     {
         return length == 0;
     }
 
+    /**
+     * Zeroes every element.
+     *
+     * @throws IllegalStateException if closed
+     */
     public final void clear()
     {
         memory.clear();
     }
 
+    /**
+     * Zeroes fromIndex inclusive to toIndex exclusive.
+     *
+     * @param fromIndex the range start, inclusive
+     * @param toIndex the range end, exclusive
+     * @throws IndexOutOfBoundsException if the range is out of bounds
+     * @throws IllegalStateException if closed
+     */
     public abstract void clearRange(long fromIndex, long toIndex);
 
     protected abstract long byteSize(long elementCount);
 
+    /**
+     * @return a fresh writer at position zero
+     */
     public abstract W writer();
 
+    /**
+     * Creates a writer at position.
+     *
+     * @param position the starting position
+     * @return the writer
+     * @throws IndexOutOfBoundsException if position is out of range
+     */
     public final W writer(long position)
     {
         W writer = writer();
@@ -138,6 +176,9 @@ public abstract class AbstractNativeArray<W extends AbstractArrayWriter> impleme
         }
     }
 
+    /**
+     * Releases the backing native memory. Safe to call more than once.
+     */
     @Override
     public final void close()
     {

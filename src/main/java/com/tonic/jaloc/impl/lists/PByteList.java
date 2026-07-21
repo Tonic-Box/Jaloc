@@ -8,16 +8,35 @@ import com.tonic.jaloc.memory.iface.NativeAllocator;
 
 import java.util.NoSuchElementException;
 
+/**
+ * A growable native byte list.
+ */
 public final class PByteList extends AbstractPrimitiveList<PByteArray, PByteWriter>
 {
+    /**
+     * Creates an empty list with zero capacity on the system allocator.
+     */
     public PByteList() {
         this(0);
     }
 
+    /**
+     * Creates an empty list with the given starting capacity on the system allocator.
+     *
+     * @param initialCapacity the starting capacity
+     * @throws IllegalArgumentException if initialCapacity is negative
+     */
     public PByteList(long initialCapacity) {
         this(SystemAllocator.getInstance(), initialCapacity);
     }
 
+    /**
+     * Creates an empty list with the given starting capacity on the given allocator.
+     *
+     * @param allocator the allocator to source memory from
+     * @param initialCapacity the starting capacity
+     * @throws IllegalArgumentException if initialCapacity is negative
+     */
     public PByteList(NativeAllocator allocator, long initialCapacity) {
         super(allocator, new PByteArray(allocator, initialCapacity));
     }
@@ -27,12 +46,25 @@ public final class PByteList extends AbstractPrimitiveList<PByteArray, PByteWrit
         return new PByteArray(allocator, capacity);
     }
 
+    /**
+     * Appends value, growing if needed.
+     *
+     * @param value the value to append
+     * @throws IllegalStateException if closed
+     */
     public void add(byte value) {
         PByteWriter writer = appendWriter(1);
         writer.put(value);
         commitWriter();
     }
 
+    /**
+     * Appends values left to right in one capacity reservation.
+     *
+     * @param values the values to append
+     * @throws NullPointerException if values is null
+     * @throws IllegalStateException if closed
+     */
     public void addAll(byte... values) {
         if (values == null) {
             throw new NullPointerException("values");
@@ -51,12 +83,29 @@ public final class PByteList extends AbstractPrimitiveList<PByteArray, PByteWrit
         commitWriter();
     }
 
+    /**
+     * Reads the element at index.
+     *
+     * @param index the element index
+     * @return the element
+     * @throws IndexOutOfBoundsException if index is out of range
+     * @throws IllegalStateException if closed
+     */
     public byte get(long index)
     {
         checkElementIndex(index);
         return elementsUnchecked().getUnchecked(index);
     }
 
+    /**
+     * Replaces the element at index.
+     *
+     * @param index the element index
+     * @param value the new value
+     * @return the previous value
+     * @throws IndexOutOfBoundsException if index is out of range
+     * @throws IllegalStateException if closed
+     */
     public byte set(long index, byte value)
     {
         checkElementIndex(index);
@@ -65,6 +114,13 @@ public final class PByteList extends AbstractPrimitiveList<PByteArray, PByteWrit
         return previous;
     }
 
+    /**
+     * Removes and returns the last element.
+     *
+     * @return the removed element
+     * @throws NoSuchElementException if empty
+     * @throws IllegalStateException if closed
+     */
     public byte removeLast()
     {
         if (isEmpty()) {
@@ -76,11 +132,23 @@ public final class PByteList extends AbstractPrimitiveList<PByteArray, PByteWrit
         return previous;
     }
 
+    /**
+     * Sorts the live range ascending.
+     *
+     * @throws IllegalStateException if closed
+     */
     public void sort()
     {
         elements().sort(0, size());
     }
 
+    /**
+     * Binary searches the live range; content must be sorted.
+     *
+     * @param value the value to find
+     * @return the matching index, or -(insertionPoint + 1) if absent
+     * @throws IllegalStateException if closed
+     */
     public long binarySearch(byte value)
     {
         return elements().binarySearch(0, size(), value);

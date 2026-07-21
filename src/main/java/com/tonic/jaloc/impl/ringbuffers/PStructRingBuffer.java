@@ -11,16 +11,36 @@ import java.util.NoSuchElementException;
 import java.util.Objects;
 import java.util.function.Consumer;
 
+/**
+ * A fixed-capacity native struct ring buffer; enqueueing when full overwrites the oldest entry.
+ */
 public final class PStructRingBuffer<T extends PStruct> extends AbstractNativeRing<PStructArray<T>, PStructWriter<T>>
 {
     private final StructLayout layout;
     private final StructViewFactory<T> viewFactory;
 
+    /**
+     * Allocates a buffer of the given capacity on the system allocator.
+     *
+     * @param layout the entry layout
+     * @param viewFactory creates the entry views
+     * @param capacity the fixed capacity
+     * @throws IllegalArgumentException if capacity is not positive
+     */
     public PStructRingBuffer(StructLayout layout, StructViewFactory<T> viewFactory, long capacity)
     {
         this(SystemAllocator.getInstance(), layout, viewFactory, capacity);
     }
 
+    /**
+     * Allocates a buffer of the given capacity on the given allocator.
+     *
+     * @param allocator the allocator to source memory from
+     * @param layout the entry layout
+     * @param viewFactory creates the entry views
+     * @param capacity the fixed capacity
+     * @throws IllegalArgumentException if capacity is not positive
+     */
     public PStructRingBuffer(NativeAllocator allocator, StructLayout layout, StructViewFactory<T> viewFactory, long capacity)
     {
         super(Objects.requireNonNull(allocator, "allocator"), new PStructArray<>(allocator, viewFactory, layout, requireCapacity(capacity)));
@@ -29,6 +49,9 @@ public final class PStructRingBuffer<T extends PStruct> extends AbstractNativeRi
         this.viewFactory = viewFactory;
     }
 
+    /**
+     * @return the entry layout
+     */
     public StructLayout layout()
     {
         return layout;
@@ -40,6 +63,12 @@ public final class PStructRingBuffer<T extends PStruct> extends AbstractNativeRi
         return new PStructArray<>(allocator, viewFactory, layout, capacity);
     }
 
+    /**
+     * Enqueues a zeroed element, overwriting the oldest when full, and returns its view.
+     *
+     * @return the view
+     * @throws IllegalStateException if closed
+     */
     public T enqueue()
     {
         if (size() == capacity())
@@ -59,6 +88,14 @@ public final class PStructRingBuffer<T extends PStruct> extends AbstractNativeRi
         return struct;
     }
 
+    /**
+     * Enqueues an element, overwriting the oldest when full, and initializes it; on the overwrite path a throwing initializer leaves a zeroed entry.
+     *
+     * @param initializer fills the fresh element
+     * @return the view
+     * @throws NullPointerException if initializer is null
+     * @throws IllegalStateException if closed
+     */
     public T enqueue(Consumer<? super T> initializer)
     {
         Objects.requireNonNull(initializer, "initializer");
@@ -100,6 +137,13 @@ public final class PStructRingBuffer<T extends PStruct> extends AbstractNativeRi
         }
     }
 
+    /**
+     * Creates a view of the head element.
+     *
+     * @return the view
+     * @throws NoSuchElementException if empty
+     * @throws IllegalStateException if closed
+     */
     public T peek()
     {
         if (isEmpty())
@@ -110,6 +154,12 @@ public final class PStructRingBuffer<T extends PStruct> extends AbstractNativeRi
         return elements().at(headIndex());
     }
 
+    /**
+     * Removes the head element, zeroing its slot.
+     *
+     * @throws NoSuchElementException if empty
+     * @throws IllegalStateException if closed
+     */
     public void dequeue()
     {
         if (isEmpty())

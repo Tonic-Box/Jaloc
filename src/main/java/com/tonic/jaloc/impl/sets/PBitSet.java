@@ -9,21 +9,40 @@ import com.tonic.jaloc.memory.internal.UnsafeMemory;
 
 import java.util.Objects;
 
+/**
+ * A growable native bitset over 64-bit words; reads past the end are false.
+ */
 public final class PBitSet extends AbstractNativeCollection<PLongArray, PLongWriter>
 {
     private long wordsBase;
     private long wordCapacity;
 
+    /**
+     * Creates an empty bitset on the system allocator.
+     */
     public PBitSet()
     {
         this(0);
     }
 
+    /**
+     * Creates a bitset presized for nbits on the system allocator.
+     *
+     * @param nbits presizes the word storage
+     * @throws IllegalArgumentException if nbits is negative
+     */
     public PBitSet(long nbits)
     {
         this(SystemAllocator.getInstance(), nbits);
     }
 
+    /**
+     * Creates a bitset presized for nbits on the given allocator.
+     *
+     * @param allocator the allocator to source memory from
+     * @param nbits presizes the word storage
+     * @throws IllegalArgumentException if nbits is negative
+     */
     public PBitSet(NativeAllocator allocator, long nbits)
     {
         super(allocator, new PLongArray(allocator, wordCount(requireBitCount(nbits))));
@@ -49,6 +68,13 @@ public final class PBitSet extends AbstractNativeCollection<PLongArray, PLongWri
         }
     }
 
+    /**
+     * Sets bit, growing if needed.
+     *
+     * @param bit the bit index
+     * @throws IndexOutOfBoundsException if bit is negative
+     * @throws IllegalStateException if closed
+     */
     public void set(long bit)
     {
         ensureOpen();
@@ -70,6 +96,13 @@ public final class PBitSet extends AbstractNativeCollection<PLongArray, PLongWri
         }
     }
 
+    /**
+     * Clears bit; past the end is a no-op.
+     *
+     * @param bit the bit index
+     * @throws IndexOutOfBoundsException if bit is negative
+     * @throws IllegalStateException if closed
+     */
     public void clear(long bit)
     {
         ensureOpen();
@@ -86,6 +119,13 @@ public final class PBitSet extends AbstractNativeCollection<PLongArray, PLongWri
         UnsafeMemory.putLong(address, UnsafeMemory.getLong(address) & ~(1L << bit));
     }
 
+    /**
+     * Flips bit, growing if needed.
+     *
+     * @param bit the bit index
+     * @throws IndexOutOfBoundsException if bit is negative
+     * @throws IllegalStateException if closed
+     */
     public void flip(long bit)
     {
         ensureOpen();
@@ -107,6 +147,14 @@ public final class PBitSet extends AbstractNativeCollection<PLongArray, PLongWri
         }
     }
 
+    /**
+     * Reads bit; past the end is false.
+     *
+     * @param bit the bit index
+     * @return the bit
+     * @throws IndexOutOfBoundsException if bit is negative
+     * @throws IllegalStateException if closed
+     */
     public boolean get(long bit)
     {
         ensureOpen();
@@ -121,6 +169,10 @@ public final class PBitSet extends AbstractNativeCollection<PLongArray, PLongWri
         return (UnsafeMemory.getLong(wordsBase + (word << 3)) & (1L << bit)) != 0;
     }
 
+    /**
+     * @return the number of set bits
+     * @throws IllegalStateException if closed
+     */
     public long cardinality()
     {
         ensureOpen();
@@ -136,6 +188,10 @@ public final class PBitSet extends AbstractNativeCollection<PLongArray, PLongWri
         return count;
     }
 
+    /**
+     * @return the highest set bit plus one, or zero when empty
+     * @throws IllegalStateException if closed
+     */
     public long length()
     {
         ensureOpen();
@@ -153,6 +209,14 @@ public final class PBitSet extends AbstractNativeCollection<PLongArray, PLongWri
         return 0;
     }
 
+    /**
+     * Finds the first set bit at or after fromBit.
+     *
+     * @param fromBit the search start
+     * @return the bit index, or -1 if none
+     * @throws IndexOutOfBoundsException if fromBit is negative
+     * @throws IllegalStateException if closed
+     */
     public long nextSetBit(long fromBit)
     {
         ensureOpen();
@@ -185,6 +249,13 @@ public final class PBitSet extends AbstractNativeCollection<PLongArray, PLongWri
         }
     }
 
+    /**
+     * Intersects this bitset with other.
+     *
+     * @param other the other bitset
+     * @throws NullPointerException if other is null
+     * @throws IllegalStateException if either bitset is closed
+     */
     public void and(PBitSet other)
     {
         Objects.requireNonNull(other, "other");
@@ -202,6 +273,13 @@ public final class PBitSet extends AbstractNativeCollection<PLongArray, PLongWri
         }
     }
 
+    /**
+     * Unions this bitset with other, growing if needed.
+     *
+     * @param other the other bitset
+     * @throws NullPointerException if other is null
+     * @throws IllegalStateException if either bitset is closed
+     */
     public void or(PBitSet other)
     {
         Objects.requireNonNull(other, "other");
@@ -227,6 +305,13 @@ public final class PBitSet extends AbstractNativeCollection<PLongArray, PLongWri
         }
     }
 
+    /**
+     * Exclusive-ors this bitset with other, growing if needed.
+     *
+     * @param other the other bitset
+     * @throws NullPointerException if other is null
+     * @throws IllegalStateException if either bitset is closed
+     */
     public void xor(PBitSet other)
     {
         Objects.requireNonNull(other, "other");
@@ -252,6 +337,11 @@ public final class PBitSet extends AbstractNativeCollection<PLongArray, PLongWri
         }
     }
 
+    /**
+     * Clears every bit.
+     *
+     * @throws IllegalStateException if closed
+     */
     public void clear()
     {
         ensureOpen();
