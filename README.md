@@ -5,7 +5,7 @@ A true primitive collocations library for Java 8+ backed by manual native memory
 - Java 8+
 
 ### Documentation
-- [JavaDocs](https://jaloc.tonicbox.dev)
+- [JavaDocs](https://tonic-box.github.io/Jaloc/)
 - [Benchmarks](./BENCHMARKS.md)
 
 ### Structure
