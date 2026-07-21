@@ -69,17 +69,13 @@ public final class PCharStack extends AbstractPrimitiveStack<PCharArray, PCharWr
             throw new NullPointerException("values");
         }
 
-        if (values.length == 0) {
-            return;
-        }
+        ensureOpen();
 
-        PCharWriter writer = appendWriter(values.length);
+        long s = sizeUnchecked();
 
-        for (char value : values) {
-            writer.put(value);
-        }
-
-        commitWriter();
+        ensureCapacity(Math.addExact(s, values.length));
+        elementsUnchecked().copyFrom(values, 0, s, values.length);
+        size(s + values.length);
     }
 
     /**

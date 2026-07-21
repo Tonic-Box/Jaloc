@@ -69,17 +69,13 @@ public final class PShortStack extends AbstractPrimitiveStack<PShortArray, PShor
             throw new NullPointerException("values");
         }
 
-        if (values.length == 0) {
-            return;
-        }
+        ensureOpen();
 
-        PShortWriter writer = appendWriter(values.length);
+        long s = sizeUnchecked();
 
-        for (short value : values) {
-            writer.put(value);
-        }
-
-        commitWriter();
+        ensureCapacity(Math.addExact(s, values.length));
+        elementsUnchecked().copyFrom(values, 0, s, values.length);
+        size(s + values.length);
     }
 
     /**

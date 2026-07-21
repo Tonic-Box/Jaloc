@@ -92,11 +92,17 @@ public final class PIntFixedQueue extends AbstractPrimitiveFixedQueue<PIntArray,
             throw new IllegalStateException("Queue is full");
         }
 
-        for (int value : values) {
-            long index = reserveTail();
-            elementsUnchecked().setUnchecked(index, value);
-            commitTail();
+        long start = physicalIndex(sizeUnchecked());
+        PIntArray table = elementsUnchecked();
+        long firstSegment = Math.min(values.length, table.length() - start);
+
+        table.copyFrom(values, 0, start, (int) firstSegment);
+
+        if (firstSegment < values.length) {
+            table.copyFrom(values, (int) firstSegment, 0, values.length - (int) firstSegment);
         }
+
+        size(sizeUnchecked() + values.length);
     }
 
     /**

@@ -192,6 +192,60 @@ public final class PByteArray extends AbstractPrimitiveArray<PByteWriter>
         return -(low + 1);
     }
 
+    /**
+     * Bulk copies length elements from source into this array.
+     *
+     * @param source the heap array to read from
+     * @param sourceIndex the start within source
+     * @param destinationIndex the start within this array
+     * @param length the element count
+     * @throws NullPointerException if source is null
+     * @throws IndexOutOfBoundsException if either range is out of bounds
+     * @throws IllegalStateException if closed
+     */
+    public void copyFrom(byte[] source, int sourceIndex, long destinationIndex, int length)
+    {
+        if (source == null)
+        {
+            throw new NullPointerException("source");
+        }
+
+        if (sourceIndex < 0 || length < 0 || sourceIndex > source.length - length)
+        {
+            throw new IndexOutOfBoundsException("sourceIndex=" + sourceIndex + ", length=" + length + ", sourceLength=" + source.length);
+        }
+
+        checkRange(destinationIndex, destinationIndex + length);
+        UnsafeMemory.copyFromHeap(source, UnsafeMemory.BYTE_ARRAY_BASE + (long) sourceIndex * Byte.BYTES, baseAddress() + destinationIndex * Byte.BYTES, (long) length * Byte.BYTES);
+    }
+
+    /**
+     * Bulk copies length elements from this array into destination.
+     *
+     * @param sourceIndex the start within this array
+     * @param destination the heap array to write into
+     * @param destinationIndex the start within destination
+     * @param length the element count
+     * @throws NullPointerException if destination is null
+     * @throws IndexOutOfBoundsException if either range is out of bounds
+     * @throws IllegalStateException if closed
+     */
+    public void copyTo(long sourceIndex, byte[] destination, int destinationIndex, int length)
+    {
+        if (destination == null)
+        {
+            throw new NullPointerException("destination");
+        }
+
+        if (destinationIndex < 0 || length < 0 || destinationIndex > destination.length - length)
+        {
+            throw new IndexOutOfBoundsException("destinationIndex=" + destinationIndex + ", length=" + length + ", destinationLength=" + destination.length);
+        }
+
+        checkRange(sourceIndex, sourceIndex + length);
+        UnsafeMemory.copyToHeap(baseAddress() + sourceIndex * Byte.BYTES, destination, UnsafeMemory.BYTE_ARRAY_BASE + (long) destinationIndex * Byte.BYTES, (long) length * Byte.BYTES);
+    }
+
     private void quicksort(long low, long high)
     {
         while (high - low >= 16)

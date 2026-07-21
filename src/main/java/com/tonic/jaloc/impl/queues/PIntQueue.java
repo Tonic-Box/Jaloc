@@ -95,9 +95,17 @@ public final class PIntQueue extends AbstractPrimitiveQueue<PIntArray, PIntWrite
 
         ensureRingCapacity(Math.addExact(size(), values.length));
 
-        for (int value : values) {
-            enqueue(value);
+        long start = physicalIndex(sizeUnchecked());
+        PIntArray table = elementsUnchecked();
+        long firstSegment = Math.min(values.length, table.length() - start);
+
+        table.copyFrom(values, 0, start, (int) firstSegment);
+
+        if (firstSegment < values.length) {
+            table.copyFrom(values, (int) firstSegment, 0, values.length - (int) firstSegment);
         }
+
+        size(sizeUnchecked() + values.length);
     }
 
     /**

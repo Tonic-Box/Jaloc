@@ -69,17 +69,13 @@ public final class PByteStack extends AbstractPrimitiveStack<PByteArray, PByteWr
             throw new NullPointerException("values");
         }
 
-        if (values.length == 0) {
-            return;
-        }
+        ensureOpen();
 
-        PByteWriter writer = appendWriter(values.length);
+        long s = sizeUnchecked();
 
-        for (byte value : values) {
-            writer.put(value);
-        }
-
-        commitWriter();
+        ensureCapacity(Math.addExact(s, values.length));
+        elementsUnchecked().copyFrom(values, 0, s, values.length);
+        size(s + values.length);
     }
 
     /**

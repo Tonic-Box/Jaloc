@@ -92,11 +92,17 @@ public final class PByteFixedQueue extends AbstractPrimitiveFixedQueue<PByteArra
             throw new IllegalStateException("Queue is full");
         }
 
-        for (byte value : values) {
-            long index = reserveTail();
-            elementsUnchecked().setUnchecked(index, value);
-            commitTail();
+        long start = physicalIndex(sizeUnchecked());
+        PByteArray table = elementsUnchecked();
+        long firstSegment = Math.min(values.length, table.length() - start);
+
+        table.copyFrom(values, 0, start, (int) firstSegment);
+
+        if (firstSegment < values.length) {
+            table.copyFrom(values, (int) firstSegment, 0, values.length - (int) firstSegment);
         }
+
+        size(sizeUnchecked() + values.length);
     }
 
     /**

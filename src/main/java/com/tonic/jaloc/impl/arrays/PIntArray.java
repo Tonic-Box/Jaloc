@@ -252,6 +252,60 @@ public final class PIntArray extends AbstractPrimitiveArray<PIntWriter>
         return -(low + 1);
     }
 
+    /**
+     * Bulk copies length elements from source into this array.
+     *
+     * @param source the heap array to read from
+     * @param sourceIndex the start within source
+     * @param destinationIndex the start within this array
+     * @param length the element count
+     * @throws NullPointerException if source is null
+     * @throws IndexOutOfBoundsException if either range is out of bounds
+     * @throws IllegalStateException if closed
+     */
+    public void copyFrom(int[] source, int sourceIndex, long destinationIndex, int length)
+    {
+        if (source == null)
+        {
+            throw new NullPointerException("source");
+        }
+
+        if (sourceIndex < 0 || length < 0 || sourceIndex > source.length - length)
+        {
+            throw new IndexOutOfBoundsException("sourceIndex=" + sourceIndex + ", length=" + length + ", sourceLength=" + source.length);
+        }
+
+        checkRange(destinationIndex, destinationIndex + length);
+        UnsafeMemory.copyFromHeap(source, UnsafeMemory.INT_ARRAY_BASE + (long) sourceIndex * Integer.BYTES, baseAddress() + destinationIndex * Integer.BYTES, (long) length * Integer.BYTES);
+    }
+
+    /**
+     * Bulk copies length elements from this array into destination.
+     *
+     * @param sourceIndex the start within this array
+     * @param destination the heap array to write into
+     * @param destinationIndex the start within destination
+     * @param length the element count
+     * @throws NullPointerException if destination is null
+     * @throws IndexOutOfBoundsException if either range is out of bounds
+     * @throws IllegalStateException if closed
+     */
+    public void copyTo(long sourceIndex, int[] destination, int destinationIndex, int length)
+    {
+        if (destination == null)
+        {
+            throw new NullPointerException("destination");
+        }
+
+        if (destinationIndex < 0 || length < 0 || destinationIndex > destination.length - length)
+        {
+            throw new IndexOutOfBoundsException("destinationIndex=" + destinationIndex + ", length=" + length + ", destinationLength=" + destination.length);
+        }
+
+        checkRange(sourceIndex, sourceIndex + length);
+        UnsafeMemory.copyToHeap(baseAddress() + sourceIndex * Integer.BYTES, destination, UnsafeMemory.INT_ARRAY_BASE + (long) destinationIndex * Integer.BYTES, (long) length * Integer.BYTES);
+    }
+
     private void quicksort(long low, long high)
     {
         while (high - low >= 16)

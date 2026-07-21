@@ -51,6 +51,24 @@ public final class UnsafeMemory
 
     private static final MethodHandle PUT_DOUBLE = bind("putDouble", long.class, double.class);
 
+    private static final MethodHandle COPY_MEMORY_HEAP = bind("copyMemory", Object.class, long.class, Object.class, long.class, long.class);
+
+    private static final MethodHandle ARRAY_BASE_OFFSET = bind("arrayBaseOffset", Class.class);
+
+    public static final long BYTE_ARRAY_BASE = arrayBase(byte[].class);
+
+    public static final long SHORT_ARRAY_BASE = arrayBase(short[].class);
+
+    public static final long CHAR_ARRAY_BASE = arrayBase(char[].class);
+
+    public static final long INT_ARRAY_BASE = arrayBase(int[].class);
+
+    public static final long LONG_ARRAY_BASE = arrayBase(long[].class);
+
+    public static final long FLOAT_ARRAY_BASE = arrayBase(float[].class);
+
+    public static final long DOUBLE_ARRAY_BASE = arrayBase(double[].class);
+
     private UnsafeMemory()
     {
     }
@@ -426,6 +444,68 @@ public final class UnsafeMemory
     }
 
     /**
+     * Copies bytes from a heap array into native memory.
+     *
+     * @param source the source array
+     * @param sourceOffset the offset within source, array base included
+     * @param destination the destination address
+     * @param bytes the byte count
+     * @throws IllegalArgumentException if bytes is negative
+     */
+    public static void copyFromHeap(Object source, long sourceOffset, long destination, long bytes)
+    {
+        if (bytes < 0)
+        {
+            throw new IllegalArgumentException("bytes cannot be negative");
+        }
+
+        if (bytes == 0)
+        {
+            return;
+        }
+
+        try
+        {
+            COPY_MEMORY_HEAP.invokeExact(source, sourceOffset, (Object) null, destination, bytes);
+        }
+        catch (Throwable throwable)
+        {
+            throw rethrow(throwable);
+        }
+    }
+
+    /**
+     * Copies bytes from native memory into a heap array.
+     *
+     * @param source the source address
+     * @param destination the destination array
+     * @param destinationOffset the offset within destination, array base included
+     * @param bytes the byte count
+     * @throws IllegalArgumentException if bytes is negative
+     */
+    public static void copyToHeap(long source, Object destination, long destinationOffset, long bytes)
+    {
+        if (bytes < 0)
+        {
+            throw new IllegalArgumentException("bytes cannot be negative");
+        }
+
+        if (bytes == 0)
+        {
+            return;
+        }
+
+        try
+        {
+            COPY_MEMORY_HEAP.invokeExact((Object) null, source, destination, destinationOffset, bytes);
+        }
+        catch (Throwable throwable)
+        {
+            throw rethrow(throwable);
+        }
+    }
+
+    /**
      * Rounds address up to alignment.
      *
      * @param address the address
@@ -474,6 +554,18 @@ public final class UnsafeMemory
         catch (ReflectiveOperationException | SecurityException e)
         {
             throw new ExceptionInInitializerError(e);
+        }
+    }
+
+    private static long arrayBase(Class<?> arrayClass)
+    {
+        try
+        {
+            return (int) ARRAY_BASE_OFFSET.invokeExact(arrayClass);
+        }
+        catch (Throwable throwable)
+        {
+            throw rethrow(throwable);
         }
     }
 

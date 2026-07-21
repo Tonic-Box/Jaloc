@@ -95,9 +95,17 @@ public final class PByteQueue extends AbstractPrimitiveQueue<PByteArray, PByteWr
 
         ensureRingCapacity(Math.addExact(size(), values.length));
 
-        for (byte value : values) {
-            enqueue(value);
+        long start = physicalIndex(sizeUnchecked());
+        PByteArray table = elementsUnchecked();
+        long firstSegment = Math.min(values.length, table.length() - start);
+
+        table.copyFrom(values, 0, start, (int) firstSegment);
+
+        if (firstSegment < values.length) {
+            table.copyFrom(values, (int) firstSegment, 0, values.length - (int) firstSegment);
         }
+
+        size(sizeUnchecked() + values.length);
     }
 
     /**

@@ -92,11 +92,17 @@ public final class PDoubleFixedQueue extends AbstractPrimitiveFixedQueue<PDouble
             throw new IllegalStateException("Queue is full");
         }
 
-        for (double value : values) {
-            long index = reserveTail();
-            elementsUnchecked().setUnchecked(index, value);
-            commitTail();
+        long start = physicalIndex(sizeUnchecked());
+        PDoubleArray table = elementsUnchecked();
+        long firstSegment = Math.min(values.length, table.length() - start);
+
+        table.copyFrom(values, 0, start, (int) firstSegment);
+
+        if (firstSegment < values.length) {
+            table.copyFrom(values, (int) firstSegment, 0, values.length - (int) firstSegment);
         }
+
+        size(sizeUnchecked() + values.length);
     }
 
     /**

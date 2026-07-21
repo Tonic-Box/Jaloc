@@ -3,6 +3,7 @@ package com.tonic.jaloc.impl.arrays;
 import com.tonic.jaloc.memory.abs.AbstractPrimitiveArray;
 import com.tonic.jaloc.memory.data.ElementSize;
 import com.tonic.jaloc.memory.iface.NativeAllocator;
+import com.tonic.jaloc.memory.internal.UnsafeMemory;
 
 /**
  * A fixed-length native double array.
@@ -159,6 +160,60 @@ public final class PDoubleArray extends AbstractPrimitiveArray<PDoubleWriter>
         }
 
         return -(low + 1);
+    }
+
+    /**
+     * Bulk copies length elements from source into this array.
+     *
+     * @param source the heap array to read from
+     * @param sourceIndex the start within source
+     * @param destinationIndex the start within this array
+     * @param length the element count
+     * @throws NullPointerException if source is null
+     * @throws IndexOutOfBoundsException if either range is out of bounds
+     * @throws IllegalStateException if closed
+     */
+    public void copyFrom(double[] source, int sourceIndex, long destinationIndex, int length)
+    {
+        if (source == null)
+        {
+            throw new NullPointerException("source");
+        }
+
+        if (sourceIndex < 0 || length < 0 || sourceIndex > source.length - length)
+        {
+            throw new IndexOutOfBoundsException("sourceIndex=" + sourceIndex + ", length=" + length + ", sourceLength=" + source.length);
+        }
+
+        checkRange(destinationIndex, destinationIndex + length);
+        UnsafeMemory.copyFromHeap(source, UnsafeMemory.DOUBLE_ARRAY_BASE + (long) sourceIndex * Double.BYTES, baseAddress() + destinationIndex * Double.BYTES, (long) length * Double.BYTES);
+    }
+
+    /**
+     * Bulk copies length elements from this array into destination.
+     *
+     * @param sourceIndex the start within this array
+     * @param destination the heap array to write into
+     * @param destinationIndex the start within destination
+     * @param length the element count
+     * @throws NullPointerException if destination is null
+     * @throws IndexOutOfBoundsException if either range is out of bounds
+     * @throws IllegalStateException if closed
+     */
+    public void copyTo(long sourceIndex, double[] destination, int destinationIndex, int length)
+    {
+        if (destination == null)
+        {
+            throw new NullPointerException("destination");
+        }
+
+        if (destinationIndex < 0 || length < 0 || destinationIndex > destination.length - length)
+        {
+            throw new IndexOutOfBoundsException("destinationIndex=" + destinationIndex + ", length=" + length + ", destinationLength=" + destination.length);
+        }
+
+        checkRange(sourceIndex, sourceIndex + length);
+        UnsafeMemory.copyToHeap(baseAddress() + sourceIndex * Double.BYTES, destination, UnsafeMemory.DOUBLE_ARRAY_BASE + (long) destinationIndex * Double.BYTES, (long) length * Double.BYTES);
     }
 
     private void quicksort(long low, long high)

@@ -69,17 +69,35 @@ public final class PIntList extends AbstractPrimitiveList<PIntArray, PIntWriter>
             throw new NullPointerException("values");
         }
 
-        if (values.length == 0) {
-            return;
+        addAll(values, 0, values.length);
+    }
+
+    /**
+     * Appends length values from the slice in one bulk copy.
+     *
+     * @param values the source array
+     * @param offset the start within values
+     * @param length the element count
+     * @throws NullPointerException if values is null
+     * @throws IndexOutOfBoundsException if the slice is out of bounds
+     * @throws IllegalStateException if closed
+     */
+    public void addAll(int[] values, int offset, int length) {
+        if (values == null) {
+            throw new NullPointerException("values");
         }
 
-        PIntWriter writer = appendWriter(values.length);
-
-        for (int value : values) {
-            writer.put(value);
+        if (offset < 0 || length < 0 || offset > values.length - length) {
+            throw new IndexOutOfBoundsException("offset=" + offset + ", length=" + length + ", valuesLength=" + values.length);
         }
 
-        commitWriter();
+        ensureOpen();
+
+        long s = sizeUnchecked();
+
+        ensureCapacity(Math.addExact(s, length));
+        elementsUnchecked().copyFrom(values, offset, s, length);
+        size(s + length);
     }
 
     /**

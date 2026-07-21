@@ -69,17 +69,13 @@ public final class PLongStack extends AbstractPrimitiveStack<PLongArray, PLongWr
             throw new NullPointerException("values");
         }
 
-        if (values.length == 0) {
-            return;
-        }
+        ensureOpen();
 
-        PLongWriter writer = appendWriter(values.length);
+        long s = sizeUnchecked();
 
-        for (long value : values) {
-            writer.put(value);
-        }
-
-        commitWriter();
+        ensureCapacity(Math.addExact(s, values.length));
+        elementsUnchecked().copyFrom(values, 0, s, values.length);
+        size(s + values.length);
     }
 
     /**
