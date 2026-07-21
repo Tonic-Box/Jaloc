@@ -5,7 +5,7 @@ A primitive collections library for Java
 - Java 8+
 
 ### Structure
-There are currently Array and List implementations for all Java primitives as well as for user defined structs.
+There are currently the following collection family implementations for all Java primitives as well as for user defined structs.
 - **Array2D** implementations can be found in [.../impl/array2ds/](./src/main/java/com/tonic/jaloc/impl/array2ds)
 - **Array** implementations can be found in [.../impl/arrays/](./src/main/java/com/tonic/jaloc/impl/arrays)
 - **Dequeue** implementations can be found in [.../impl/dequeues/](./src/main/java/com/tonic/jaloc/impl/dequeues)
