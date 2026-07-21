@@ -170,6 +170,11 @@ public final class PCharArray extends AbstractPrimitiveArray<PCharWriter>
     {
         checkRange(fromIndex, toIndex);
 
+        if (toIndex - fromIndex <= 1048576)
+        {
+            return branchlessSearch(fromIndex, toIndex, value);
+        }
+
         long low = fromIndex;
         long high = toIndex - 1;
 
@@ -193,6 +198,37 @@ public final class PCharArray extends AbstractPrimitiveArray<PCharWriter>
         }
 
         return -(low + 1);
+    }
+
+    private long branchlessSearch(long fromIndex, long toIndex, char value)
+    {
+        long base = fromIndex;
+        long n = toIndex - fromIndex;
+
+        while (n > 1)
+        {
+            long half = n >>> 1;
+
+            base = getUnchecked(base + half - 1) < value ? base + half : base;
+            n -= half;
+        }
+
+        if (n == 1)
+        {
+            char candidate = getUnchecked(base);
+
+            if (candidate == value)
+            {
+                return base;
+            }
+
+            if (candidate < value)
+            {
+                return -(base + 2);
+            }
+        }
+
+        return -(base + 1);
     }
 
     /**

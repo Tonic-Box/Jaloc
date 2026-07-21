@@ -167,6 +167,11 @@ public final class PByteArray extends AbstractPrimitiveArray<PByteWriter>
     {
         checkRange(fromIndex, toIndex);
 
+        if (toIndex - fromIndex <= 2097152)
+        {
+            return branchlessSearch(fromIndex, toIndex, value);
+        }
+
         long low = fromIndex;
         long high = toIndex - 1;
 
@@ -190,6 +195,37 @@ public final class PByteArray extends AbstractPrimitiveArray<PByteWriter>
         }
 
         return -(low + 1);
+    }
+
+    private long branchlessSearch(long fromIndex, long toIndex, byte value)
+    {
+        long base = fromIndex;
+        long n = toIndex - fromIndex;
+
+        while (n > 1)
+        {
+            long half = n >>> 1;
+
+            base = getUnchecked(base + half - 1) < value ? base + half : base;
+            n -= half;
+        }
+
+        if (n == 1)
+        {
+            byte candidate = getUnchecked(base);
+
+            if (candidate == value)
+            {
+                return base;
+            }
+
+            if (candidate < value)
+            {
+                return -(base + 2);
+            }
+        }
+
+        return -(base + 1);
     }
 
     /**

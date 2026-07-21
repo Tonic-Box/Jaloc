@@ -229,6 +229,11 @@ public final class PLongArray extends AbstractPrimitiveArray<PLongWriter>
     {
         checkRange(fromIndex, toIndex);
 
+        if (toIndex - fromIndex <= 262144)
+        {
+            return branchlessSearch(fromIndex, toIndex, value);
+        }
+
         long low = fromIndex;
         long high = toIndex - 1;
 
@@ -252,6 +257,37 @@ public final class PLongArray extends AbstractPrimitiveArray<PLongWriter>
         }
 
         return -(low + 1);
+    }
+
+    private long branchlessSearch(long fromIndex, long toIndex, long value)
+    {
+        long base = fromIndex;
+        long n = toIndex - fromIndex;
+
+        while (n > 1)
+        {
+            long half = n >>> 1;
+
+            base = getUnchecked(base + half - 1) < value ? base + half : base;
+            n -= half;
+        }
+
+        if (n == 1)
+        {
+            long candidate = getUnchecked(base);
+
+            if (candidate == value)
+            {
+                return base;
+            }
+
+            if (candidate < value)
+            {
+                return -(base + 2);
+            }
+        }
+
+        return -(base + 1);
     }
 
     /**
