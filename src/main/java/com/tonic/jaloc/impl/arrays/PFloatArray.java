@@ -68,7 +68,7 @@ public final class PFloatArray extends AbstractPrimitiveArray<PFloatWriter>
         while (low <= high)
         {
             long mid = low + ((high - low) >>> 1);
-            int comparison = Float.compare(get(mid), value);
+            int comparison = Float.compare(getUnchecked(mid), value);
 
             if (comparison < 0)
             {
@@ -92,19 +92,19 @@ public final class PFloatArray extends AbstractPrimitiveArray<PFloatWriter>
         while (high - low >= 16)
         {
             long middle = low + ((high - low) >>> 1);
-            float pivot = get(medianOfThree(low, middle, high));
+            float pivot = getUnchecked(medianOfThree(low, middle, high));
 
             long left = low;
             long right = high;
 
             while (left <= right)
             {
-                while (Float.compare(get(left), pivot) < 0)
+                while (Float.compare(getUnchecked(left), pivot) < 0)
                 {
                     left++;
                 }
 
-                while (Float.compare(get(right), pivot) > 0)
+                while (Float.compare(getUnchecked(right), pivot) > 0)
                 {
                     right--;
                 }
@@ -136,24 +136,24 @@ public final class PFloatArray extends AbstractPrimitiveArray<PFloatWriter>
     {
         for (long i = low + 1; i <= high; i++)
         {
-            float value = get(i);
+            float value = getUnchecked(i);
             long j = i - 1;
 
-            while (j >= low && Float.compare(get(j), value) > 0)
+            while (j >= low && Float.compare(getUnchecked(j), value) > 0)
             {
-                set(j + 1, get(j));
+                setUnchecked(j + 1, getUnchecked(j));
                 j--;
             }
 
-            set(j + 1, value);
+            setUnchecked(j + 1, value);
         }
     }
 
     private long medianOfThree(long a, long b, long c)
     {
-        float first = get(a);
-        float second = get(b);
-        float third = get(c);
+        float first = getUnchecked(a);
+        float second = getUnchecked(b);
+        float third = getUnchecked(c);
 
         if (Float.compare(first, second) < 0)
         {
@@ -165,8 +165,8 @@ public final class PFloatArray extends AbstractPrimitiveArray<PFloatWriter>
 
     private void swap(long i, long j)
     {
-        float temp = get(i);
-        set(i, get(j));
-        set(j, temp);
+        float temp = getUnchecked(i);
+        setUnchecked(i, getUnchecked(j));
+        setUnchecked(j, temp);
     }
 }

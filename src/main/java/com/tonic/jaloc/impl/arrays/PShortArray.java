@@ -3,6 +3,7 @@ package com.tonic.jaloc.impl.arrays;
 import com.tonic.jaloc.memory.abs.AbstractPrimitiveArray;
 import com.tonic.jaloc.memory.data.ElementSize;
 import com.tonic.jaloc.memory.iface.NativeAllocator;
+import com.tonic.jaloc.memory.internal.UnsafeMemory;
 
 public final class PShortArray extends AbstractPrimitiveArray<PShortWriter>
 {
@@ -50,7 +51,40 @@ public final class PShortArray extends AbstractPrimitiveArray<PShortWriter>
     public void sort(long fromIndex, long toIndex)
     {
         checkRange(fromIndex, toIndex);
-        quicksort(fromIndex, toIndex - 1);
+
+        if (toIndex - fromIndex < 2048)
+        {
+            quicksort(fromIndex, toIndex - 1);
+            return;
+        }
+
+        countingSort(fromIndex, toIndex);
+    }
+
+    private void countingSort(long fromIndex, long toIndex)
+    {
+        long base = baseAddress() + fromIndex * Short.BYTES;
+        long length = toIndex - fromIndex;
+        long[] counts = new long[65536];
+
+        for (long i = 0; i < length; i++)
+        {
+            counts[UnsafeMemory.getShort(base + i * Short.BYTES) + 32768]++;
+        }
+
+        long position = base;
+
+        for (int bucket = 0; bucket < 65536; bucket++)
+        {
+            long run = counts[bucket];
+            short value = (short) (bucket - 32768);
+
+            for (long k = 0; k < run; k++)
+            {
+                UnsafeMemory.putShort(position, value);
+                position += Short.BYTES;
+            }
+        }
     }
 
     public long binarySearch(short value)
@@ -68,7 +102,7 @@ public final class PShortArray extends AbstractPrimitiveArray<PShortWriter>
         while (low <= high)
         {
             long mid = low + ((high - low) >>> 1);
-            short midValue = get(mid);
+            short midValue = getUnchecked(mid);
 
             if (midValue < value)
             {
@@ -92,19 +126,19 @@ public final class PShortArray extends AbstractPrimitiveArray<PShortWriter>
         while (high - low >= 16)
         {
             long middle = low + ((high - low) >>> 1);
-            short pivot = get(medianOfThree(low, middle, high));
+            short pivot = getUnchecked(medianOfThree(low, middle, high));
 
             long left = low;
             long right = high;
 
             while (left <= right)
             {
-                while (get(left) < pivot)
+                while (getUnchecked(left) < pivot)
                 {
                     left++;
                 }
 
-                while (get(right) > pivot)
+                while (getUnchecked(right) > pivot)
                 {
                     right--;
                 }
@@ -136,24 +170,24 @@ public final class PShortArray extends AbstractPrimitiveArray<PShortWriter>
     {
         for (long i = low + 1; i <= high; i++)
         {
-            short value = get(i);
+            short value = getUnchecked(i);
             long j = i - 1;
 
-            while (j >= low && get(j) > value)
+            while (j >= low && getUnchecked(j) > value)
             {
-                set(j + 1, get(j));
+                setUnchecked(j + 1, getUnchecked(j));
                 j--;
             }
 
-            set(j + 1, value);
+            setUnchecked(j + 1, value);
         }
     }
 
     private long medianOfThree(long a, long b, long c)
     {
-        short first = get(a);
-        short second = get(b);
-        short third = get(c);
+        short first = getUnchecked(a);
+        short second = getUnchecked(b);
+        short third = getUnchecked(c);
 
         if (first < second)
         {
@@ -165,8 +199,8 @@ public final class PShortArray extends AbstractPrimitiveArray<PShortWriter>
 
     private void swap(long i, long j)
     {
-        short temp = get(i);
-        set(i, get(j));
-        set(j, temp);
+        short temp = getUnchecked(i);
+        setUnchecked(i, getUnchecked(j));
+        setUnchecked(j, temp);
     }
 }

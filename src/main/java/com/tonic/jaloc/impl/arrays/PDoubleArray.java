@@ -68,7 +68,7 @@ public final class PDoubleArray extends AbstractPrimitiveArray<PDoubleWriter>
         while (low <= high)
         {
             long mid = low + ((high - low) >>> 1);
-            int comparison = Double.compare(get(mid), value);
+            int comparison = Double.compare(getUnchecked(mid), value);
 
             if (comparison < 0)
             {
@@ -92,19 +92,19 @@ public final class PDoubleArray extends AbstractPrimitiveArray<PDoubleWriter>
         while (high - low >= 16)
         {
             long middle = low + ((high - low) >>> 1);
-            double pivot = get(medianOfThree(low, middle, high));
+            double pivot = getUnchecked(medianOfThree(low, middle, high));
 
             long left = low;
             long right = high;
 
             while (left <= right)
             {
-                while (Double.compare(get(left), pivot) < 0)
+                while (Double.compare(getUnchecked(left), pivot) < 0)
                 {
                     left++;
                 }
 
-                while (Double.compare(get(right), pivot) > 0)
+                while (Double.compare(getUnchecked(right), pivot) > 0)
                 {
                     right--;
                 }
@@ -136,24 +136,24 @@ public final class PDoubleArray extends AbstractPrimitiveArray<PDoubleWriter>
     {
         for (long i = low + 1; i <= high; i++)
         {
-            double value = get(i);
+            double value = getUnchecked(i);
             long j = i - 1;
 
-            while (j >= low && Double.compare(get(j), value) > 0)
+            while (j >= low && Double.compare(getUnchecked(j), value) > 0)
             {
-                set(j + 1, get(j));
+                setUnchecked(j + 1, getUnchecked(j));
                 j--;
             }
 
-            set(j + 1, value);
+            setUnchecked(j + 1, value);
         }
     }
 
     private long medianOfThree(long a, long b, long c)
     {
-        double first = get(a);
-        double second = get(b);
-        double third = get(c);
+        double first = getUnchecked(a);
+        double second = getUnchecked(b);
+        double third = getUnchecked(c);
 
         if (Double.compare(first, second) < 0)
         {
@@ -165,8 +165,8 @@ public final class PDoubleArray extends AbstractPrimitiveArray<PDoubleWriter>
 
     private void swap(long i, long j)
     {
-        double temp = get(i);
-        set(i, get(j));
-        set(j, temp);
+        double temp = getUnchecked(i);
+        setUnchecked(i, getUnchecked(j));
+        setUnchecked(j, temp);
     }
 }

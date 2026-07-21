@@ -3,6 +3,7 @@ package com.tonic.jaloc.impl.arrays;
 import com.tonic.jaloc.memory.abs.AbstractPrimitiveArray;
 import com.tonic.jaloc.memory.data.ElementSize;
 import com.tonic.jaloc.memory.iface.NativeAllocator;
+import com.tonic.jaloc.memory.internal.UnsafeMemory;
 
 public final class PIntArray extends AbstractPrimitiveArray<PIntWriter>
 {
@@ -50,7 +51,97 @@ public final class PIntArray extends AbstractPrimitiveArray<PIntWriter>
     public void sort(long fromIndex, long toIndex)
     {
         checkRange(fromIndex, toIndex);
-        quicksort(fromIndex, toIndex - 1);
+
+        if (toIndex - fromIndex < 2048)
+        {
+            quicksort(fromIndex, toIndex - 1);
+            return;
+        }
+
+        radixSort(fromIndex, toIndex);
+    }
+
+    private void radixSort(long fromIndex, long toIndex)
+    {
+        long length = toIndex - fromIndex;
+        long source = baseAddress() + fromIndex * Integer.BYTES;
+        long scratch = UnsafeMemory.allocate(length * Integer.BYTES);
+
+        try
+        {
+            long[] counts = new long[4 * 256];
+
+            for (long i = 0; i < length; i++)
+            {
+                int value = UnsafeMemory.getInt(source + i * Integer.BYTES);
+
+                counts[value & 0xFF]++;
+                counts[256 + ((value >>> 8) & 0xFF)]++;
+                counts[512 + ((value >>> 16) & 0xFF)]++;
+                counts[768 + (((value >>> 24) ^ 0x80) & 0xFF)]++;
+            }
+
+            long from = source;
+            long to = scratch;
+
+            for (int pass = 0; pass < 4; pass++)
+            {
+                int bucketBase = pass << 8;
+
+                if (trivialPass(counts, bucketBase, length))
+                {
+                    continue;
+                }
+
+                long[] offsets = new long[256];
+                long sum = 0;
+
+                for (int bucket = 0; bucket < 256; bucket++)
+                {
+                    offsets[bucket] = sum;
+                    sum += counts[bucketBase + bucket];
+                }
+
+                int shift = pass << 3;
+                boolean signedPass = pass == 3;
+
+                for (long i = 0; i < length; i++)
+                {
+                    int value = UnsafeMemory.getInt(from + i * Integer.BYTES);
+                    int digit = signedPass ? ((value >>> shift) ^ 0x80) & 0xFF : (value >>> shift) & 0xFF;
+
+                    UnsafeMemory.putInt(to + offsets[digit] * Integer.BYTES, value);
+                    offsets[digit]++;
+                }
+
+                long swap = from;
+
+                from = to;
+                to = swap;
+            }
+
+            if (from != source)
+            {
+                UnsafeMemory.copy(from, source, length * Integer.BYTES);
+            }
+        }
+        finally
+        {
+            UnsafeMemory.free(scratch);
+        }
+    }
+
+    private static boolean trivialPass(long[] counts, int bucketBase, long length)
+    {
+        for (int bucket = 0; bucket < 256; bucket++)
+        {
+            if (counts[bucketBase + bucket] == length)
+            {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     public long binarySearch(int value)
@@ -68,7 +159,7 @@ public final class PIntArray extends AbstractPrimitiveArray<PIntWriter>
         while (low <= high)
         {
             long mid = low + ((high - low) >>> 1);
-            int midValue = get(mid);
+            int midValue = getUnchecked(mid);
 
             if (midValue < value)
             {
@@ -92,19 +183,19 @@ public final class PIntArray extends AbstractPrimitiveArray<PIntWriter>
         while (high - low >= 16)
         {
             long middle = low + ((high - low) >>> 1);
-            int pivot = get(medianOfThree(low, middle, high));
+            int pivot = getUnchecked(medianOfThree(low, middle, high));
 
             long left = low;
             long right = high;
 
             while (left <= right)
             {
-                while (get(left) < pivot)
+                while (getUnchecked(left) < pivot)
                 {
                     left++;
                 }
 
-                while (get(right) > pivot)
+                while (getUnchecked(right) > pivot)
                 {
                     right--;
                 }
@@ -136,24 +227,24 @@ public final class PIntArray extends AbstractPrimitiveArray<PIntWriter>
     {
         for (long i = low + 1; i <= high; i++)
         {
-            int value = get(i);
+            int value = getUnchecked(i);
             long j = i - 1;
 
-            while (j >= low && get(j) > value)
+            while (j >= low && getUnchecked(j) > value)
             {
-                set(j + 1, get(j));
+                setUnchecked(j + 1, getUnchecked(j));
                 j--;
             }
 
-            set(j + 1, value);
+            setUnchecked(j + 1, value);
         }
     }
 
     private long medianOfThree(long a, long b, long c)
     {
-        int first = get(a);
-        int second = get(b);
-        int third = get(c);
+        int first = getUnchecked(a);
+        int second = getUnchecked(b);
+        int third = getUnchecked(c);
 
         if (first < second)
         {
@@ -165,8 +256,8 @@ public final class PIntArray extends AbstractPrimitiveArray<PIntWriter>
 
     private void swap(long i, long j)
     {
-        int temp = get(i);
-        set(i, get(j));
-        set(j, temp);
+        int temp = getUnchecked(i);
+        setUnchecked(i, getUnchecked(j));
+        setUnchecked(j, temp);
     }
 }

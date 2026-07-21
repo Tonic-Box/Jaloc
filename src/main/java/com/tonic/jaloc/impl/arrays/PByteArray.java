@@ -3,6 +3,7 @@ package com.tonic.jaloc.impl.arrays;
 import com.tonic.jaloc.memory.abs.AbstractPrimitiveArray;
 import com.tonic.jaloc.memory.data.ElementSize;
 import com.tonic.jaloc.memory.iface.NativeAllocator;
+import com.tonic.jaloc.memory.internal.UnsafeMemory;
 
 public final class PByteArray extends AbstractPrimitiveArray<PByteWriter>
 {
@@ -48,7 +49,39 @@ public final class PByteArray extends AbstractPrimitiveArray<PByteWriter>
     public void sort(long fromIndex, long toIndex)
     {
         checkRange(fromIndex, toIndex);
-        quicksort(fromIndex, toIndex - 1);
+
+        if (toIndex - fromIndex < 2048)
+        {
+            quicksort(fromIndex, toIndex - 1);
+            return;
+        }
+
+        countingSort(fromIndex, toIndex);
+    }
+
+    private void countingSort(long fromIndex, long toIndex)
+    {
+        long base = baseAddress() + fromIndex;
+        long length = toIndex - fromIndex;
+        long[] counts = new long[256];
+
+        for (long i = 0; i < length; i++)
+        {
+            counts[UnsafeMemory.getByte(base + i) + 128]++;
+        }
+
+        long position = base;
+
+        for (int bucket = 0; bucket < 256; bucket++)
+        {
+            long run = counts[bucket];
+
+            if (run != 0)
+            {
+                UnsafeMemory.fill(position, run, (byte) (bucket - 128));
+                position += run;
+            }
+        }
     }
 
     public long binarySearch(byte value)
@@ -66,7 +99,7 @@ public final class PByteArray extends AbstractPrimitiveArray<PByteWriter>
         while (low <= high)
         {
             long mid = low + ((high - low) >>> 1);
-            byte midValue = get(mid);
+            byte midValue = getUnchecked(mid);
 
             if (midValue < value)
             {
@@ -90,19 +123,19 @@ public final class PByteArray extends AbstractPrimitiveArray<PByteWriter>
         while (high - low >= 16)
         {
             long middle = low + ((high - low) >>> 1);
-            byte pivot = get(medianOfThree(low, middle, high));
+            byte pivot = getUnchecked(medianOfThree(low, middle, high));
 
             long left = low;
             long right = high;
 
             while (left <= right)
             {
-                while (get(left) < pivot)
+                while (getUnchecked(left) < pivot)
                 {
                     left++;
                 }
 
-                while (get(right) > pivot)
+                while (getUnchecked(right) > pivot)
                 {
                     right--;
                 }
@@ -134,24 +167,24 @@ public final class PByteArray extends AbstractPrimitiveArray<PByteWriter>
     {
         for (long i = low + 1; i <= high; i++)
         {
-            byte value = get(i);
+            byte value = getUnchecked(i);
             long j = i - 1;
 
-            while (j >= low && get(j) > value)
+            while (j >= low && getUnchecked(j) > value)
             {
-                set(j + 1, get(j));
+                setUnchecked(j + 1, getUnchecked(j));
                 j--;
             }
 
-            set(j + 1, value);
+            setUnchecked(j + 1, value);
         }
     }
 
     private long medianOfThree(long a, long b, long c)
     {
-        byte first = get(a);
-        byte second = get(b);
-        byte third = get(c);
+        byte first = getUnchecked(a);
+        byte second = getUnchecked(b);
+        byte third = getUnchecked(c);
 
         if (first < second)
         {
@@ -163,8 +196,8 @@ public final class PByteArray extends AbstractPrimitiveArray<PByteWriter>
 
     private void swap(long i, long j)
     {
-        byte temp = get(i);
-        set(i, get(j));
-        set(j, temp);
+        byte temp = getUnchecked(i);
+        setUnchecked(i, getUnchecked(j));
+        setUnchecked(j, temp);
     }
 }
