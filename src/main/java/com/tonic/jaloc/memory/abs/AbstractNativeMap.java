@@ -21,7 +21,6 @@ public abstract class AbstractNativeMap<T extends PStruct> extends AbstractNativ
     private static final int KEY_LONG = 4;
 
     private final StructLayout layout;
-    private final StructField keyField;
     private final StructType keyType;
     private final long keyOffset;
     private final long stride;
@@ -31,6 +30,7 @@ public abstract class AbstractNativeMap<T extends PStruct> extends AbstractNativ
 
     private long tableBase;
     private long tableMask;
+    private long growLimit;
     private boolean hasZeroKey;
 
     protected AbstractNativeMap(NativeAllocator allocator, PStructArray<T> initialArray, String keyFieldName)
@@ -38,7 +38,9 @@ public abstract class AbstractNativeMap<T extends PStruct> extends AbstractNativ
         super(allocator, initialArray);
 
         this.layout = initialArray.layout();
-        this.keyField = layout.field(keyFieldName);
+
+        StructField keyField = layout.field(keyFieldName);
+
         this.keyType = keyField.getType();
         this.keyOffset = keyField.getOffset();
         this.stride = layout.stride();
@@ -47,6 +49,7 @@ public abstract class AbstractNativeMap<T extends PStruct> extends AbstractNativ
         this.floatKey = keyType == StructType.FLOAT;
         this.tableBase = initialArray.baseAddress();
         this.tableMask = initialArray.length() - 2;
+        this.growLimit = loadLimit();
     }
 
     /**
@@ -153,6 +156,70 @@ public abstract class AbstractNativeMap<T extends PStruct> extends AbstractNativ
 
     protected final long findSlot(long keyBits)
     {
+        if (keyKind == KEY_LONG)
+        {
+            return findSlotLong(keyBits);
+        }
+
+        if (keyKind == KEY_INT)
+        {
+            return findSlotInt(keyBits);
+        }
+
+        return findSlotGeneric(keyBits);
+    }
+
+    private long findSlotLong(long keyBits)
+    {
+        long base = tableBase + keyOffset;
+        long mask = tableMask;
+        long position = mix(keyBits) & mask;
+
+        while (true)
+        {
+            long current = UnsafeMemory.getLong(base + position * stride);
+
+            if (current == 0)
+            {
+                return -1;
+            }
+
+            if (current == keyBits)
+            {
+                return position;
+            }
+
+            position = (position + 1) & mask;
+        }
+    }
+
+    private long findSlotInt(long keyBits)
+    {
+        long base = tableBase + keyOffset;
+        long mask = tableMask;
+        long position = mix(keyBits) & mask;
+        int key = (int) keyBits;
+
+        while (true)
+        {
+            int current = UnsafeMemory.getInt(base + position * stride);
+
+            if (current == 0)
+            {
+                return -1;
+            }
+
+            if (current == key)
+            {
+                return position;
+            }
+
+            position = (position + 1) & mask;
+        }
+    }
+
+    private long findSlotGeneric(long keyBits)
+    {
         long base = tableBase;
         long mask = tableMask;
         long position = mix(keyBits) & mask;
@@ -177,6 +244,116 @@ public abstract class AbstractNativeMap<T extends PStruct> extends AbstractNativ
 
     protected final long insertSlot(long keyBits)
     {
+        if (keyKind == KEY_LONG)
+        {
+            return insertSlotLong(keyBits);
+        }
+
+        if (keyKind == KEY_INT)
+        {
+            return insertSlotInt(keyBits);
+        }
+
+        return insertSlotGeneric(keyBits);
+    }
+
+    private long insertSlotLong(long keyBits)
+    {
+        long base = tableBase + keyOffset;
+        long entryStride = stride;
+        long mask = tableMask;
+        long position = mix(keyBits) & mask;
+
+        while (true)
+        {
+            long current = UnsafeMemory.getLong(base + position * entryStride);
+
+            if (current == 0)
+            {
+                break;
+            }
+
+            if (current == keyBits)
+            {
+                return position;
+            }
+
+            position = (position + 1) & mask;
+        }
+
+        if (occupancy() + 1 > growLimit)
+        {
+            replaceArray(((tableMask + 1) << 1) + 1);
+
+            tableBase = elements().baseAddress();
+            tableMask = elements().length() - 2;
+            growLimit = loadLimit();
+
+            base = tableBase + keyOffset;
+            mask = tableMask;
+            position = mix(keyBits) & mask;
+
+            while (UnsafeMemory.getLong(base + position * entryStride) != 0)
+            {
+                position = (position + 1) & mask;
+            }
+        }
+
+        writeKeyAt(tableBase, position, keyBits);
+        size(sizeUnchecked() + 1);
+        return ~position;
+    }
+
+    private long insertSlotInt(long keyBits)
+    {
+        long base = tableBase + keyOffset;
+        long entryStride = stride;
+        long mask = tableMask;
+        long position = mix(keyBits) & mask;
+        int key = (int) keyBits;
+
+        while (true)
+        {
+            int current = UnsafeMemory.getInt(base + position * entryStride);
+
+            if (current == 0)
+            {
+                break;
+            }
+
+            if (current == key)
+            {
+                return position;
+            }
+
+            position = (position + 1) & mask;
+        }
+
+        if (occupancy() + 1 > growLimit)
+        {
+            replaceArray(((tableMask + 1) << 1) + 1);
+
+            tableBase = elements().baseAddress();
+            tableMask = elements().length() - 2;
+            growLimit = loadLimit();
+
+            base = tableBase + keyOffset;
+            mask = tableMask;
+            position = mix(keyBits) & mask;
+
+            while (UnsafeMemory.getInt(base + position * entryStride) != 0)
+            {
+                position = (position + 1) & mask;
+            }
+        }
+
+        writeKeyAt(tableBase, position, keyBits);
+        size(sizeUnchecked() + 1);
+        return ~position;
+    }
+
+    private long insertSlotGeneric(long keyBits)
+    {
         long base = tableBase;
         long mask = tableMask;
         long position = mix(keyBits) & mask;
@@ -198,12 +375,13 @@ public abstract class AbstractNativeMap<T extends PStruct> extends AbstractNativ
             position = (position + 1) & mask;
         }
 
-        if (occupancy() + 1 > loadLimit())
+        if (occupancy() + 1 > growLimit)
         {
             replaceArray(((tableMask + 1) << 1) + 1);
 
             tableBase = elements().baseAddress();
             tableMask = elements().length() - 2;
+            growLimit = loadLimit();
 
             base = tableBase;
             mask = tableMask;
