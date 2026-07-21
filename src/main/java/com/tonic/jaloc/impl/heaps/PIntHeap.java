@@ -5,6 +5,7 @@ import com.tonic.jaloc.impl.arrays.PIntWriter;
 import com.tonic.jaloc.memory.SystemAllocator;
 import com.tonic.jaloc.memory.abs.AbstractPrimitiveHeap;
 import com.tonic.jaloc.memory.iface.NativeAllocator;
+import com.tonic.jaloc.memory.internal.UnsafeMemory;
 
 import java.util.NoSuchElementException;
 
@@ -52,10 +53,10 @@ public final class PIntHeap extends AbstractPrimitiveHeap<PIntArray, PIntWriter>
      * @throws IllegalStateException if closed
      */
     public void push(int value) {
-        PIntWriter writer = appendWriter(1);
-        writer.put(value);
-        commitWriter();
-        siftUp(sizeUnchecked() - 1);
+        long s = appendIndex();
+        UnsafeMemory.putInt(elementsBase() + (s << 2), value);
+        size(s + 1);
+        siftUp(s);
     }
 
     /**

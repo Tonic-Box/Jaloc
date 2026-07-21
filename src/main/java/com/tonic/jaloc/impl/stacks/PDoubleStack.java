@@ -5,6 +5,7 @@ import com.tonic.jaloc.impl.arrays.PDoubleWriter;
 import com.tonic.jaloc.memory.SystemAllocator;
 import com.tonic.jaloc.memory.abs.AbstractPrimitiveStack;
 import com.tonic.jaloc.memory.iface.NativeAllocator;
+import com.tonic.jaloc.memory.internal.UnsafeMemory;
 
 import java.util.NoSuchElementException;
 
@@ -52,9 +53,9 @@ public final class PDoubleStack extends AbstractPrimitiveStack<PDoubleArray, PDo
      * @throws IllegalStateException if closed
      */
     public void push(double value) {
-        PDoubleWriter writer = appendWriter(1);
-        writer.put(value);
-        commitWriter();
+        long s = appendIndex();
+        UnsafeMemory.putDouble(elementsBase() + (s << 3), value);
+        size(s + 1);
     }
 
     /**
@@ -86,12 +87,13 @@ public final class PDoubleStack extends AbstractPrimitiveStack<PDoubleArray, PDo
      * @throws IllegalStateException if closed
      */
     public double pop() {
-        if (isEmpty()) {
+        ensureOpen();
+        long s = sizeUnchecked();
+        if (s == 0) {
             throw new NoSuchElementException("Stack is empty");
         }
-        long lastIndex = size() - 1;
-        double value = elementsUnchecked().getUnchecked(lastIndex);
-        decrementSize();
+        double value = UnsafeMemory.getDouble(elementsBase() + ((s - 1) << 3));
+        size(s - 1);
         return value;
     }
 
@@ -103,9 +105,11 @@ public final class PDoubleStack extends AbstractPrimitiveStack<PDoubleArray, PDo
      * @throws IllegalStateException if closed
      */
     public double peek() {
-        if (isEmpty()) {
+        ensureOpen();
+        long s = sizeUnchecked();
+        if (s == 0) {
             throw new NoSuchElementException("Stack is empty");
         }
-        return elementsUnchecked().getUnchecked(size() - 1);
+        return UnsafeMemory.getDouble(elementsBase() + ((s - 1) << 3));
     }
 }

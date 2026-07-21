@@ -5,6 +5,7 @@ import com.tonic.jaloc.impl.arrays.PByteWriter;
 import com.tonic.jaloc.memory.SystemAllocator;
 import com.tonic.jaloc.memory.abs.AbstractPrimitiveHeap;
 import com.tonic.jaloc.memory.iface.NativeAllocator;
+import com.tonic.jaloc.memory.internal.UnsafeMemory;
 
 import java.util.NoSuchElementException;
 
@@ -52,10 +53,10 @@ public final class PByteHeap extends AbstractPrimitiveHeap<PByteArray, PByteWrit
      * @throws IllegalStateException if closed
      */
     public void push(byte value) {
-        PByteWriter writer = appendWriter(1);
-        writer.put(value);
-        commitWriter();
-        siftUp(sizeUnchecked() - 1);
+        long s = appendIndex();
+        UnsafeMemory.putByte(elementsBase() + s, value);
+        size(s + 1);
+        siftUp(s);
     }
 
     /**

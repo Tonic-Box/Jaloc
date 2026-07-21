@@ -5,6 +5,7 @@ import com.tonic.jaloc.impl.arrays.PFloatWriter;
 import com.tonic.jaloc.memory.SystemAllocator;
 import com.tonic.jaloc.memory.abs.AbstractPrimitiveHeap;
 import com.tonic.jaloc.memory.iface.NativeAllocator;
+import com.tonic.jaloc.memory.internal.UnsafeMemory;
 
 import java.util.NoSuchElementException;
 
@@ -52,10 +53,10 @@ public final class PFloatHeap extends AbstractPrimitiveHeap<PFloatArray, PFloatW
      * @throws IllegalStateException if closed
      */
     public void push(float value) {
-        PFloatWriter writer = appendWriter(1);
-        writer.put(value);
-        commitWriter();
-        siftUp(sizeUnchecked() - 1);
+        long s = appendIndex();
+        UnsafeMemory.putFloat(elementsBase() + (s << 2), value);
+        size(s + 1);
+        siftUp(s);
     }
 
     /**

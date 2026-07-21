@@ -5,6 +5,7 @@ import com.tonic.jaloc.impl.arrays.PShortWriter;
 import com.tonic.jaloc.memory.SystemAllocator;
 import com.tonic.jaloc.memory.abs.AbstractPrimitiveHeap;
 import com.tonic.jaloc.memory.iface.NativeAllocator;
+import com.tonic.jaloc.memory.internal.UnsafeMemory;
 
 import java.util.NoSuchElementException;
 
@@ -52,10 +53,10 @@ public final class PShortHeap extends AbstractPrimitiveHeap<PShortArray, PShortW
      * @throws IllegalStateException if closed
      */
     public void push(short value) {
-        PShortWriter writer = appendWriter(1);
-        writer.put(value);
-        commitWriter();
-        siftUp(sizeUnchecked() - 1);
+        long s = appendIndex();
+        UnsafeMemory.putShort(elementsBase() + (s << 1), value);
+        size(s + 1);
+        siftUp(s);
     }
 
     /**

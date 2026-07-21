@@ -5,6 +5,7 @@ import com.tonic.jaloc.impl.arrays.PShortWriter;
 import com.tonic.jaloc.memory.SystemAllocator;
 import com.tonic.jaloc.memory.abs.AbstractPrimitiveList;
 import com.tonic.jaloc.memory.iface.NativeAllocator;
+import com.tonic.jaloc.memory.internal.UnsafeMemory;
 
 import java.util.NoSuchElementException;
 
@@ -53,9 +54,9 @@ public final class PShortList extends AbstractPrimitiveList<PShortArray, PShortW
      * @throws IllegalStateException if closed
      */
     public void add(short value) {
-        PShortWriter writer = appendWriter(1);
-        writer.put(value);
-        commitWriter();
+        long s = appendIndex();
+        UnsafeMemory.putShort(elementsBase() + (s << 1), value);
+        size(s + 1);
     }
 
     /**
@@ -141,12 +142,13 @@ public final class PShortList extends AbstractPrimitiveList<PShortArray, PShortW
      */
     public short removeLast()
     {
-        if (isEmpty()) {
+        ensureOpen();
+        long s = sizeUnchecked();
+        if (s == 0) {
             throw new NoSuchElementException("List is empty");
         }
-        long lastIndex = size() - 1;
-        short previous = elementsUnchecked().getUnchecked(lastIndex);
-        decrementSize();
+        short previous = UnsafeMemory.getShort(elementsBase() + ((s - 1) << 1));
+        size(s - 1);
         return previous;
     }
 

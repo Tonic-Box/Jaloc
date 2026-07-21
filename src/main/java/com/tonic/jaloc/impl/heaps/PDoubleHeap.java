@@ -5,6 +5,7 @@ import com.tonic.jaloc.impl.arrays.PDoubleWriter;
 import com.tonic.jaloc.memory.SystemAllocator;
 import com.tonic.jaloc.memory.abs.AbstractPrimitiveHeap;
 import com.tonic.jaloc.memory.iface.NativeAllocator;
+import com.tonic.jaloc.memory.internal.UnsafeMemory;
 
 import java.util.NoSuchElementException;
 
@@ -52,10 +53,10 @@ public final class PDoubleHeap extends AbstractPrimitiveHeap<PDoubleArray, PDoub
      * @throws IllegalStateException if closed
      */
     public void push(double value) {
-        PDoubleWriter writer = appendWriter(1);
-        writer.put(value);
-        commitWriter();
-        siftUp(sizeUnchecked() - 1);
+        long s = appendIndex();
+        UnsafeMemory.putDouble(elementsBase() + (s << 3), value);
+        size(s + 1);
+        siftUp(s);
     }
 
     /**

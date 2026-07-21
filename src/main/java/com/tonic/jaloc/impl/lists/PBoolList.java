@@ -57,9 +57,9 @@ public final class PBoolList extends AbstractPrimitiveList<PBoolArray, PBoolWrit
      */
     public void add(boolean value)
     {
-        PBoolWriter writer = appendWriter(1);
-        writer.put(value);
-        commitWriter();
+        long s = appendIndex();
+        elementsUnchecked().setUnchecked(s, value);
+        size(s + 1);
     }
 
     /**
@@ -122,13 +122,14 @@ public final class PBoolList extends AbstractPrimitiveList<PBoolArray, PBoolWrit
      */
     public boolean removeLast()
     {
-        if (isEmpty()) {
+        ensureOpen();
+        long s = sizeUnchecked();
+        if (s == 0) {
             throw new NoSuchElementException("List is empty");
         }
-        long lastIndex = size() - 1;
-        boolean previous = elementsUnchecked().getUnchecked(lastIndex);
-        elementsUnchecked().setUnchecked(lastIndex, false);
-        decrementSize();
+        boolean previous = elementsUnchecked().getUnchecked(s - 1);
+        elementsUnchecked().setUnchecked(s - 1, false);
+        size(s - 1);
         return previous;
     }
 }

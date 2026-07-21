@@ -5,6 +5,7 @@ import com.tonic.jaloc.impl.arrays.PByteWriter;
 import com.tonic.jaloc.memory.SystemAllocator;
 import com.tonic.jaloc.memory.abs.AbstractPrimitiveStack;
 import com.tonic.jaloc.memory.iface.NativeAllocator;
+import com.tonic.jaloc.memory.internal.UnsafeMemory;
 
 import java.util.NoSuchElementException;
 
@@ -52,9 +53,9 @@ public final class PByteStack extends AbstractPrimitiveStack<PByteArray, PByteWr
      * @throws IllegalStateException if closed
      */
     public void push(byte value) {
-        PByteWriter writer = appendWriter(1);
-        writer.put(value);
-        commitWriter();
+        long s = appendIndex();
+        UnsafeMemory.putByte(elementsBase() + s, value);
+        size(s + 1);
     }
 
     /**
@@ -86,12 +87,13 @@ public final class PByteStack extends AbstractPrimitiveStack<PByteArray, PByteWr
      * @throws IllegalStateException if closed
      */
     public byte pop() {
-        if (isEmpty()) {
+        ensureOpen();
+        long s = sizeUnchecked();
+        if (s == 0) {
             throw new NoSuchElementException("Stack is empty");
         }
-        long lastIndex = size() - 1;
-        byte value = elementsUnchecked().getUnchecked(lastIndex);
-        decrementSize();
+        byte value = UnsafeMemory.getByte(elementsBase() + (s - 1));
+        size(s - 1);
         return value;
     }
 
@@ -103,9 +105,11 @@ public final class PByteStack extends AbstractPrimitiveStack<PByteArray, PByteWr
      * @throws IllegalStateException if closed
      */
     public byte peek() {
-        if (isEmpty()) {
+        ensureOpen();
+        long s = sizeUnchecked();
+        if (s == 0) {
             throw new NoSuchElementException("Stack is empty");
         }
-        return elementsUnchecked().getUnchecked(size() - 1);
+        return UnsafeMemory.getByte(elementsBase() + (s - 1));
     }
 }

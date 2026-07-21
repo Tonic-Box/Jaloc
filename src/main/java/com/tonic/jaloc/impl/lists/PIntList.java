@@ -5,6 +5,7 @@ import com.tonic.jaloc.impl.arrays.PIntWriter;
 import com.tonic.jaloc.memory.SystemAllocator;
 import com.tonic.jaloc.memory.abs.AbstractPrimitiveList;
 import com.tonic.jaloc.memory.iface.NativeAllocator;
+import com.tonic.jaloc.memory.internal.UnsafeMemory;
 
 import java.util.NoSuchElementException;
 
@@ -52,9 +53,9 @@ public final class PIntList extends AbstractPrimitiveList<PIntArray, PIntWriter>
      * @throws IllegalStateException if closed
      */
     public void add(int value) {
-        PIntWriter writer = appendWriter(1);
-        writer.put(value);
-        commitWriter();
+        long s = appendIndex();
+        UnsafeMemory.putInt(elementsBase() + (s << 2), value);
+        size(s + 1);
     }
 
     /**
@@ -140,12 +141,13 @@ public final class PIntList extends AbstractPrimitiveList<PIntArray, PIntWriter>
      */
     public int removeLast()
     {
-        if (isEmpty()) {
+        ensureOpen();
+        long s = sizeUnchecked();
+        if (s == 0) {
             throw new NoSuchElementException("List is empty");
         }
-        long lastIndex = size() - 1;
-        int previous = elementsUnchecked().getUnchecked(lastIndex);
-        decrementSize();
+        int previous = UnsafeMemory.getInt(elementsBase() + ((s - 1) << 2));
+        size(s - 1);
         return previous;
     }
 

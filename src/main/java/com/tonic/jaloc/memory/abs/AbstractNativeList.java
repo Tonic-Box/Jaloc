@@ -8,12 +8,21 @@ import com.tonic.jaloc.memory.iface.NativeAllocator;
 public abstract class AbstractNativeList<A extends AbstractNativeArray<W>, W extends AbstractArrayWriter> extends AbstractNativeCollection<A, W>
 {
     private W writer;
+    private long capacityCache;
+    private long baseCache;
 
     protected AbstractNativeList(NativeAllocator allocator, A initialArray)
     {
         super(allocator, initialArray);
 
         this.writer = initialArray.writer();
+        this.capacityCache = initialArray.length();
+        this.baseCache = elementsBaseAddress();
+    }
+
+    protected final long elementsBase()
+    {
+        return baseCache;
     }
 
     /**
@@ -57,6 +66,8 @@ public abstract class AbstractNativeList<A extends AbstractNativeArray<W>, W ext
 
         replaceArray(growCapacity(capacity(), requiredCapacity));
         writer = elements().writer(size());
+        capacityCache = elementsUnchecked().length();
+        baseCache = elementsBaseAddress();
     }
 
     /**
@@ -75,6 +86,22 @@ public abstract class AbstractNativeList<A extends AbstractNativeArray<W>, W ext
 
         replaceArray(size());
         writer = elements().writer(size());
+        capacityCache = elementsUnchecked().length();
+        baseCache = elementsBaseAddress();
+    }
+
+    protected final long appendIndex()
+    {
+        ensureOpen();
+
+        long s = sizeUnchecked();
+
+        if (s == capacityCache)
+        {
+            ensureCapacity(s + 1);
+        }
+
+        return s;
     }
 
     protected final W appendWriter(long additionalElements)

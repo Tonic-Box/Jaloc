@@ -57,9 +57,9 @@ public final class PBoolStack extends AbstractPrimitiveStack<PBoolArray, PBoolWr
      */
     public void push(boolean value)
     {
-        PBoolWriter writer = appendWriter(1);
-        writer.put(value);
-        commitWriter();
+        long s = appendIndex();
+        elementsUnchecked().setUnchecked(s, value);
+        size(s + 1);
     }
 
     /**
@@ -91,13 +91,14 @@ public final class PBoolStack extends AbstractPrimitiveStack<PBoolArray, PBoolWr
      */
     public boolean pop()
     {
-        if (isEmpty()) {
+        ensureOpen();
+        long s = sizeUnchecked();
+        if (s == 0) {
             throw new NoSuchElementException("Stack is empty");
         }
-        long lastIndex = size() - 1;
-        boolean value = elementsUnchecked().getUnchecked(lastIndex);
-        elementsUnchecked().setUnchecked(lastIndex, false);
-        decrementSize();
+        boolean value = elementsUnchecked().getUnchecked(s - 1);
+        elementsUnchecked().setUnchecked(s - 1, false);
+        size(s - 1);
         return value;
     }
 
@@ -110,9 +111,11 @@ public final class PBoolStack extends AbstractPrimitiveStack<PBoolArray, PBoolWr
      */
     public boolean peek()
     {
-        if (isEmpty()) {
+        ensureOpen();
+        long s = sizeUnchecked();
+        if (s == 0) {
             throw new NoSuchElementException("Stack is empty");
         }
-        return elementsUnchecked().getUnchecked(size() - 1);
+        return elementsUnchecked().getUnchecked(s - 1);
     }
 }

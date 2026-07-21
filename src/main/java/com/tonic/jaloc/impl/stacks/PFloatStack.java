@@ -5,6 +5,7 @@ import com.tonic.jaloc.impl.arrays.PFloatWriter;
 import com.tonic.jaloc.memory.SystemAllocator;
 import com.tonic.jaloc.memory.abs.AbstractPrimitiveStack;
 import com.tonic.jaloc.memory.iface.NativeAllocator;
+import com.tonic.jaloc.memory.internal.UnsafeMemory;
 
 import java.util.NoSuchElementException;
 
@@ -52,9 +53,9 @@ public final class PFloatStack extends AbstractPrimitiveStack<PFloatArray, PFloa
      * @throws IllegalStateException if closed
      */
     public void push(float value) {
-        PFloatWriter writer = appendWriter(1);
-        writer.put(value);
-        commitWriter();
+        long s = appendIndex();
+        UnsafeMemory.putFloat(elementsBase() + (s << 2), value);
+        size(s + 1);
     }
 
     /**
@@ -86,12 +87,13 @@ public final class PFloatStack extends AbstractPrimitiveStack<PFloatArray, PFloa
      * @throws IllegalStateException if closed
      */
     public float pop() {
-        if (isEmpty()) {
+        ensureOpen();
+        long s = sizeUnchecked();
+        if (s == 0) {
             throw new NoSuchElementException("Stack is empty");
         }
-        long lastIndex = size() - 1;
-        float value = elementsUnchecked().getUnchecked(lastIndex);
-        decrementSize();
+        float value = UnsafeMemory.getFloat(elementsBase() + ((s - 1) << 2));
+        size(s - 1);
         return value;
     }
 
@@ -103,9 +105,11 @@ public final class PFloatStack extends AbstractPrimitiveStack<PFloatArray, PFloa
      * @throws IllegalStateException if closed
      */
     public float peek() {
-        if (isEmpty()) {
+        ensureOpen();
+        long s = sizeUnchecked();
+        if (s == 0) {
             throw new NoSuchElementException("Stack is empty");
         }
-        return elementsUnchecked().getUnchecked(size() - 1);
+        return UnsafeMemory.getFloat(elementsBase() + ((s - 1) << 2));
     }
 }

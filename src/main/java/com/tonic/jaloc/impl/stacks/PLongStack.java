@@ -5,6 +5,7 @@ import com.tonic.jaloc.impl.arrays.PLongWriter;
 import com.tonic.jaloc.memory.SystemAllocator;
 import com.tonic.jaloc.memory.abs.AbstractPrimitiveStack;
 import com.tonic.jaloc.memory.iface.NativeAllocator;
+import com.tonic.jaloc.memory.internal.UnsafeMemory;
 
 import java.util.NoSuchElementException;
 
@@ -52,9 +53,9 @@ public final class PLongStack extends AbstractPrimitiveStack<PLongArray, PLongWr
      * @throws IllegalStateException if closed
      */
     public void push(long value) {
-        PLongWriter writer = appendWriter(1);
-        writer.put(value);
-        commitWriter();
+        long s = appendIndex();
+        UnsafeMemory.putLong(elementsBase() + (s << 3), value);
+        size(s + 1);
     }
 
     /**
@@ -86,12 +87,13 @@ public final class PLongStack extends AbstractPrimitiveStack<PLongArray, PLongWr
      * @throws IllegalStateException if closed
      */
     public long pop() {
-        if (isEmpty()) {
+        ensureOpen();
+        long s = sizeUnchecked();
+        if (s == 0) {
             throw new NoSuchElementException("Stack is empty");
         }
-        long lastIndex = size() - 1;
-        long value = elementsUnchecked().getUnchecked(lastIndex);
-        decrementSize();
+        long value = UnsafeMemory.getLong(elementsBase() + ((s - 1) << 3));
+        size(s - 1);
         return value;
     }
 
@@ -103,9 +105,11 @@ public final class PLongStack extends AbstractPrimitiveStack<PLongArray, PLongWr
      * @throws IllegalStateException if closed
      */
     public long peek() {
-        if (isEmpty()) {
+        ensureOpen();
+        long s = sizeUnchecked();
+        if (s == 0) {
             throw new NoSuchElementException("Stack is empty");
         }
-        return elementsUnchecked().getUnchecked(size() - 1);
+        return UnsafeMemory.getLong(elementsBase() + ((s - 1) << 3));
     }
 }

@@ -56,10 +56,10 @@ public final class PBoolHeap extends AbstractPrimitiveHeap<PBoolArray, PBoolWrit
      */
     public void push(boolean value)
     {
-        PBoolWriter writer = appendWriter(1);
-        writer.put(value);
-        commitWriter();
-        siftUp(sizeUnchecked() - 1);
+        long s = appendIndex();
+        elementsUnchecked().setUnchecked(s, value);
+        size(s + 1);
+        siftUp(s);
     }
 
     /**
