@@ -90,7 +90,7 @@ public final class PBoolFixedQueue extends AbstractPrimitiveFixedQueue<PBoolArra
         if (values.length == 0) {
             return;
         }
-        if (Math.addExact(size(), (long) values.length) > capacity()) {
+        if (Math.addExact(size(), values.length) > capacity()) {
             throw new IllegalStateException("Queue is full");
         }
         for (boolean value : values) {
@@ -133,11 +133,4 @@ public final class PBoolFixedQueue extends AbstractPrimitiveFixedQueue<PBoolArra
         return elementsUnchecked().getUnchecked(headIndex());
     }
 
-    private static long requireCapacity(long capacity)
-    {
-        if (capacity <= 0) {
-            throw new IllegalArgumentException("capacity must be positive");
-        }
-        return capacity;
-    }
 }

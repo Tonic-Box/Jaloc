@@ -4,10 +4,34 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="2824b8b6-14eb-456f-be4b-62b6e25e85cf" name="Changes" comment="Fold shared map facade methods into AbstractNativeMap">
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/tonic/jaloc/impl/maps/PMap.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/tonic/jaloc/impl/maps/PMap.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/tonic/jaloc/impl/maps/PStructMap.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/tonic/jaloc/impl/maps/PStructMap.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/tonic/jaloc/memory/abs/AbstractNativeMap.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/tonic/jaloc/memory/abs/AbstractNativeMap.java" afterDir="false" />
+    <list default="true" id="2824b8b6-14eb-456f-be4b-62b6e25e85cf" name="Changes" comment="Extract struct collection bases and centralize ring capacity check">
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/tonic/jaloc/memory/abs/AbstractStructList.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/tonic/jaloc/memory/abs/AbstractStructRing.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/inspectionProfiles/Project_Default.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/inspectionProfiles/Project_Default.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/tonic/jaloc/impl/dequeues/PStructDeque.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/tonic/jaloc/impl/dequeues/PStructDeque.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/tonic/jaloc/impl/fixedqueues/PBoolFixedQueue.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/tonic/jaloc/impl/fixedqueues/PBoolFixedQueue.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/tonic/jaloc/impl/fixedqueues/PByteFixedQueue.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/tonic/jaloc/impl/fixedqueues/PByteFixedQueue.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/tonic/jaloc/impl/fixedqueues/PCharFixedQueue.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/tonic/jaloc/impl/fixedqueues/PCharFixedQueue.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/tonic/jaloc/impl/fixedqueues/PDoubleFixedQueue.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/tonic/jaloc/impl/fixedqueues/PDoubleFixedQueue.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/tonic/jaloc/impl/fixedqueues/PFloatFixedQueue.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/tonic/jaloc/impl/fixedqueues/PFloatFixedQueue.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/tonic/jaloc/impl/fixedqueues/PIntFixedQueue.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/tonic/jaloc/impl/fixedqueues/PIntFixedQueue.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/tonic/jaloc/impl/fixedqueues/PLongFixedQueue.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/tonic/jaloc/impl/fixedqueues/PLongFixedQueue.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/tonic/jaloc/impl/fixedqueues/PShortFixedQueue.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/tonic/jaloc/impl/fixedqueues/PShortFixedQueue.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/tonic/jaloc/impl/fixedqueues/PStructFixedQueue.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/tonic/jaloc/impl/fixedqueues/PStructFixedQueue.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/tonic/jaloc/impl/lists/PStructList.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/tonic/jaloc/impl/lists/PStructList.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/tonic/jaloc/impl/queues/PStructQueue.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/tonic/jaloc/impl/queues/PStructQueue.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/tonic/jaloc/impl/ringbuffers/PBoolRingBuffer.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/tonic/jaloc/impl/ringbuffers/PBoolRingBuffer.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/tonic/jaloc/impl/ringbuffers/PByteRingBuffer.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/tonic/jaloc/impl/ringbuffers/PByteRingBuffer.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/tonic/jaloc/impl/ringbuffers/PCharRingBuffer.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/tonic/jaloc/impl/ringbuffers/PCharRingBuffer.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/tonic/jaloc/impl/ringbuffers/PDoubleRingBuffer.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/tonic/jaloc/impl/ringbuffers/PDoubleRingBuffer.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/tonic/jaloc/impl/ringbuffers/PFloatRingBuffer.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/tonic/jaloc/impl/ringbuffers/PFloatRingBuffer.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/tonic/jaloc/impl/ringbuffers/PIntRingBuffer.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/tonic/jaloc/impl/ringbuffers/PIntRingBuffer.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/tonic/jaloc/impl/ringbuffers/PLongRingBuffer.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/tonic/jaloc/impl/ringbuffers/PLongRingBuffer.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/tonic/jaloc/impl/ringbuffers/PShortRingBuffer.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/tonic/jaloc/impl/ringbuffers/PShortRingBuffer.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/tonic/jaloc/impl/ringbuffers/PStructRingBuffer.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/tonic/jaloc/impl/ringbuffers/PStructRingBuffer.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/tonic/jaloc/impl/stacks/PStructStack.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/tonic/jaloc/impl/stacks/PStructStack.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/tonic/jaloc/memory/abs/AbstractNativeRing.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/tonic/jaloc/memory/abs/AbstractNativeRing.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -172,22 +196,6 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1784496645962</updated>
-    </task>
-    <task id="LOCAL-00003" summary="Extract AllocationRecord from AllocationState as the deallocation authority">
-      <option name="closed" value="true" />
-      <created>1784533858600</created>
-      <option name="number" value="00003" />
-      <option name="presentableId" value="LOCAL-00003" />
-      <option name="project" value="LOCAL" />
-      <updated>1784533858600</updated>
-    </task>
-    <task id="LOCAL-00004" summary="Add reachability-based leak backstop for unclosed native allocations">
-      <option name="closed" value="true" />
-      <created>1784538659208</created>
-      <option name="number" value="00004" />
-      <option name="presentableId" value="LOCAL-00004" />
-      <option name="project" value="LOCAL" />
-      <updated>1784538659208</updated>
     </task>
     <task id="LOCAL-00005" summary="Cache base addresses and deduplicate per-access safety checks">
       <option name="closed" value="true" />
@@ -565,7 +573,23 @@
       <option name="project" value="LOCAL" />
       <updated>1784699338559</updated>
     </task>
-    <option name="localTasksCounter" value="52" />
+    <task id="LOCAL-00052" summary="Fold shared map facade methods into AbstractNativeMap">
+      <option name="closed" value="true" />
+      <created>1784699993074</created>
+      <option name="number" value="00052" />
+      <option name="presentableId" value="LOCAL-00052" />
+      <option name="project" value="LOCAL" />
+      <updated>1784699993074</updated>
+    </task>
+    <task id="LOCAL-00053" summary="Extract AbstractNativeArray2D behind the nine 2D grids">
+      <option name="closed" value="true" />
+      <created>1784700231370</created>
+      <option name="number" value="00053" />
+      <option name="presentableId" value="LOCAL-00053" />
+      <option name="project" value="LOCAL" />
+      <updated>1784700231370</updated>
+    </task>
+    <option name="localTasksCounter" value="54" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -580,8 +604,6 @@
     </option>
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="Add cursor-based lookups to PStructMap" />
-    <MESSAGE value="Read size without liveness checks in post-entry bookkeeping" />
     <MESSAGE value="Collapse ensureOpen to a local flag on arrays and collections" />
     <MESSAGE value="- README&#10;- Cache word base and capacity in PBitSet" />
     <MESSAGE value="Delegate proven-index element access to unchecked reads across families" />
@@ -605,7 +627,9 @@
     <MESSAGE value="update readme" />
     <MESSAGE value="Centralize hash-table math and radix trivial-pass check" />
     <MESSAGE value="Fold shared map facade methods into AbstractNativeMap" />
-    <option name="LAST_COMMIT_MESSAGE" value="Fold shared map facade methods into AbstractNativeMap" />
+    <MESSAGE value="Extract AbstractNativeArray2D behind the nine 2D grids" />
+    <MESSAGE value="Extract struct collection bases and centralize ring capacity check" />
+    <option name="LAST_COMMIT_MESSAGE" value="Extract struct collection bases and centralize ring capacity check" />
   </component>
   <component name="XSLT-Support.FileAssociations.UIState">
     <expand />

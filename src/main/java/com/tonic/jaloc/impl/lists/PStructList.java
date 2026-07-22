@@ -17,11 +17,8 @@ import java.util.function.Consumer;
 /**
  * A growable native struct list; elements are accessed through views, and any capacity change invalidates outstanding views.
  */
-public final class PStructList<T extends PStruct> extends AbstractNativeList<PStructArray<T>, PStructWriter<T>> implements Iterable<T>
+public final class PStructList<T extends PStruct> extends AbstractStructList<T> implements Iterable<T>
 {
-    private final StructLayout layout;
-    private final StructViewFactory<T> viewFactory;
-
     /**
      * Creates an empty list with zero capacity on the system allocator.
      *
@@ -57,24 +54,7 @@ public final class PStructList<T extends PStruct> extends AbstractNativeList<PSt
      */
     public PStructList(NativeAllocator allocator, StructLayout layout, StructViewFactory<T> viewFactory, long initialCapacity)
     {
-        super(Objects.requireNonNull(allocator, "allocator"), new PStructArray<>(allocator, viewFactory, layout, initialCapacity));
-
-        this.layout = layout;
-        this.viewFactory = viewFactory;
-    }
-
-    /**
-     * @return the entry layout
-     */
-    public StructLayout layout()
-    {
-        return layout;
-    }
-
-    @Override
-    protected PStructArray<T> createArray(NativeAllocator allocator, long capacity)
-    {
-        return new PStructArray<>(allocator, viewFactory, layout, capacity);
+        super(allocator, layout, viewFactory, initialCapacity);
     }
 
     /**

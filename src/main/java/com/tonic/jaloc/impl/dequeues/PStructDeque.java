@@ -14,11 +14,8 @@ import java.util.function.Consumer;
 /**
  * A growable native struct deque on a ring; elements are accessed through views, and any capacity change invalidates outstanding views.
  */
-public final class PStructDeque<T extends PStruct> extends AbstractNativeRing<PStructArray<T>, PStructWriter<T>>
+public final class PStructDeque<T extends PStruct> extends AbstractStructRing<T>
 {
-    private final StructLayout layout;
-    private final StructViewFactory<T> viewFactory;
-
     /**
      * Creates an empty deque with zero capacity on the system allocator.
      *
@@ -54,24 +51,7 @@ public final class PStructDeque<T extends PStruct> extends AbstractNativeRing<PS
      */
     public PStructDeque(NativeAllocator allocator, StructLayout layout, StructViewFactory<T> viewFactory, long initialCapacity)
     {
-        super(Objects.requireNonNull(allocator, "allocator"), new PStructArray<>(allocator, viewFactory, layout, initialCapacity));
-
-        this.layout = layout;
-        this.viewFactory = viewFactory;
-    }
-
-    /**
-     * @return the entry layout
-     */
-    public StructLayout layout()
-    {
-        return layout;
-    }
-
-    @Override
-    protected PStructArray<T> createArray(NativeAllocator allocator, long capacity)
-    {
-        return new PStructArray<>(allocator, viewFactory, layout, capacity);
+        super(allocator, layout, viewFactory, initialCapacity);
     }
 
     /**

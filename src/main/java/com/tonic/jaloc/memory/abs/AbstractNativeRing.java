@@ -122,6 +122,16 @@ public abstract class AbstractNativeRing<A extends AbstractNativeArray<W>, W ext
         head = 0;
     }
 
+    protected static long requireCapacity(long capacity)
+    {
+        if (capacity <= 0)
+        {
+            throw new IllegalArgumentException("capacity must be positive");
+        }
+
+        return capacity;
+    }
+
     protected final void trimRing()
     {
         ensureOpen();

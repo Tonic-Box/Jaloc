@@ -14,11 +14,8 @@ import java.util.function.Consumer;
 /**
  * A fixed-capacity native struct FIFO queue that rejects when full.
  */
-public final class PStructFixedQueue<T extends PStruct> extends AbstractNativeRing<PStructArray<T>, PStructWriter<T>>
+public final class PStructFixedQueue<T extends PStruct> extends AbstractStructRing<T>
 {
-    private final StructLayout layout;
-    private final StructViewFactory<T> viewFactory;
-
     /**
      * Allocates a queue of the given capacity on the system allocator.
      *
@@ -43,24 +40,7 @@ public final class PStructFixedQueue<T extends PStruct> extends AbstractNativeRi
      */
     public PStructFixedQueue(NativeAllocator allocator, StructLayout layout, StructViewFactory<T> viewFactory, long capacity)
     {
-        super(Objects.requireNonNull(allocator, "allocator"), new PStructArray<>(allocator, viewFactory, layout, requireCapacity(capacity)));
-
-        this.layout = layout;
-        this.viewFactory = viewFactory;
-    }
-
-    /**
-     * @return the entry layout
-     */
-    public StructLayout layout()
-    {
-        return layout;
-    }
-
-    @Override
-    protected PStructArray<T> createArray(NativeAllocator allocator, long capacity)
-    {
-        return new PStructArray<>(allocator, viewFactory, layout, capacity);
+        super(allocator, layout, viewFactory, requireCapacity(capacity));
     }
 
     /**
@@ -174,15 +154,5 @@ public final class PStructFixedQueue<T extends PStruct> extends AbstractNativeRi
             struct.clear();
             throw e;
         }
-    }
-
-    private static long requireCapacity(long capacity)
-    {
-        if (capacity <= 0)
-        {
-            throw new IllegalArgumentException("capacity must be positive");
-        }
-
-        return capacity;
     }
 }

@@ -105,10 +105,4 @@ public final class PShortRingBuffer extends AbstractPrimitiveRingBuffer<PShortAr
         return elementsUnchecked().getUnchecked(headIndex());
     }
 
-    private static long requireCapacity(long capacity) {
-        if (capacity <= 0) {
-            throw new IllegalArgumentException("capacity must be positive");
-        }
-        return capacity;
-    }
 }

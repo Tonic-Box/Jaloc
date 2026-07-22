@@ -136,10 +136,4 @@ public final class PDoubleFixedQueue extends AbstractPrimitiveFixedQueue<PDouble
         return elementsUnchecked().getUnchecked(headIndex());
     }
 
-    private static long requireCapacity(long capacity) {
-        if (capacity <= 0) {
-            throw new IllegalArgumentException("capacity must be positive");
-        }
-        return capacity;
-    }
 }

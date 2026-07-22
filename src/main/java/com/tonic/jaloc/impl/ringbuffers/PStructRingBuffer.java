@@ -14,11 +14,8 @@ import java.util.function.Consumer;
 /**
  * A fixed-capacity native struct ring buffer; enqueueing when full overwrites the oldest entry.
  */
-public final class PStructRingBuffer<T extends PStruct> extends AbstractNativeRing<PStructArray<T>, PStructWriter<T>>
+public final class PStructRingBuffer<T extends PStruct> extends AbstractStructRing<T>
 {
-    private final StructLayout layout;
-    private final StructViewFactory<T> viewFactory;
-
     /**
      * Allocates a buffer of the given capacity on the system allocator.
      *
@@ -43,24 +40,7 @@ public final class PStructRingBuffer<T extends PStruct> extends AbstractNativeRi
      */
     public PStructRingBuffer(NativeAllocator allocator, StructLayout layout, StructViewFactory<T> viewFactory, long capacity)
     {
-        super(Objects.requireNonNull(allocator, "allocator"), new PStructArray<>(allocator, viewFactory, layout, requireCapacity(capacity)));
-
-        this.layout = layout;
-        this.viewFactory = viewFactory;
-    }
-
-    /**
-     * @return the entry layout
-     */
-    public StructLayout layout()
-    {
-        return layout;
-    }
-
-    @Override
-    protected PStructArray<T> createArray(NativeAllocator allocator, long capacity)
-    {
-        return new PStructArray<>(allocator, viewFactory, layout, capacity);
+        super(allocator, layout, viewFactory, requireCapacity(capacity));
     }
 
     /**
@@ -154,15 +134,5 @@ public final class PStructRingBuffer<T extends PStruct> extends AbstractNativeRi
 
         elements().clearStruct(headIndex());
         advanceHead();
-    }
-
-    private static long requireCapacity(long capacity)
-    {
-        if (capacity <= 0)
-        {
-            throw new IllegalArgumentException("capacity must be positive");
-        }
-
-        return capacity;
     }
 }
