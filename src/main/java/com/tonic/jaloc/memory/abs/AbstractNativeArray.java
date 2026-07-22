@@ -51,7 +51,12 @@ public abstract class AbstractNativeArray<W extends AbstractArrayWriter> impleme
         try
         {
             allocatedMemory = allocatedBlock.region();
-            allocatedMemory.clear();
+
+            if (allocator.clearRequired())
+            {
+                allocatedMemory.clear();
+            }
+
             allocatedAddress = allocatedMemory.address();
         }
         catch (RuntimeException | Error e)

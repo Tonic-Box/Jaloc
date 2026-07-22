@@ -63,6 +63,19 @@ Ratio is how many times faster Jaloc is. Anything above 1.00x means Jaloc wins t
 
 Beyond the timings, Jaloc adds nothing to GC pauses, holds collections past 2 billion elements, frees memory on `close()`, and supports struct layouts - none of which fastutil offers.
 
+## Spill mode (memory-mapped) vs malloc
+
+`MappedAllocator.ephemeral()` backs collections with memory-mapped temp files the kernel deletes at process exit. Pages become OS-reclaimable under memory pressure instead of pinned like malloc. Same collections, same code - only the allocator changes.
+
+| Benchmark | malloc | spill | Ratio |
+|---|---:|---:|---:|
+| long set contains 1M | 38.20 ms | 38.16 ms | **1.00x** |
+| long list get-sum 1M | 0.88 ms | 0.86 ms | **1.02x** |
+| long set add 1M | 42.17 ms | 69.22 ms | 0.61x |
+| long list add 1M | 7.53 ms | 44.69 ms | 0.17x |
+
+**Summary:** once pages are resident, reads run at full malloc speed - the CPU does not know the page is file-backed. Building a collection is slower: each growth step maps a fresh file and every first page touch is a soft fault, costs malloc does not pay. Spill mode is for large, read-heavy, or memory-pressured workloads, not write throughput.
+
 ## Reproducing
 
 Each row runs a Jaloc collection against its JDK or fastutil equivalent on identical random data, verified for matching results before timing. Numbers vary by machine; treat the ratios as the takeaway, not the absolute times.

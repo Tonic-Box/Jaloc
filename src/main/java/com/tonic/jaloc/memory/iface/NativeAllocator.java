@@ -38,7 +38,18 @@ public interface NativeAllocator
      */
     default MemoryBlock allocateZeroed(long bytes, int alignment) {
         MemoryBlock block = allocate(bytes, alignment);
-        block.region().clear();
+
+        if (clearRequired()) {
+            block.region().clear();
+        }
+
         return block;
+    }
+
+    /**
+     * @return true if fresh blocks need explicit zeroing; allocators handing out pre-zeroed memory return false
+     */
+    default boolean clearRequired() {
+        return true;
     }
 }

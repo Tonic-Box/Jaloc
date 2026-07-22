@@ -4,13 +4,14 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="2824b8b6-14eb-456f-be4b-62b6e25e85cf" name="Changes" comment="Recover the finally clause once for a try with user catches">
+    <list default="true" id="2824b8b6-14eb-456f-be4b-62b6e25e85cf" name="Changes" comment="Add memory-mapped spill allocator (MappedAllocator, map0 binding, skip-clear)">
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/tonic/jaloc/memory/MappedAllocator.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/tonic/jaloc/memory/internal/MappedExtent.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/tonic/jaloc/memory/internal/MappedFiles.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/tonic/jaloc/impl/sets/PDoubleSet.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/tonic/jaloc/impl/sets/PDoubleSet.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/tonic/jaloc/impl/sets/PFloatSet.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/tonic/jaloc/impl/sets/PFloatSet.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/tonic/jaloc/impl/sets/PIntSet.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/tonic/jaloc/impl/sets/PIntSet.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/tonic/jaloc/impl/sets/PLongSet.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/tonic/jaloc/impl/sets/PLongSet.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/tonic/jaloc/memory/abs/AbstractNativeMap.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/tonic/jaloc/memory/abs/AbstractNativeMap.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/BENCHMARKS.md" beforeDir="false" afterPath="$PROJECT_DIR$/BENCHMARKS.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/tonic/jaloc/memory/abs/AbstractNativeArray.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/tonic/jaloc/memory/abs/AbstractNativeArray.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/tonic/jaloc/memory/iface/NativeAllocator.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/tonic/jaloc/memory/iface/NativeAllocator.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -175,22 +176,6 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1784496645962</updated>
-    </task>
-    <task id="LOCAL-00010" summary="Add native FIFO queues for primitives">
-      <option name="closed" value="true" />
-      <created>1784546561486</created>
-      <option name="number" value="00010" />
-      <option name="presentableId" value="LOCAL-00010" />
-      <option name="project" value="LOCAL" />
-      <updated>1784546561486</updated>
-    </task>
-    <task id="LOCAL-00011" summary="Add PStructQueue for FIFO struct storage on the ring engine">
-      <option name="closed" value="true" />
-      <created>1784547461128</created>
-      <option name="number" value="00011" />
-      <option name="presentableId" value="LOCAL-00011" />
-      <option name="project" value="LOCAL" />
-      <updated>1784547461128</updated>
     </task>
     <task id="LOCAL-00012" summary="ring buffers for all types">
       <option name="closed" value="true" />
@@ -568,7 +553,23 @@
       <option name="project" value="LOCAL" />
       <updated>1784738699933</updated>
     </task>
-    <option name="localTasksCounter" value="59" />
+    <task id="LOCAL-00059" summary="Add trim() to maps and hash sets">
+      <option name="closed" value="true" />
+      <created>1784742577296</created>
+      <option name="number" value="00059" />
+      <option name="presentableId" value="LOCAL-00059" />
+      <option name="project" value="LOCAL" />
+      <updated>1784742577296</updated>
+    </task>
+    <task id="LOCAL-00060" summary="Add trim() to maps and hash sets">
+      <option name="closed" value="true" />
+      <created>1784742688887</created>
+      <option name="number" value="00060" />
+      <option name="presentableId" value="LOCAL-00060" />
+      <option name="project" value="LOCAL" />
+      <updated>1784742688887</updated>
+    </task>
+    <option name="localTasksCounter" value="61" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -583,8 +584,6 @@
     </option>
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="Add heap-array bulk copy interop and memcpy-backed bulk operations" />
-    <MESSAGE value="PBitSet range operations and forEachSetBit" />
     <MESSAGE value="Switch heaps from binary to 4-ary" />
     <MESSAGE value="Add radix sort for PFloatArray/PDoubleArray via IEEE bit-flip transform" />
     <MESSAGE value="Add branchless binary search under 2MB range to all arrays" />
@@ -608,7 +607,9 @@
     <MESSAGE value="Add max-heaps and heapify constructors" />
     <MESSAGE value="Add PBloomFilter" />
     <MESSAGE value="Recover the finally clause once for a try with user catches" />
-    <option name="LAST_COMMIT_MESSAGE" value="Recover the finally clause once for a try with user catches" />
+    <MESSAGE value="Add trim() to maps and hash sets" />
+    <MESSAGE value="Add memory-mapped spill allocator (MappedAllocator, map0 binding, skip-clear)" />
+    <option name="LAST_COMMIT_MESSAGE" value="Add memory-mapped spill allocator (MappedAllocator, map0 binding, skip-clear)" />
   </component>
   <component name="XSLT-Support.FileAssociations.UIState">
     <expand />
