@@ -179,7 +179,7 @@ public final class PFloatArray extends AbstractPrimitiveArray<PFloatWriter>
             {
                 int bucketBase = pass << 8;
 
-                if (trivialPass(counts, bucketBase, length))
+                if (SortSupport.trivialPass(counts, bucketBase, length))
                 {
                     continue;
                 }
@@ -221,19 +221,6 @@ public final class PFloatArray extends AbstractPrimitiveArray<PFloatWriter>
         {
             UnsafeMemory.free(scratch);
         }
-    }
-
-    private static boolean trivialPass(long[] counts, int bucketBase, long length)
-    {
-        for (int bucket = 0; bucket < 256; bucket++)
-        {
-            if (counts[bucketBase + bucket] == length)
-            {
-                return true;
-            }
-        }
-
-        return false;
     }
 
     /**

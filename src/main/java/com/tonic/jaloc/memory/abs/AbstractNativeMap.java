@@ -7,6 +7,7 @@ import com.tonic.jaloc.memory.data.struct.StructField;
 import com.tonic.jaloc.memory.data.struct.StructLayout;
 import com.tonic.jaloc.memory.data.struct.StructType;
 import com.tonic.jaloc.memory.iface.NativeAllocator;
+import com.tonic.jaloc.memory.internal.HashMath;
 import com.tonic.jaloc.memory.internal.UnsafeMemory;
 
 /**
@@ -77,7 +78,7 @@ public abstract class AbstractNativeMap<T extends PStruct> extends AbstractNativ
                 continue;
             }
 
-            long position = mix(bits) & destinationMask;
+            long position = HashMath.mix(bits) & destinationMask;
 
             while (keyBitsAt(destinationBase, position) != 0)
             {
@@ -173,7 +174,7 @@ public abstract class AbstractNativeMap<T extends PStruct> extends AbstractNativ
     {
         long base = tableBase + keyOffset;
         long mask = tableMask;
-        long position = mix(keyBits) & mask;
+        long position = HashMath.mix(keyBits) & mask;
 
         while (true)
         {
@@ -197,7 +198,7 @@ public abstract class AbstractNativeMap<T extends PStruct> extends AbstractNativ
     {
         long base = tableBase + keyOffset;
         long mask = tableMask;
-        long position = mix(keyBits) & mask;
+        long position = HashMath.mix(keyBits) & mask;
         int key = (int) keyBits;
 
         while (true)
@@ -222,7 +223,7 @@ public abstract class AbstractNativeMap<T extends PStruct> extends AbstractNativ
     {
         long base = tableBase;
         long mask = tableMask;
-        long position = mix(keyBits) & mask;
+        long position = HashMath.mix(keyBits) & mask;
 
         while (true)
         {
@@ -262,7 +263,7 @@ public abstract class AbstractNativeMap<T extends PStruct> extends AbstractNativ
         long base = tableBase + keyOffset;
         long entryStride = stride;
         long mask = tableMask;
-        long position = mix(keyBits) & mask;
+        long position = HashMath.mix(keyBits) & mask;
 
         while (true)
         {
@@ -291,7 +292,7 @@ public abstract class AbstractNativeMap<T extends PStruct> extends AbstractNativ
 
             base = tableBase + keyOffset;
             mask = tableMask;
-            position = mix(keyBits) & mask;
+            position = HashMath.mix(keyBits) & mask;
 
             while (UnsafeMemory.getLong(base + position * entryStride) != 0)
             {
@@ -309,7 +310,7 @@ public abstract class AbstractNativeMap<T extends PStruct> extends AbstractNativ
         long base = tableBase + keyOffset;
         long entryStride = stride;
         long mask = tableMask;
-        long position = mix(keyBits) & mask;
+        long position = HashMath.mix(keyBits) & mask;
         int key = (int) keyBits;
 
         while (true)
@@ -339,7 +340,7 @@ public abstract class AbstractNativeMap<T extends PStruct> extends AbstractNativ
 
             base = tableBase + keyOffset;
             mask = tableMask;
-            position = mix(keyBits) & mask;
+            position = HashMath.mix(keyBits) & mask;
 
             while (UnsafeMemory.getInt(base + position * entryStride) != 0)
             {
@@ -356,7 +357,7 @@ public abstract class AbstractNativeMap<T extends PStruct> extends AbstractNativ
     {
         long base = tableBase;
         long mask = tableMask;
-        long position = mix(keyBits) & mask;
+        long position = HashMath.mix(keyBits) & mask;
 
         while (true)
         {
@@ -385,7 +386,7 @@ public abstract class AbstractNativeMap<T extends PStruct> extends AbstractNativ
 
             base = tableBase;
             mask = tableMask;
-            position = mix(keyBits) & mask;
+            position = HashMath.mix(keyBits) & mask;
 
             while (keyBitsAt(base, position) != 0)
             {
@@ -402,7 +403,7 @@ public abstract class AbstractNativeMap<T extends PStruct> extends AbstractNativ
     {
         long base = tableBase;
         long mask = tableMask;
-        long position = mix(keyBits) & mask;
+        long position = HashMath.mix(keyBits) & mask;
 
         while (true)
         {
@@ -507,7 +508,7 @@ public abstract class AbstractNativeMap<T extends PStruct> extends AbstractNativ
                     return;
                 }
 
-                long slot = mix(current) & mask;
+                long slot = HashMath.mix(current) & mask;
 
                 if (last <= position ? (last >= slot || slot > position) : (last >= slot && slot > position))
                 {
@@ -570,9 +571,7 @@ public abstract class AbstractNativeMap<T extends PStruct> extends AbstractNativ
 
     private long loadLimit()
     {
-        long tableSize = tableMask + 1;
-
-        return tableSize - (tableSize >>> 2);
+        return HashMath.loadLimit(tableMask + 1);
     }
 
     private static int kindOf(StructType keyType)
@@ -596,29 +595,8 @@ public abstract class AbstractNativeMap<T extends PStruct> extends AbstractNativ
         }
     }
 
-    private static long mix(long value)
-    {
-        long hash = value * 0x9E3779B97F4A7C15L;
-
-        return hash ^ (hash >>> 32);
-    }
-
     protected static long tableLength(long expectedElements)
     {
-        if (expectedElements < 0)
-        {
-            throw new IllegalArgumentException("expectedElements cannot be negative");
-        }
-
-        long needed = expectedElements + ((expectedElements + 2) / 3);
-
-        return nextPowerOfTwo(Math.max(16, needed)) + 1;
-    }
-
-    private static long nextPowerOfTwo(long value)
-    {
-        long highest = Long.highestOneBit(value);
-
-        return highest == value ? value : highest << 1;
+        return HashMath.tableSize(expectedElements) + 1;
     }
 }

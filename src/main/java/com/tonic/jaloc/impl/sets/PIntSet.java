@@ -5,6 +5,7 @@ import com.tonic.jaloc.impl.arrays.PIntWriter;
 import com.tonic.jaloc.memory.SystemAllocator;
 import com.tonic.jaloc.memory.abs.AbstractNativeCollection;
 import com.tonic.jaloc.memory.iface.NativeAllocator;
+import com.tonic.jaloc.memory.internal.HashMath;
 import com.tonic.jaloc.memory.internal.UnsafeMemory;
 
 import java.util.Objects;
@@ -48,11 +49,11 @@ public final class PIntSet extends AbstractNativeCollection<PIntArray, PIntWrite
      */
     public PIntSet(NativeAllocator allocator, long expectedElements)
     {
-        super(allocator, new PIntArray(allocator, tableSize(expectedElements)));
+        super(allocator, new PIntArray(allocator, HashMath.tableSize(expectedElements)));
 
         this.tableBase = elementsBaseAddress();
         this.tableMask = elementsUnchecked().length() - 1;
-        this.growLimit = loadLimit(tableMask + 1);
+        this.growLimit = HashMath.loadLimit(tableMask + 1);
     }
 
     @Override
@@ -76,7 +77,7 @@ public final class PIntSet extends AbstractNativeCollection<PIntArray, PIntWrite
                 continue;
             }
 
-            long position = mix(value) & mask;
+            long position = HashMath.mix(value) & mask;
 
             while (destination.getUnchecked(position) != 0)
             {
@@ -112,7 +113,7 @@ public final class PIntSet extends AbstractNativeCollection<PIntArray, PIntWrite
 
         long base = tableBase;
         long mask = tableMask;
-        long position = mix(value) & mask;
+        long position = HashMath.mix(value) & mask;
 
         while (true)
         {
@@ -137,11 +138,11 @@ public final class PIntSet extends AbstractNativeCollection<PIntArray, PIntWrite
 
             tableBase = elementsBaseAddress();
             tableMask = elementsUnchecked().length() - 1;
-            growLimit = loadLimit(tableMask + 1);
+            growLimit = HashMath.loadLimit(tableMask + 1);
 
             base = tableBase;
             mask = tableMask;
-            position = mix(value) & mask;
+            position = HashMath.mix(value) & mask;
 
             while (UnsafeMemory.getInt(base + (position << 2)) != 0)
             {
@@ -179,7 +180,7 @@ public final class PIntSet extends AbstractNativeCollection<PIntArray, PIntWrite
 
         long base = tableBase;
         long mask = tableMask;
-        long position = mix(value) & mask;
+        long position = HashMath.mix(value) & mask;
 
         while (true)
         {
@@ -219,7 +220,7 @@ public final class PIntSet extends AbstractNativeCollection<PIntArray, PIntWrite
 
         long base = tableBase;
         long mask = tableMask;
-        long position = mix(value) & mask;
+        long position = HashMath.mix(value) & mask;
 
         while (true)
         {
@@ -307,7 +308,7 @@ public final class PIntSet extends AbstractNativeCollection<PIntArray, PIntWrite
                     return;
                 }
 
-                long slot = mix(current) & mask;
+                long slot = HashMath.mix(current) & mask;
 
                 if (last <= position ? (last >= slot || slot > position) : (last >= slot && slot > position))
                 {
@@ -326,34 +327,4 @@ public final class PIntSet extends AbstractNativeCollection<PIntArray, PIntWrite
         return sizeUnchecked() - (containsZero ? 1 : 0);
     }
 
-    private long loadLimit(long tableLength)
-    {
-        return tableLength - (tableLength >>> 2);
-    }
-
-    private static long mix(long value)
-    {
-        long hash = value * 0x9E3779B97F4A7C15L;
-
-        return hash ^ (hash >>> 32);
-    }
-
-    private static long tableSize(long expectedElements)
-    {
-        if (expectedElements < 0)
-        {
-            throw new IllegalArgumentException("expectedElements cannot be negative");
-        }
-
-        long needed = expectedElements + ((expectedElements + 2) / 3);
-
-        return nextPowerOfTwo(Math.max(16, needed));
-    }
-
-    private static long nextPowerOfTwo(long value)
-    {
-        long highest = Long.highestOneBit(value);
-
-        return highest == value ? value : highest << 1;
-    }
 }
