@@ -129,6 +129,16 @@ public final class PFloatSet implements AutoCloseable
     }
 
     /**
+     * Shrinks the table to the smallest size fitting the current elements.
+     *
+     * @throws IllegalStateException if closed
+     */
+    public void trim()
+    {
+        bits.trim();
+    }
+
+    /**
      * Releases the backing native memory. Safe to call more than once.
      */
     @Override

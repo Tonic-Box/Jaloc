@@ -4,16 +4,13 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="2824b8b6-14eb-456f-be4b-62b6e25e85cf" name="Changes" comment="update BENCHMARKS">
+    <list default="true" id="2824b8b6-14eb-456f-be4b-62b6e25e85cf" name="Changes" comment="Recover the finally clause once for a try with user catches">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/tonic/jaloc/impl/heaps/PBoolHeap.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/tonic/jaloc/impl/heaps/PBoolHeap.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/tonic/jaloc/impl/heaps/PByteHeap.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/tonic/jaloc/impl/heaps/PByteHeap.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/tonic/jaloc/impl/heaps/PCharHeap.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/tonic/jaloc/impl/heaps/PCharHeap.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/tonic/jaloc/impl/heaps/PDoubleHeap.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/tonic/jaloc/impl/heaps/PDoubleHeap.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/tonic/jaloc/impl/heaps/PFloatHeap.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/tonic/jaloc/impl/heaps/PFloatHeap.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/tonic/jaloc/impl/heaps/PIntHeap.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/tonic/jaloc/impl/heaps/PIntHeap.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/tonic/jaloc/impl/heaps/PLongHeap.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/tonic/jaloc/impl/heaps/PLongHeap.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/tonic/jaloc/impl/heaps/PShortHeap.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/tonic/jaloc/impl/heaps/PShortHeap.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/tonic/jaloc/impl/sets/PDoubleSet.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/tonic/jaloc/impl/sets/PDoubleSet.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/tonic/jaloc/impl/sets/PFloatSet.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/tonic/jaloc/impl/sets/PFloatSet.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/tonic/jaloc/impl/sets/PIntSet.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/tonic/jaloc/impl/sets/PIntSet.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/tonic/jaloc/impl/sets/PLongSet.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/tonic/jaloc/impl/sets/PLongSet.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/tonic/jaloc/memory/abs/AbstractNativeMap.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/tonic/jaloc/memory/abs/AbstractNativeMap.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -178,22 +175,6 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1784496645962</updated>
-    </task>
-    <task id="LOCAL-00008" summary="Add native LIFO stacks for all primitive types and structs">
-      <option name="closed" value="true" />
-      <created>1784543792062</created>
-      <option name="number" value="00008" />
-      <option name="presentableId" value="LOCAL-00008" />
-      <option name="project" value="LOCAL" />
-      <updated>1784543792062</updated>
-    </task>
-    <task id="LOCAL-00009" summary="Extract AbstractNativeCollection as the shared collection engine base">
-      <option name="closed" value="true" />
-      <created>1784545309047</created>
-      <option name="number" value="00009" />
-      <option name="presentableId" value="LOCAL-00009" />
-      <option name="project" value="LOCAL" />
-      <updated>1784545309047</updated>
     </task>
     <task id="LOCAL-00010" summary="Add native FIFO queues for primitives">
       <option name="closed" value="true" />
@@ -571,7 +552,23 @@
       <option name="project" value="LOCAL" />
       <updated>1784735515845</updated>
     </task>
-    <option name="localTasksCounter" value="57" />
+    <task id="LOCAL-00057" summary="Add max-heaps and heapify constructors">
+      <option name="closed" value="true" />
+      <created>1784738225700</created>
+      <option name="number" value="00057" />
+      <option name="presentableId" value="LOCAL-00057" />
+      <option name="project" value="LOCAL" />
+      <updated>1784738225700</updated>
+    </task>
+    <task id="LOCAL-00058" summary="Add PBloomFilter">
+      <option name="closed" value="true" />
+      <created>1784738699933</created>
+      <option name="number" value="00058" />
+      <option name="presentableId" value="LOCAL-00058" />
+      <option name="project" value="LOCAL" />
+      <updated>1784738699933</updated>
+    </task>
+    <option name="localTasksCounter" value="59" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -586,9 +583,6 @@
     </option>
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="Delegate proven-index element access to unchecked reads across families" />
-    <MESSAGE value="Add radix and counting sorts, run sort internals unchecked" />
-    <MESSAGE value="javadocs" />
     <MESSAGE value="Add heap-array bulk copy interop and memcpy-backed bulk operations" />
     <MESSAGE value="PBitSet range operations and forEachSetBit" />
     <MESSAGE value="Switch heaps from binary to 4-ary" />
@@ -611,7 +605,10 @@
     <MESSAGE value="Extract struct collection bases and centralize ring capacity check" />
     <MESSAGE value="Route cache refresh through an onArrayReplaced hook" />
     <MESSAGE value="update BENCHMARKS" />
-    <option name="LAST_COMMIT_MESSAGE" value="update BENCHMARKS" />
+    <MESSAGE value="Add max-heaps and heapify constructors" />
+    <MESSAGE value="Add PBloomFilter" />
+    <MESSAGE value="Recover the finally clause once for a try with user catches" />
+    <option name="LAST_COMMIT_MESSAGE" value="Recover the finally clause once for a try with user catches" />
   </component>
   <component name="XSLT-Support.FileAssociations.UIState">
     <expand />

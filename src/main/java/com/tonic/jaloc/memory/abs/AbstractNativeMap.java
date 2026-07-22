@@ -108,6 +108,25 @@ public abstract class AbstractNativeMap<T extends PStruct> extends AbstractNativ
         size(0);
     }
 
+    /**
+     * Shrinks the table to the smallest size fitting the current mappings.
+     *
+     * @throws IllegalStateException if closed
+     */
+    public final void trim()
+    {
+        ensureOpen();
+
+        long target = tableLength(occupancy());
+
+        if (target >= elementsUnchecked().length())
+        {
+            return;
+        }
+
+        replaceArray(target);
+    }
+
     protected final StructType keyType()
     {
         return keyType;

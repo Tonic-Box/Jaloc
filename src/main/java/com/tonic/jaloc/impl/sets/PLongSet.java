@@ -291,6 +291,25 @@ public final class PLongSet extends AbstractNativeCollection<PLongArray, PLongWr
         size(0);
     }
 
+    /**
+     * Shrinks the table to the smallest size fitting the current elements.
+     *
+     * @throws IllegalStateException if closed
+     */
+    public void trim()
+    {
+        ensureOpen();
+
+        long target = HashMath.tableSize(occupancy());
+
+        if (target >= elementsUnchecked().length())
+        {
+            return;
+        }
+
+        replaceArray(target);
+    }
+
     private void shiftKeys(long position)
     {
         long base = tableBase;
