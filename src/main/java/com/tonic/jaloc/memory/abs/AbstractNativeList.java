@@ -65,9 +65,6 @@ public abstract class AbstractNativeList<A extends AbstractNativeArray<W>, W ext
         }
 
         replaceArray(growCapacity(capacity(), requiredCapacity));
-        writer = elements().writer(size());
-        capacityCache = elementsUnchecked().length();
-        baseCache = elementsBaseAddress();
     }
 
     /**
@@ -85,7 +82,14 @@ public abstract class AbstractNativeList<A extends AbstractNativeArray<W>, W ext
         }
 
         replaceArray(size());
-        writer = elements().writer(size());
+    }
+
+    @Override
+    protected void onArrayReplaced()
+    {
+        super.onArrayReplaced();
+
+        writer = elements().writer(sizeUnchecked());
         capacityCache = elementsUnchecked().length();
         baseCache = elementsBaseAddress();
     }

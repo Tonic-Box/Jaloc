@@ -63,6 +63,16 @@ public final class PLongSet extends AbstractNativeCollection<PLongArray, PLongWr
     }
 
     @Override
+    protected void onArrayReplaced()
+    {
+        super.onArrayReplaced();
+
+        tableBase = elementsBaseAddress();
+        tableMask = elementsUnchecked().length() - 1;
+        growLimit = HashMath.loadLimit(tableMask + 1);
+    }
+
+    @Override
     protected void migrateElements(PLongArray source, PLongArray destination)
     {
         long sourceLength = source.length();
@@ -135,10 +145,6 @@ public final class PLongSet extends AbstractNativeCollection<PLongArray, PLongWr
         if (occupancy() + 1 > growLimit)
         {
             replaceArray((mask + 1) << 1);
-
-            tableBase = elementsBaseAddress();
-            tableMask = elementsUnchecked().length() - 1;
-            growLimit = HashMath.loadLimit(tableMask + 1);
 
             base = tableBase;
             mask = tableMask;

@@ -119,7 +119,6 @@ public abstract class AbstractNativeRing<A extends AbstractNativeArray<W>, W ext
         }
 
         replaceArray(growCapacity(capacity(), requiredCapacity));
-        head = 0;
     }
 
     protected static long requireCapacity(long capacity)
@@ -142,6 +141,13 @@ public abstract class AbstractNativeRing<A extends AbstractNativeArray<W>, W ext
         }
 
         replaceArray(size());
+    }
+
+    @Override
+    protected void onArrayReplaced()
+    {
+        super.onArrayReplaced();
+
         head = 0;
     }
 

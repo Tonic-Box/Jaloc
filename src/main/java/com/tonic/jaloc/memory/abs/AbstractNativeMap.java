@@ -362,10 +362,6 @@ public abstract class AbstractNativeMap<T extends PStruct> extends AbstractNativ
         {
             replaceArray(((tableMask + 1) << 1) + 1);
 
-            tableBase = elements().baseAddress();
-            tableMask = elements().length() - 2;
-            growLimit = loadLimit();
-
             base = tableBase + keyOffset;
             mask = tableMask;
             position = HashMath.mix(keyBits) & mask;
@@ -410,10 +406,6 @@ public abstract class AbstractNativeMap<T extends PStruct> extends AbstractNativ
         {
             replaceArray(((tableMask + 1) << 1) + 1);
 
-            tableBase = elements().baseAddress();
-            tableMask = elements().length() - 2;
-            growLimit = loadLimit();
-
             base = tableBase + keyOffset;
             mask = tableMask;
             position = HashMath.mix(keyBits) & mask;
@@ -455,10 +447,6 @@ public abstract class AbstractNativeMap<T extends PStruct> extends AbstractNativ
         if (occupancy() + 1 > growLimit)
         {
             replaceArray(((tableMask + 1) << 1) + 1);
-
-            tableBase = elements().baseAddress();
-            tableMask = elements().length() - 2;
-            growLimit = loadLimit();
 
             base = tableBase;
             mask = tableMask;
@@ -648,6 +636,16 @@ public abstract class AbstractNativeMap<T extends PStruct> extends AbstractNativ
     private long loadLimit()
     {
         return HashMath.loadLimit(tableMask + 1);
+    }
+
+    @Override
+    protected void onArrayReplaced()
+    {
+        super.onArrayReplaced();
+
+        tableBase = elements().baseAddress();
+        tableMask = elements().length() - 2;
+        growLimit = loadLimit();
     }
 
     private static int kindOf(StructType keyType)

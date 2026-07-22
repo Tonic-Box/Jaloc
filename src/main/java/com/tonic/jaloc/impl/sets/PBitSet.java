@@ -556,6 +556,12 @@ public final class PBitSet extends AbstractNativeCollection<PLongArray, PLongWri
     private void growWords(long requiredWords)
     {
         replaceArray(growCapacity(wordCapacity, requiredWords));
+    }
+
+    @Override
+    protected void onArrayReplaced()
+    {
+        super.onArrayReplaced();
 
         wordsBase = elementsBaseAddress();
         wordCapacity = capacity();

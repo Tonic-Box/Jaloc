@@ -122,6 +122,7 @@ public abstract class AbstractNativeCollection<A extends AbstractNativeArray<W>,
             installed = true;
 
             previous.close();
+            onArrayReplaced();
         }
         finally
         {
@@ -130,6 +131,10 @@ public abstract class AbstractNativeCollection<A extends AbstractNativeArray<W>,
                 replacement.close();
             }
         }
+    }
+
+    protected void onArrayReplaced()
+    {
     }
 
     protected static long growCapacity(long currentCapacity, long requiredCapacity)
