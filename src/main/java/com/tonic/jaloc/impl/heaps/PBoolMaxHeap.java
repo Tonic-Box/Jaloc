@@ -10,14 +10,14 @@ import java.util.NoSuchElementException;
 import java.util.Objects;
 
 /**
- * A growable native bool min-heap.
+ * A growable native bool max-heap.
  */
-public final class PBoolHeap extends AbstractPrimitiveHeap<PBoolArray, PBoolWriter>
+public final class PBoolMaxHeap extends AbstractPrimitiveHeap<PBoolArray, PBoolWriter>
 {
     /**
      * Creates an empty heap with zero capacity on the system allocator.
      */
-    public PBoolHeap()
+    public PBoolMaxHeap()
     {
         this(0);
     }
@@ -28,7 +28,7 @@ public final class PBoolHeap extends AbstractPrimitiveHeap<PBoolArray, PBoolWrit
      * @param initialCapacity the starting capacity
      * @throws IllegalArgumentException if initialCapacity is negative
      */
-    public PBoolHeap(long initialCapacity)
+    public PBoolMaxHeap(long initialCapacity)
     {
         this(SystemAllocator.getInstance(), initialCapacity);
     }
@@ -40,7 +40,7 @@ public final class PBoolHeap extends AbstractPrimitiveHeap<PBoolArray, PBoolWrit
      * @param initialCapacity the starting capacity
      * @throws IllegalArgumentException if initialCapacity is negative
      */
-    public PBoolHeap(NativeAllocator allocator, long initialCapacity) {
+    public PBoolMaxHeap(NativeAllocator allocator, long initialCapacity) {
         super(allocator, new PBoolArray(allocator, initialCapacity));
     }
 
@@ -50,7 +50,7 @@ public final class PBoolHeap extends AbstractPrimitiveHeap<PBoolArray, PBoolWrit
      * @param values the values to heapify
      * @throws NullPointerException if values is null
      */
-    public PBoolHeap(boolean... values)
+    public PBoolMaxHeap(boolean... values)
     {
         this(SystemAllocator.getInstance(), values);
     }
@@ -62,7 +62,7 @@ public final class PBoolHeap extends AbstractPrimitiveHeap<PBoolArray, PBoolWrit
      * @param values the values to heapify
      * @throws NullPointerException if values is null
      */
-    public PBoolHeap(NativeAllocator allocator, boolean... values)
+    public PBoolMaxHeap(NativeAllocator allocator, boolean... values)
     {
         super(allocator, new PBoolArray(allocator, Objects.requireNonNull(values, "values").length));
         for (int i = 0; i < values.length; i++) {
@@ -92,7 +92,7 @@ public final class PBoolHeap extends AbstractPrimitiveHeap<PBoolArray, PBoolWrit
     }
 
     /**
-     * Removes and returns the smallest element.
+     * Removes and returns the largest element.
      *
      * @return the removed element
      * @throws NoSuchElementException if empty
@@ -117,9 +117,9 @@ public final class PBoolHeap extends AbstractPrimitiveHeap<PBoolArray, PBoolWrit
     }
 
     /**
-     * Reads the smallest element without removing it.
+     * Reads the largest element without removing it.
      *
-     * @return the smallest element
+     * @return the largest element
      * @throws NoSuchElementException if empty
      * @throws IllegalStateException if closed
      */
@@ -145,7 +145,7 @@ public final class PBoolHeap extends AbstractPrimitiveHeap<PBoolArray, PBoolWrit
         while (index > 0) {
             long parent = (index - 1) >>> 2;
             boolean parentValue = heap.getUnchecked(parent);
-            if (Boolean.compare(parentValue, value) <= 0) {
+            if (Boolean.compare(parentValue, value) >= 0) {
                 break;
             }
             heap.setUnchecked(index, parentValue);
@@ -168,12 +168,12 @@ public final class PBoolHeap extends AbstractPrimitiveHeap<PBoolArray, PBoolWrit
             long limit = Math.min(child + 4, count);
             for (long next = child + 1; next < limit; next++) {
                 boolean nextValue = heap.getUnchecked(next);
-                if (Boolean.compare(nextValue, childValue) < 0) {
+                if (Boolean.compare(nextValue, childValue) > 0) {
                     child = next;
                     childValue = nextValue;
                 }
             }
-            if (Boolean.compare(value, childValue) <= 0) {
+            if (Boolean.compare(value, childValue) >= 0) {
                 break;
             }
             heap.setUnchecked(index, childValue);

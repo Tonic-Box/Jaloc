@@ -1,24 +1,23 @@
 package com.tonic.jaloc.impl.heaps;
 
-import com.tonic.jaloc.impl.arrays.PBoolArray;
-import com.tonic.jaloc.impl.arrays.PBoolWriter;
+import com.tonic.jaloc.impl.arrays.PLongArray;
+import com.tonic.jaloc.impl.arrays.PLongWriter;
 import com.tonic.jaloc.memory.SystemAllocator;
 import com.tonic.jaloc.memory.abs.AbstractPrimitiveHeap;
 import com.tonic.jaloc.memory.iface.NativeAllocator;
+import com.tonic.jaloc.memory.internal.UnsafeMemory;
 
 import java.util.NoSuchElementException;
 import java.util.Objects;
 
 /**
- * A growable native bool min-heap.
+ * A growable native long max-heap.
  */
-public final class PBoolHeap extends AbstractPrimitiveHeap<PBoolArray, PBoolWriter>
-{
+public final class PLongMaxHeap extends AbstractPrimitiveHeap<PLongArray, PLongWriter> {
     /**
      * Creates an empty heap with zero capacity on the system allocator.
      */
-    public PBoolHeap()
-    {
+    public PLongMaxHeap() {
         this(0);
     }
 
@@ -28,8 +27,7 @@ public final class PBoolHeap extends AbstractPrimitiveHeap<PBoolArray, PBoolWrit
      * @param initialCapacity the starting capacity
      * @throws IllegalArgumentException if initialCapacity is negative
      */
-    public PBoolHeap(long initialCapacity)
-    {
+    public PLongMaxHeap(long initialCapacity) {
         this(SystemAllocator.getInstance(), initialCapacity);
     }
 
@@ -40,8 +38,8 @@ public final class PBoolHeap extends AbstractPrimitiveHeap<PBoolArray, PBoolWrit
      * @param initialCapacity the starting capacity
      * @throws IllegalArgumentException if initialCapacity is negative
      */
-    public PBoolHeap(NativeAllocator allocator, long initialCapacity) {
-        super(allocator, new PBoolArray(allocator, initialCapacity));
+    public PLongMaxHeap(NativeAllocator allocator, long initialCapacity) {
+        super(allocator, new PLongArray(allocator, initialCapacity));
     }
 
     /**
@@ -50,8 +48,7 @@ public final class PBoolHeap extends AbstractPrimitiveHeap<PBoolArray, PBoolWrit
      * @param values the values to heapify
      * @throws NullPointerException if values is null
      */
-    public PBoolHeap(boolean... values)
-    {
+    public PLongMaxHeap(long... values) {
         this(SystemAllocator.getInstance(), values);
     }
 
@@ -62,19 +59,16 @@ public final class PBoolHeap extends AbstractPrimitiveHeap<PBoolArray, PBoolWrit
      * @param values the values to heapify
      * @throws NullPointerException if values is null
      */
-    public PBoolHeap(NativeAllocator allocator, boolean... values)
-    {
-        super(allocator, new PBoolArray(allocator, Objects.requireNonNull(values, "values").length));
-        for (int i = 0; i < values.length; i++) {
-            elementsUnchecked().setUnchecked(i, values[i]);
-        }
+    public PLongMaxHeap(NativeAllocator allocator, long... values) {
+        super(allocator, new PLongArray(allocator, Objects.requireNonNull(values, "values").length));
+        elementsUnchecked().copyFrom(values, 0, 0, values.length);
         size(values.length);
         heapify();
     }
 
     @Override
-    protected PBoolArray createArray(NativeAllocator allocator, long capacity) {
-        return new PBoolArray(allocator, capacity);
+    protected PLongArray createArray(NativeAllocator allocator, long capacity) {
+        return new PLongArray(allocator, capacity);
     }
 
     /**
@@ -83,31 +77,27 @@ public final class PBoolHeap extends AbstractPrimitiveHeap<PBoolArray, PBoolWrit
      * @param value the value to push
      * @throws IllegalStateException if closed
      */
-    public void push(boolean value)
-    {
+    public void push(long value) {
         long s = appendIndex();
-        elementsUnchecked().setUnchecked(s, value);
+        UnsafeMemory.putLong(elementsBase() + (s << 3), value);
         size(s + 1);
         siftUp(s);
     }
 
     /**
-     * Removes and returns the smallest element.
+     * Removes and returns the largest element.
      *
      * @return the removed element
      * @throws NoSuchElementException if empty
      * @throws IllegalStateException if closed
      */
-    public boolean pop()
-    {
+    public long pop() {
         if (isEmpty()) {
             throw new NoSuchElementException("Heap is empty");
         }
-        PBoolArray heap = elements();
-        boolean root = heap.getUnchecked(0);
-        long lastIndex = sizeUnchecked() - 1;
-        boolean last = heap.getUnchecked(lastIndex);
-        heap.setUnchecked(lastIndex, false);
+        PLongArray heap = elements();
+        long root = heap.getUnchecked(0);
+        long last = heap.getUnchecked(sizeUnchecked() - 1);
         decrementSize();
         if (sizeUnchecked() != 0) {
             heap.setUnchecked(0, last);
@@ -117,35 +107,32 @@ public final class PBoolHeap extends AbstractPrimitiveHeap<PBoolArray, PBoolWrit
     }
 
     /**
-     * Reads the smallest element without removing it.
+     * Reads the largest element without removing it.
      *
-     * @return the smallest element
+     * @return the largest element
      * @throws NoSuchElementException if empty
      * @throws IllegalStateException if closed
      */
-    public boolean peek()
-    {
+    public long peek() {
         if (isEmpty()) {
             throw new NoSuchElementException("Heap is empty");
         }
         return elements().getUnchecked(0);
     }
 
-    private void heapify()
-    {
+    private void heapify() {
         for (long index = (sizeUnchecked() - 2) >> 2; index >= 0; index--) {
             siftDown(index);
         }
     }
 
-    private void siftUp(long index)
-    {
-        PBoolArray heap = elements();
-        boolean value = heap.getUnchecked(index);
+    private void siftUp(long index) {
+        PLongArray heap = elements();
+        long value = heap.getUnchecked(index);
         while (index > 0) {
             long parent = (index - 1) >>> 2;
-            boolean parentValue = heap.getUnchecked(parent);
-            if (Boolean.compare(parentValue, value) <= 0) {
+            long parentValue = heap.getUnchecked(parent);
+            if (parentValue >= value) {
                 break;
             }
             heap.setUnchecked(index, parentValue);
@@ -154,26 +141,25 @@ public final class PBoolHeap extends AbstractPrimitiveHeap<PBoolArray, PBoolWrit
         heap.setUnchecked(index, value);
     }
 
-    private void siftDown(long index)
-    {
-        PBoolArray heap = elements();
+    private void siftDown(long index) {
+        PLongArray heap = elements();
         long count = sizeUnchecked();
-        boolean value = heap.getUnchecked(index);
+        long value = heap.getUnchecked(index);
         while (true) {
             long child = (index << 2) + 1;
             if (child >= count) {
                 break;
             }
-            boolean childValue = heap.getUnchecked(child);
+            long childValue = heap.getUnchecked(child);
             long limit = Math.min(child + 4, count);
             for (long next = child + 1; next < limit; next++) {
-                boolean nextValue = heap.getUnchecked(next);
-                if (Boolean.compare(nextValue, childValue) < 0) {
+                long nextValue = heap.getUnchecked(next);
+                if (nextValue > childValue) {
                     child = next;
                     childValue = nextValue;
                 }
             }
-            if (Boolean.compare(value, childValue) <= 0) {
+            if (value >= childValue) {
                 break;
             }
             heap.setUnchecked(index, childValue);

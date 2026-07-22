@@ -8,6 +8,7 @@ import com.tonic.jaloc.memory.iface.NativeAllocator;
 import com.tonic.jaloc.memory.internal.UnsafeMemory;
 
 import java.util.NoSuchElementException;
+import java.util.Objects;
 
 /**
  * A growable native byte min-heap.
@@ -39,6 +40,30 @@ public final class PByteHeap extends AbstractPrimitiveHeap<PByteArray, PByteWrit
      */
     public PByteHeap(NativeAllocator allocator, long initialCapacity) {
         super(allocator, new PByteArray(allocator, initialCapacity));
+    }
+
+    /**
+     * Builds a heap from values in one heapify pass on the system allocator.
+     *
+     * @param values the values to heapify
+     * @throws NullPointerException if values is null
+     */
+    public PByteHeap(byte... values) {
+        this(SystemAllocator.getInstance(), values);
+    }
+
+    /**
+     * Builds a heap from values in one heapify pass on the given allocator.
+     *
+     * @param allocator the allocator to source memory from
+     * @param values the values to heapify
+     * @throws NullPointerException if values is null
+     */
+    public PByteHeap(NativeAllocator allocator, byte... values) {
+        super(allocator, new PByteArray(allocator, Objects.requireNonNull(values, "values").length));
+        elementsUnchecked().copyFrom(values, 0, 0, values.length);
+        size(values.length);
+        heapify();
     }
 
     @Override
@@ -93,6 +118,12 @@ public final class PByteHeap extends AbstractPrimitiveHeap<PByteArray, PByteWrit
             throw new NoSuchElementException("Heap is empty");
         }
         return elements().getUnchecked(0);
+    }
+
+    private void heapify() {
+        for (long index = (sizeUnchecked() - 2) >> 2; index >= 0; index--) {
+            siftDown(index);
+        }
     }
 
     private void siftUp(long index) {

@@ -8,6 +8,7 @@ import com.tonic.jaloc.memory.iface.NativeAllocator;
 import com.tonic.jaloc.memory.internal.UnsafeMemory;
 
 import java.util.NoSuchElementException;
+import java.util.Objects;
 
 /**
  * A growable native int min-heap.
@@ -39,6 +40,30 @@ public final class PIntHeap extends AbstractPrimitiveHeap<PIntArray, PIntWriter>
      */
     public PIntHeap(NativeAllocator allocator, long initialCapacity) {
         super(allocator, new PIntArray(allocator, initialCapacity));
+    }
+
+    /**
+     * Builds a heap from values in one heapify pass on the system allocator.
+     *
+     * @param values the values to heapify
+     * @throws NullPointerException if values is null
+     */
+    public PIntHeap(int... values) {
+        this(SystemAllocator.getInstance(), values);
+    }
+
+    /**
+     * Builds a heap from values in one heapify pass on the given allocator.
+     *
+     * @param allocator the allocator to source memory from
+     * @param values the values to heapify
+     * @throws NullPointerException if values is null
+     */
+    public PIntHeap(NativeAllocator allocator, int... values) {
+        super(allocator, new PIntArray(allocator, Objects.requireNonNull(values, "values").length));
+        elementsUnchecked().copyFrom(values, 0, 0, values.length);
+        size(values.length);
+        heapify();
     }
 
     @Override
@@ -93,6 +118,12 @@ public final class PIntHeap extends AbstractPrimitiveHeap<PIntArray, PIntWriter>
             throw new NoSuchElementException("Heap is empty");
         }
         return elements().getUnchecked(0);
+    }
+
+    private void heapify() {
+        for (long index = (sizeUnchecked() - 2) >> 2; index >= 0; index--) {
+            siftDown(index);
+        }
     }
 
     private void siftUp(long index) {
