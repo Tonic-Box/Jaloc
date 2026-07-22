@@ -76,6 +76,19 @@ Beyond the timings, Jaloc adds nothing to GC pauses, holds collections past 2 bi
 
 **Summary:** once pages are resident, reads run at full malloc speed - the CPU does not know the page is file-backed. Building a collection is slower: each growth step maps a fresh file and every first page touch is a soft fault, costs malloc does not pay. Spill mode is for large, read-heavy, or memory-pressured workloads, not write throughput.
 
+## Persistent arrays vs malloc
+
+`PLongArray.create(path, length)` and `PLongArray.open(path)` back a fixed array with a named file that outlives the process. File length is the array's complete state, so no header or metadata is stored.
+
+| Benchmark | malloc | mapped file | Ratio |
+|---|---:|---:|---:|
+| read-sum 1M longs | 0.70 ms | 0.81 ms | 0.87x |
+| fill 1M longs | 0.70 ms | 2.77 ms | 0.25x |
+
+First fill of a fresh 8 MB file costs 7.7-8.7 ms including page faults; opening and mapping that file afterwards takes 0.6 ms.
+
+**Summary:** reads are near parity once resident. Writes pay for dirty-page tracking and kernel writeback, which is the price of the data still being there after the process exits - verified surviving both a clean close and a hard `halt()` with no close at all.
+
 ## Reproducing
 
 Each row runs a Jaloc collection against its JDK or fastutil equivalent on identical random data, verified for matching results before timing. Numbers vary by machine; treat the ratios as the takeaway, not the absolute times.

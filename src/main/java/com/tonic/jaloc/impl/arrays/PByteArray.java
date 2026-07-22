@@ -3,7 +3,10 @@ package com.tonic.jaloc.impl.arrays;
 import com.tonic.jaloc.memory.abs.AbstractPrimitiveArray;
 import com.tonic.jaloc.memory.data.ElementSize;
 import com.tonic.jaloc.memory.iface.NativeAllocator;
+import com.tonic.jaloc.memory.internal.FileMappedAllocator;
 import com.tonic.jaloc.memory.internal.UnsafeMemory;
+
+import java.nio.file.Path;
 
 /**
  * A fixed-length native byte array.
@@ -29,6 +32,34 @@ public final class PByteArray extends AbstractPrimitiveArray<PByteWriter>
      */
     public PByteArray(NativeAllocator allocator, long length) {
         super(allocator, ElementSize.BYTE, length);
+    }
+
+    /**
+     * Creates a new file holding length elements and maps it, zeroed.
+     *
+     * @param path the file to create
+     * @param length the element count
+     * @return the array over the mapped file
+     * @throws IllegalArgumentException if length is not positive
+     * @throws java.io.UncheckedIOException if the file already exists or cannot be created
+     * @throws UnsupportedOperationException if file mapping is unavailable on this JVM
+     */
+    public static PByteArray create(Path path, long length) {
+        return new PByteArray(FileMappedAllocator.create(path, MappedArrays.requireLength(length)), length);
+    }
+
+    /**
+     * Opens an existing file and maps it, keeping its contents.
+     *
+     * @param path the file to open
+     * @return the array over the mapped file
+     * @throws IllegalArgumentException if the file is empty
+     * @throws java.io.UncheckedIOException if the file cannot be opened
+     * @throws UnsupportedOperationException if file mapping is unavailable on this JVM
+     */
+    public static PByteArray open(Path path) {
+        FileMappedAllocator allocator = FileMappedAllocator.open(path);
+        return new PByteArray(allocator, allocator.fileBytes());
     }
 
     /**

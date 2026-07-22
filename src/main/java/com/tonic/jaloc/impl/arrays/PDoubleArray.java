@@ -3,7 +3,10 @@ package com.tonic.jaloc.impl.arrays;
 import com.tonic.jaloc.memory.abs.AbstractPrimitiveArray;
 import com.tonic.jaloc.memory.data.ElementSize;
 import com.tonic.jaloc.memory.iface.NativeAllocator;
+import com.tonic.jaloc.memory.internal.FileMappedAllocator;
 import com.tonic.jaloc.memory.internal.UnsafeMemory;
+
+import java.nio.file.Path;
 
 /**
  * A fixed-length native double array.
@@ -31,6 +34,36 @@ public final class PDoubleArray extends AbstractPrimitiveArray<PDoubleWriter>
     public PDoubleArray(NativeAllocator allocator, long length)
     {
         super(allocator, ElementSize.QWORD, length);
+    }
+
+    /**
+     * Creates a new file holding length elements and maps it, zeroed.
+     *
+     * @param path the file to create
+     * @param length the element count
+     * @return the array over the mapped file
+     * @throws IllegalArgumentException if length is not positive
+     * @throws java.io.UncheckedIOException if the file already exists or cannot be created
+     * @throws UnsupportedOperationException if file mapping is unavailable on this JVM
+     */
+    public static PDoubleArray create(Path path, long length)
+    {
+        return new PDoubleArray(FileMappedAllocator.create(path, ElementSize.QWORD.byteSize(MappedArrays.requireLength(length))), length);
+    }
+
+    /**
+     * Opens an existing file and maps it, keeping its contents.
+     *
+     * @param path the file to open
+     * @return the array over the mapped file
+     * @throws IllegalArgumentException if the file is empty or its length is not a multiple of the element width
+     * @throws java.io.UncheckedIOException if the file cannot be opened
+     * @throws UnsupportedOperationException if file mapping is unavailable on this JVM
+     */
+    public static PDoubleArray open(Path path)
+    {
+        FileMappedAllocator allocator = FileMappedAllocator.open(path);
+        return new PDoubleArray(allocator, MappedArrays.elementCount(allocator.fileBytes(), ElementSize.QWORD.getSize()));
     }
 
     /**
