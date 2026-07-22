@@ -25,7 +25,7 @@
     catch(err) {
     }
 //-->
-var methods = {"i0":10,"i1":10,"i2":10,"i3":10,"i4":10,"i5":10,"i6":10,"i7":10};
+var methods = {"i0":10,"i1":10,"i2":10,"i3":10,"i4":10,"i5":10,"i6":10};
 var tabs = {65535:["t0","All Methods"],2:["t2","Instance Methods"],8:["t4","Concrete Methods"]};
 var altColor = "altColor";
 var rowColor = "rowColor";
@@ -112,7 +112,12 @@ var activeTableTab = "activeTableTab";
 <li><a href="../../../../../com/tonic/jaloc/memory/abs/AbstractNativeList.html" title="class in com.tonic.jaloc.memory.abs">com.tonic.jaloc.memory.abs.AbstractNativeList</a>&lt;<a href="../../../../../com/tonic/jaloc/impl/arrays/struct/PStructArray.html" title="class in com.tonic.jaloc.impl.arrays.struct">PStructArray</a>&lt;T&gt;,<a href="../../../../../com/tonic/jaloc/impl/arrays/struct/PStructWriter.html" title="class in com.tonic.jaloc.impl.arrays.struct">PStructWriter</a>&lt;T&gt;&gt;</li>
 <li>
 <ul class="inheritance">
+<li><a href="../../../../../com/tonic/jaloc/memory/abs/AbstractStructList.html" title="class in com.tonic.jaloc.memory.abs">com.tonic.jaloc.memory.abs.AbstractStructList</a>&lt;T&gt;</li>
+<li>
+<ul class="inheritance">
 <li>com.tonic.jaloc.impl.lists.PStructList&lt;T&gt;</li>
+</ul>
+</li>
 </ul>
 </li>
 </ul>
@@ -130,7 +135,7 @@ var activeTableTab = "activeTableTab";
 <hr>
 <br>
 <pre>public final class <span class="typeNameLabel">PStructList&lt;T extends <a href="../../../../../com/tonic/jaloc/impl/arrays/struct/PStruct.html" title="class in com.tonic.jaloc.impl.arrays.struct">PStruct</a>&gt;</span>
-extends <a href="../../../../../com/tonic/jaloc/memory/abs/AbstractNativeList.html" title="class in com.tonic.jaloc.memory.abs">AbstractNativeList</a>&lt;<a href="../../../../../com/tonic/jaloc/impl/arrays/struct/PStructArray.html" title="class in com.tonic.jaloc.impl.arrays.struct">PStructArray</a>&lt;T&gt;,<a href="../../../../../com/tonic/jaloc/impl/arrays/struct/PStructWriter.html" title="class in com.tonic.jaloc.impl.arrays.struct">PStructWriter</a>&lt;T&gt;&gt;
+extends <a href="../../../../../com/tonic/jaloc/memory/abs/AbstractStructList.html" title="class in com.tonic.jaloc.memory.abs">AbstractStructList</a>&lt;T&gt;
 implements java.lang.Iterable&lt;T&gt;</pre>
 <div class="block">A growable native struct list; elements are accessed through views, and any capacity change invalidates outstanding views.</div>
 </li>
@@ -215,22 +220,25 @@ implements java.lang.Iterable&lt;T&gt;</pre>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/tonic/jaloc/impl/lists/PStructList.html#iterator--">iterator</a></span>()</code>&nbsp;</td>
 </tr>
 <tr id="i5" class="rowColor">
-<td class="colFirst"><code><a href="../../../../../com/tonic/jaloc/memory/data/struct/StructLayout.html" title="class in com.tonic.jaloc.memory.data.struct">StructLayout</a></code></td>
-<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/tonic/jaloc/impl/lists/PStructList.html#layout--">layout</a></span>()</code>&nbsp;</td>
-</tr>
-<tr id="i6" class="altColor">
 <td class="colFirst"><code>void</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/tonic/jaloc/impl/lists/PStructList.html#removeLast--">removeLast</a></span>()</code>
 <div class="block">Removes the last element, zeroing its slot.</div>
 </td>
 </tr>
-<tr id="i7" class="rowColor">
+<tr id="i6" class="altColor">
 <td class="colFirst"><code>void</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/tonic/jaloc/impl/lists/PStructList.html#sort-java.util.Comparator-">sort</a></span>(java.util.Comparator&lt;? super <a href="../../../../../com/tonic/jaloc/impl/lists/PStructList.html" title="type parameter in PStructList">T</a>&gt;&nbsp;comparator)</code>
 <div class="block">Sorts the live range by comparator.</div>
 </td>
 </tr>
 </table>
+<ul class="blockList">
+<li class="blockList"><a name="methods.inherited.from.class.com.tonic.jaloc.memory.abs.AbstractStructList">
+<!--   -->
+</a>
+<h3>Methods inherited from class&nbsp;com.tonic.jaloc.memory.abs.<a href="../../../../../com/tonic/jaloc/memory/abs/AbstractStructList.html" title="class in com.tonic.jaloc.memory.abs">AbstractStructList</a></h3>
+<code><a href="../../../../../com/tonic/jaloc/memory/abs/AbstractStructList.html#layout--">layout</a></code></li>
+</ul>
 <ul class="blockList">
 <li class="blockList"><a name="methods.inherited.from.class.com.tonic.jaloc.memory.abs.AbstractNativeList">
 <!--   -->
@@ -339,19 +347,6 @@ implements java.lang.Iterable&lt;T&gt;</pre>
 <!--   -->
 </a>
 <h3>Method Detail</h3>
-<a name="layout--">
-<!--   -->
-</a>
-<ul class="blockList">
-<li class="blockList">
-<h4>layout</h4>
-<pre>public&nbsp;<a href="../../../../../com/tonic/jaloc/memory/data/struct/StructLayout.html" title="class in com.tonic.jaloc.memory.data.struct">StructLayout</a>&nbsp;layout()</pre>
-<dl>
-<dt><span class="returnLabel">Returns:</span></dt>
-<dd>the entry layout</dd>
-</dl>
-</li>
-</ul>
 <a name="add--">
 <!--   -->
 </a>

@@ -25,7 +25,7 @@
     catch(err) {
     }
 //-->
-var methods = {"i0":10,"i1":10,"i2":10,"i3":10,"i4":10,"i5":10};
+var methods = {"i0":10,"i1":10,"i2":10,"i3":10,"i4":10};
 var tabs = {65535:["t0","All Methods"],2:["t2","Instance Methods"],8:["t4","Concrete Methods"]};
 var altColor = "altColor";
 var rowColor = "rowColor";
@@ -112,7 +112,12 @@ var activeTableTab = "activeTableTab";
 <li><a href="../../../../../com/tonic/jaloc/memory/abs/AbstractNativeRing.html" title="class in com.tonic.jaloc.memory.abs">com.tonic.jaloc.memory.abs.AbstractNativeRing</a>&lt;<a href="../../../../../com/tonic/jaloc/impl/arrays/struct/PStructArray.html" title="class in com.tonic.jaloc.impl.arrays.struct">PStructArray</a>&lt;T&gt;,<a href="../../../../../com/tonic/jaloc/impl/arrays/struct/PStructWriter.html" title="class in com.tonic.jaloc.impl.arrays.struct">PStructWriter</a>&lt;T&gt;&gt;</li>
 <li>
 <ul class="inheritance">
+<li><a href="../../../../../com/tonic/jaloc/memory/abs/AbstractStructRing.html" title="class in com.tonic.jaloc.memory.abs">com.tonic.jaloc.memory.abs.AbstractStructRing</a>&lt;T&gt;</li>
+<li>
+<ul class="inheritance">
 <li>com.tonic.jaloc.impl.fixedqueues.PStructFixedQueue&lt;T&gt;</li>
+</ul>
+</li>
 </ul>
 </li>
 </ul>
@@ -130,7 +135,7 @@ var activeTableTab = "activeTableTab";
 <hr>
 <br>
 <pre>public final class <span class="typeNameLabel">PStructFixedQueue&lt;T extends <a href="../../../../../com/tonic/jaloc/impl/arrays/struct/PStruct.html" title="class in com.tonic.jaloc.impl.arrays.struct">PStruct</a>&gt;</span>
-extends <a href="../../../../../com/tonic/jaloc/memory/abs/AbstractNativeRing.html" title="class in com.tonic.jaloc.memory.abs">AbstractNativeRing</a>&lt;<a href="../../../../../com/tonic/jaloc/impl/arrays/struct/PStructArray.html" title="class in com.tonic.jaloc.impl.arrays.struct">PStructArray</a>&lt;T&gt;,<a href="../../../../../com/tonic/jaloc/impl/arrays/struct/PStructWriter.html" title="class in com.tonic.jaloc.impl.arrays.struct">PStructWriter</a>&lt;T&gt;&gt;</pre>
+extends <a href="../../../../../com/tonic/jaloc/memory/abs/AbstractStructRing.html" title="class in com.tonic.jaloc.memory.abs">AbstractStructRing</a>&lt;T&gt;</pre>
 <div class="block">A fixed-capacity native struct FIFO queue that rejects when full.</div>
 </li>
 </ul>
@@ -198,22 +203,25 @@ extends <a href="../../../../../com/tonic/jaloc/memory/abs/AbstractNativeRing.ht
 </td>
 </tr>
 <tr id="i3" class="rowColor">
-<td class="colFirst"><code><a href="../../../../../com/tonic/jaloc/memory/data/struct/StructLayout.html" title="class in com.tonic.jaloc.memory.data.struct">StructLayout</a></code></td>
-<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/tonic/jaloc/impl/fixedqueues/PStructFixedQueue.html#layout--">layout</a></span>()</code>&nbsp;</td>
-</tr>
-<tr id="i4" class="altColor">
 <td class="colFirst"><code>boolean</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/tonic/jaloc/impl/fixedqueues/PStructFixedQueue.html#offer-java.util.function.Consumer-">offer</a></span>(java.util.function.Consumer&lt;? super <a href="../../../../../com/tonic/jaloc/impl/fixedqueues/PStructFixedQueue.html" title="type parameter in PStructFixedQueue">T</a>&gt;&nbsp;initializer)</code>
 <div class="block">Enqueues and initializes an element if room remains.</div>
 </td>
 </tr>
-<tr id="i5" class="rowColor">
+<tr id="i4" class="altColor">
 <td class="colFirst"><code><a href="../../../../../com/tonic/jaloc/impl/fixedqueues/PStructFixedQueue.html" title="type parameter in PStructFixedQueue">T</a></code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/tonic/jaloc/impl/fixedqueues/PStructFixedQueue.html#peek--">peek</a></span>()</code>
 <div class="block">Creates a view of the head element.</div>
 </td>
 </tr>
 </table>
+<ul class="blockList">
+<li class="blockList"><a name="methods.inherited.from.class.com.tonic.jaloc.memory.abs.AbstractStructRing">
+<!--   -->
+</a>
+<h3>Methods inherited from class&nbsp;com.tonic.jaloc.memory.abs.<a href="../../../../../com/tonic/jaloc/memory/abs/AbstractStructRing.html" title="class in com.tonic.jaloc.memory.abs">AbstractStructRing</a></h3>
+<code><a href="../../../../../com/tonic/jaloc/memory/abs/AbstractStructRing.html#layout--">layout</a></code></li>
+</ul>
 <ul class="blockList">
 <li class="blockList"><a name="methods.inherited.from.class.com.tonic.jaloc.memory.abs.AbstractNativeRing">
 <!--   -->
@@ -299,19 +307,6 @@ extends <a href="../../../../../com/tonic/jaloc/memory/abs/AbstractNativeRing.ht
 <!--   -->
 </a>
 <h3>Method Detail</h3>
-<a name="layout--">
-<!--   -->
-</a>
-<ul class="blockList">
-<li class="blockList">
-<h4>layout</h4>
-<pre>public&nbsp;<a href="../../../../../com/tonic/jaloc/memory/data/struct/StructLayout.html" title="class in com.tonic.jaloc.memory.data.struct">StructLayout</a>&nbsp;layout()</pre>
-<dl>
-<dt><span class="returnLabel">Returns:</span></dt>
-<dd>the entry layout</dd>
-</dl>
-</li>
-</ul>
 <a name="enqueue--">
 <!--   -->
 </a>

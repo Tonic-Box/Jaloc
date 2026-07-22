@@ -25,7 +25,7 @@
     catch(err) {
     }
 //-->
-var methods = {"i0":10,"i1":10};
+var methods = {"i0":10,"i1":10,"i2":10,"i3":10,"i4":10,"i5":10,"i6":10};
 var tabs = {65535:["t0","All Methods"],2:["t2","Instance Methods"],8:["t4","Concrete Methods"]};
 var altColor = "altColor";
 var rowColor = "rowColor";
@@ -156,8 +156,38 @@ extends <a href="../../../../../com/tonic/jaloc/memory/abs/AbstractNativeCollect
 </td>
 </tr>
 <tr id="i1" class="rowColor">
+<td class="colFirst"><code>boolean</code></td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/tonic/jaloc/memory/abs/AbstractNativeMap.html#containsKey-double-">containsKey</a></span>(double&nbsp;key)</code>
+<div class="block">Tests whether key is present.</div>
+</td>
+</tr>
+<tr id="i2" class="altColor">
+<td class="colFirst"><code>boolean</code></td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/tonic/jaloc/memory/abs/AbstractNativeMap.html#containsKey-long-">containsKey</a></span>(long&nbsp;key)</code>
+<div class="block">Tests whether key is present.</div>
+</td>
+</tr>
+<tr id="i3" class="rowColor">
 <td class="colFirst"><code><a href="../../../../../com/tonic/jaloc/memory/data/struct/StructLayout.html" title="class in com.tonic.jaloc.memory.data.struct">StructLayout</a></code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/tonic/jaloc/memory/abs/AbstractNativeMap.html#layout--">layout</a></span>()</code>&nbsp;</td>
+</tr>
+<tr id="i4" class="altColor">
+<td class="colFirst"><code>boolean</code></td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/tonic/jaloc/memory/abs/AbstractNativeMap.html#remove-double-">remove</a></span>(double&nbsp;key)</code>
+<div class="block">Removes the mapping for key.</div>
+</td>
+</tr>
+<tr id="i5" class="rowColor">
+<td class="colFirst"><code>boolean</code></td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/tonic/jaloc/memory/abs/AbstractNativeMap.html#remove-long-">remove</a></span>(long&nbsp;key)</code>
+<div class="block">Removes the mapping for key.</div>
+</td>
+</tr>
+<tr id="i6" class="altColor">
+<td class="colFirst"><code>void</code></td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/tonic/jaloc/memory/abs/AbstractNativeMap.html#trim--">trim</a></span>()</code>
+<div class="block">Shrinks the table to the smallest size fitting the current mappings.</div>
+</td>
 </tr>
 </table>
 <ul class="blockList">
@@ -204,13 +234,103 @@ extends <a href="../../../../../com/tonic/jaloc/memory/abs/AbstractNativeCollect
 <a name="clear--">
 <!--   -->
 </a>
-<ul class="blockListLast">
+<ul class="blockList">
 <li class="blockList">
 <h4>clear</h4>
 <pre>public&nbsp;void&nbsp;clear()</pre>
 <div class="block">Empties the map.</div>
 <dl>
 <dt><span class="throwsLabel">Throws:</span></dt>
+<dd><code>java.lang.IllegalStateException</code> - if closed</dd>
+</dl>
+</li>
+</ul>
+<a name="trim--">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>trim</h4>
+<pre>public final&nbsp;void&nbsp;trim()</pre>
+<div class="block">Shrinks the table to the smallest size fitting the current mappings.</div>
+<dl>
+<dt><span class="throwsLabel">Throws:</span></dt>
+<dd><code>java.lang.IllegalStateException</code> - if closed</dd>
+</dl>
+</li>
+</ul>
+<a name="containsKey-long-">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>containsKey</h4>
+<pre>public final&nbsp;boolean&nbsp;containsKey(long&nbsp;key)</pre>
+<div class="block">Tests whether key is present.</div>
+<dl>
+<dt><span class="paramLabel">Parameters:</span></dt>
+<dd><code>key</code> - the key</dd>
+<dt><span class="returnLabel">Returns:</span></dt>
+<dd>true if present</dd>
+<dt><span class="throwsLabel">Throws:</span></dt>
+<dd><code>java.lang.IllegalArgumentException</code> - on key type mismatch</dd>
+<dd><code>java.lang.IllegalStateException</code> - if closed</dd>
+</dl>
+</li>
+</ul>
+<a name="containsKey-double-">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>containsKey</h4>
+<pre>public final&nbsp;boolean&nbsp;containsKey(double&nbsp;key)</pre>
+<div class="block">Tests whether key is present.</div>
+<dl>
+<dt><span class="paramLabel">Parameters:</span></dt>
+<dd><code>key</code> - the key</dd>
+<dt><span class="returnLabel">Returns:</span></dt>
+<dd>true if present</dd>
+<dt><span class="throwsLabel">Throws:</span></dt>
+<dd><code>java.lang.IllegalArgumentException</code> - on key type mismatch</dd>
+<dd><code>java.lang.IllegalStateException</code> - if closed</dd>
+</dl>
+</li>
+</ul>
+<a name="remove-long-">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>remove</h4>
+<pre>public final&nbsp;boolean&nbsp;remove(long&nbsp;key)</pre>
+<div class="block">Removes the mapping for key.</div>
+<dl>
+<dt><span class="paramLabel">Parameters:</span></dt>
+<dd><code>key</code> - the key</dd>
+<dt><span class="returnLabel">Returns:</span></dt>
+<dd>true if the map changed</dd>
+<dt><span class="throwsLabel">Throws:</span></dt>
+<dd><code>java.lang.IllegalArgumentException</code> - on key type mismatch</dd>
+<dd><code>java.lang.IllegalStateException</code> - if closed</dd>
+</dl>
+</li>
+</ul>
+<a name="remove-double-">
+<!--   -->
+</a>
+<ul class="blockListLast">
+<li class="blockList">
+<h4>remove</h4>
+<pre>public final&nbsp;boolean&nbsp;remove(double&nbsp;key)</pre>
+<div class="block">Removes the mapping for key.</div>
+<dl>
+<dt><span class="paramLabel">Parameters:</span></dt>
+<dd><code>key</code> - the key</dd>
+<dt><span class="returnLabel">Returns:</span></dt>
+<dd>true if the map changed</dd>
+<dt><span class="throwsLabel">Throws:</span></dt>
+<dd><code>java.lang.IllegalArgumentException</code> - on key type mismatch</dd>
 <dd><code>java.lang.IllegalStateException</code> - if closed</dd>
 </dl>
 </li>

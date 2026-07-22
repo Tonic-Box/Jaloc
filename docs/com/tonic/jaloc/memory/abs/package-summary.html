@@ -101,75 +101,93 @@
 </td>
 </tr>
 <tr class="altColor">
+<td class="colFirst"><a href="../../../../../com/tonic/jaloc/memory/abs/AbstractNativeArray2D.html" title="class in com.tonic.jaloc.memory.abs">AbstractNativeArray2D</a></td>
+<td class="colLast">
+<div class="block">The fixed-shape scaffolding behind the row-major 2D grids: dimensions, flat addressing, and lifecycle.</div>
+</td>
+</tr>
+<tr class="rowColor">
 <td class="colFirst"><a href="../../../../../com/tonic/jaloc/memory/abs/AbstractNativeCollection.html" title="class in com.tonic.jaloc.memory.abs">AbstractNativeCollection</a>&lt;A extends <a href="../../../../../com/tonic/jaloc/memory/abs/AbstractNativeArray.html" title="class in com.tonic.jaloc.memory.abs">AbstractNativeArray</a>&lt;W&gt;,W extends <a href="../../../../../com/tonic/jaloc/memory/abs/AbstractArrayWriter.html" title="class in com.tonic.jaloc.memory.abs">AbstractArrayWriter</a>&gt;</td>
 <td class="colLast">
 <div class="block">The base of all native collections: allocator, backing array, size, and lifecycle.</div>
 </td>
 </tr>
-<tr class="rowColor">
+<tr class="altColor">
 <td class="colFirst"><a href="../../../../../com/tonic/jaloc/memory/abs/AbstractNativeList.html" title="class in com.tonic.jaloc.memory.abs">AbstractNativeList</a>&lt;A extends <a href="../../../../../com/tonic/jaloc/memory/abs/AbstractNativeArray.html" title="class in com.tonic.jaloc.memory.abs">AbstractNativeArray</a>&lt;W&gt;,W extends <a href="../../../../../com/tonic/jaloc/memory/abs/AbstractArrayWriter.html" title="class in com.tonic.jaloc.memory.abs">AbstractArrayWriter</a>&gt;</td>
 <td class="colLast">
 <div class="block">The contiguous-storage engine behind lists, stacks, and heaps.</div>
 </td>
 </tr>
-<tr class="altColor">
+<tr class="rowColor">
 <td class="colFirst"><a href="../../../../../com/tonic/jaloc/memory/abs/AbstractNativeMap.html" title="class in com.tonic.jaloc.memory.abs">AbstractNativeMap</a>&lt;T extends <a href="../../../../../com/tonic/jaloc/impl/arrays/struct/PStruct.html" title="class in com.tonic.jaloc.impl.arrays.struct">PStruct</a>&gt;</td>
 <td class="colLast">
 <div class="block">The struct-entry hash engine behind the maps: open addressing over a keyed layout with a reserved zero-key slot.</div>
 </td>
 </tr>
-<tr class="rowColor">
+<tr class="altColor">
 <td class="colFirst"><a href="../../../../../com/tonic/jaloc/memory/abs/AbstractNativeRing.html" title="class in com.tonic.jaloc.memory.abs">AbstractNativeRing</a>&lt;A extends <a href="../../../../../com/tonic/jaloc/memory/abs/AbstractNativeArray.html" title="class in com.tonic.jaloc.memory.abs">AbstractNativeArray</a>&lt;W&gt;,W extends <a href="../../../../../com/tonic/jaloc/memory/abs/AbstractArrayWriter.html" title="class in com.tonic.jaloc.memory.abs">AbstractArrayWriter</a>&gt;</td>
 <td class="colLast">
 <div class="block">The ring engine behind queues, deques, and buffers: wraparound head and tail over one array.</div>
 </td>
 </tr>
-<tr class="altColor">
+<tr class="rowColor">
 <td class="colFirst"><a href="../../../../../com/tonic/jaloc/memory/abs/AbstractPrimitiveArray.html" title="class in com.tonic.jaloc.memory.abs">AbstractPrimitiveArray</a>&lt;W extends <a href="../../../../../com/tonic/jaloc/memory/abs/AbstractArrayWriter.html" title="class in com.tonic.jaloc.memory.abs">AbstractArrayWriter</a>&gt;</td>
 <td class="colLast">
 <div class="block">A native array of fixed-width elements with checked and unchecked access.</div>
 </td>
 </tr>
-<tr class="rowColor">
+<tr class="altColor">
 <td class="colFirst"><a href="../../../../../com/tonic/jaloc/memory/abs/AbstractPrimitiveDeque.html" title="class in com.tonic.jaloc.memory.abs">AbstractPrimitiveDeque</a>&lt;A extends <a href="../../../../../com/tonic/jaloc/memory/abs/AbstractPrimitiveArray.html" title="class in com.tonic.jaloc.memory.abs">AbstractPrimitiveArray</a>&lt;W&gt;,W extends <a href="../../../../../com/tonic/jaloc/memory/abs/AbstractArrayWriter.html" title="class in com.tonic.jaloc.memory.abs">AbstractArrayWriter</a>&gt;</td>
 <td class="colLast">
 <div class="block">The marker base for primitive deques.</div>
 </td>
 </tr>
-<tr class="altColor">
+<tr class="rowColor">
 <td class="colFirst"><a href="../../../../../com/tonic/jaloc/memory/abs/AbstractPrimitiveFixedQueue.html" title="class in com.tonic.jaloc.memory.abs">AbstractPrimitiveFixedQueue</a>&lt;A extends <a href="../../../../../com/tonic/jaloc/memory/abs/AbstractPrimitiveArray.html" title="class in com.tonic.jaloc.memory.abs">AbstractPrimitiveArray</a>&lt;W&gt;,W extends <a href="../../../../../com/tonic/jaloc/memory/abs/AbstractArrayWriter.html" title="class in com.tonic.jaloc.memory.abs">AbstractArrayWriter</a>&gt;</td>
 <td class="colLast">
 <div class="block">The marker base for primitive fixed queues.</div>
 </td>
 </tr>
-<tr class="rowColor">
+<tr class="altColor">
 <td class="colFirst"><a href="../../../../../com/tonic/jaloc/memory/abs/AbstractPrimitiveHeap.html" title="class in com.tonic.jaloc.memory.abs">AbstractPrimitiveHeap</a>&lt;A extends <a href="../../../../../com/tonic/jaloc/memory/abs/AbstractPrimitiveArray.html" title="class in com.tonic.jaloc.memory.abs">AbstractPrimitiveArray</a>&lt;W&gt;,W extends <a href="../../../../../com/tonic/jaloc/memory/abs/AbstractArrayWriter.html" title="class in com.tonic.jaloc.memory.abs">AbstractArrayWriter</a>&gt;</td>
 <td class="colLast">
 <div class="block">The marker base for primitive heaps.</div>
 </td>
 </tr>
-<tr class="altColor">
+<tr class="rowColor">
 <td class="colFirst"><a href="../../../../../com/tonic/jaloc/memory/abs/AbstractPrimitiveList.html" title="class in com.tonic.jaloc.memory.abs">AbstractPrimitiveList</a>&lt;A extends <a href="../../../../../com/tonic/jaloc/memory/abs/AbstractPrimitiveArray.html" title="class in com.tonic.jaloc.memory.abs">AbstractPrimitiveArray</a>&lt;W&gt;,W extends <a href="../../../../../com/tonic/jaloc/memory/abs/AbstractArrayWriter.html" title="class in com.tonic.jaloc.memory.abs">AbstractArrayWriter</a>&gt;</td>
 <td class="colLast">
 <div class="block">The marker base for primitive lists.</div>
 </td>
 </tr>
-<tr class="rowColor">
+<tr class="altColor">
 <td class="colFirst"><a href="../../../../../com/tonic/jaloc/memory/abs/AbstractPrimitiveQueue.html" title="class in com.tonic.jaloc.memory.abs">AbstractPrimitiveQueue</a>&lt;A extends <a href="../../../../../com/tonic/jaloc/memory/abs/AbstractPrimitiveArray.html" title="class in com.tonic.jaloc.memory.abs">AbstractPrimitiveArray</a>&lt;W&gt;,W extends <a href="../../../../../com/tonic/jaloc/memory/abs/AbstractArrayWriter.html" title="class in com.tonic.jaloc.memory.abs">AbstractArrayWriter</a>&gt;</td>
 <td class="colLast">
 <div class="block">The marker base for primitive queues.</div>
 </td>
 </tr>
-<tr class="altColor">
+<tr class="rowColor">
 <td class="colFirst"><a href="../../../../../com/tonic/jaloc/memory/abs/AbstractPrimitiveRingBuffer.html" title="class in com.tonic.jaloc.memory.abs">AbstractPrimitiveRingBuffer</a>&lt;A extends <a href="../../../../../com/tonic/jaloc/memory/abs/AbstractPrimitiveArray.html" title="class in com.tonic.jaloc.memory.abs">AbstractPrimitiveArray</a>&lt;W&gt;,W extends <a href="../../../../../com/tonic/jaloc/memory/abs/AbstractArrayWriter.html" title="class in com.tonic.jaloc.memory.abs">AbstractArrayWriter</a>&gt;</td>
 <td class="colLast">
 <div class="block">The marker base for primitive ring buffers.</div>
 </td>
 </tr>
-<tr class="rowColor">
+<tr class="altColor">
 <td class="colFirst"><a href="../../../../../com/tonic/jaloc/memory/abs/AbstractPrimitiveStack.html" title="class in com.tonic.jaloc.memory.abs">AbstractPrimitiveStack</a>&lt;A extends <a href="../../../../../com/tonic/jaloc/memory/abs/AbstractPrimitiveArray.html" title="class in com.tonic.jaloc.memory.abs">AbstractPrimitiveArray</a>&lt;W&gt;,W extends <a href="../../../../../com/tonic/jaloc/memory/abs/AbstractArrayWriter.html" title="class in com.tonic.jaloc.memory.abs">AbstractArrayWriter</a>&gt;</td>
 <td class="colLast">
 <div class="block">The marker base for primitive stacks.</div>
+</td>
+</tr>
+<tr class="rowColor">
+<td class="colFirst"><a href="../../../../../com/tonic/jaloc/memory/abs/AbstractStructList.html" title="class in com.tonic.jaloc.memory.abs">AbstractStructList</a>&lt;T extends <a href="../../../../../com/tonic/jaloc/impl/arrays/struct/PStruct.html" title="class in com.tonic.jaloc.impl.arrays.struct">PStruct</a>&gt;</td>
+<td class="colLast">
+<div class="block">The contiguous-storage base for struct collections: layout, view factory, and array creation.</div>
+</td>
+</tr>
+<tr class="altColor">
+<td class="colFirst"><a href="../../../../../com/tonic/jaloc/memory/abs/AbstractStructRing.html" title="class in com.tonic.jaloc.memory.abs">AbstractStructRing</a>&lt;T extends <a href="../../../../../com/tonic/jaloc/impl/arrays/struct/PStruct.html" title="class in com.tonic.jaloc.impl.arrays.struct">PStruct</a>&gt;</td>
+<td class="colLast">
+<div class="block">The ring-storage base for struct collections: layout, view factory, and array creation.</div>
 </td>
 </tr>
 </tbody>

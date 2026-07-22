@@ -55,8 +55,8 @@ var activeTableTab = "activeTableTab";
 </div>
 <div class="subNav">
 <ul class="navList">
-<li><a href="../../../../../com/tonic/jaloc/impl/heaps/PBoolHeap.html" title="class in com.tonic.jaloc.impl.heaps"><span class="typeNameLink">Prev&nbsp;Class</span></a></li>
-<li><a href="../../../../../com/tonic/jaloc/impl/heaps/PCharHeap.html" title="class in com.tonic.jaloc.impl.heaps"><span class="typeNameLink">Next&nbsp;Class</span></a></li>
+<li><a href="../../../../../com/tonic/jaloc/impl/heaps/PBoolMaxHeap.html" title="class in com.tonic.jaloc.impl.heaps"><span class="typeNameLink">Prev&nbsp;Class</span></a></li>
+<li><a href="../../../../../com/tonic/jaloc/impl/heaps/PByteMaxHeap.html" title="class in com.tonic.jaloc.impl.heaps"><span class="typeNameLink">Next&nbsp;Class</span></a></li>
 </ul>
 <ul class="navList">
 <li><a href="../../../../../index.html?com/tonic/jaloc/impl/heaps/PByteHeap.html" target="_top">Frames</a></li>
@@ -160,8 +160,19 @@ extends <a href="../../../../../com/tonic/jaloc/memory/abs/AbstractPrimitiveHeap
 </td>
 </tr>
 <tr class="rowColor">
+<td class="colOne"><code><span class="memberNameLink"><a href="../../../../../com/tonic/jaloc/impl/heaps/PByteHeap.html#PByteHeap-byte...-">PByteHeap</a></span>(byte...&nbsp;values)</code>
+<div class="block">Builds a heap from values in one heapify pass on the system allocator.</div>
+</td>
+</tr>
+<tr class="altColor">
 <td class="colOne"><code><span class="memberNameLink"><a href="../../../../../com/tonic/jaloc/impl/heaps/PByteHeap.html#PByteHeap-long-">PByteHeap</a></span>(long&nbsp;initialCapacity)</code>
 <div class="block">Creates an empty heap with the given starting capacity on the system allocator.</div>
+</td>
+</tr>
+<tr class="rowColor">
+<td class="colOne"><code><span class="memberNameLink"><a href="../../../../../com/tonic/jaloc/impl/heaps/PByteHeap.html#PByteHeap-com.tonic.jaloc.memory.iface.NativeAllocator-byte...-">PByteHeap</a></span>(<a href="../../../../../com/tonic/jaloc/memory/iface/NativeAllocator.html" title="interface in com.tonic.jaloc.memory.iface">NativeAllocator</a>&nbsp;allocator,
+         byte...&nbsp;values)</code>
+<div class="block">Builds a heap from values in one heapify pass on the given allocator.</div>
 </td>
 </tr>
 <tr class="altColor">
@@ -268,7 +279,7 @@ extends <a href="../../../../../com/tonic/jaloc/memory/abs/AbstractPrimitiveHeap
 <a name="PByteHeap-com.tonic.jaloc.memory.iface.NativeAllocator-long-">
 <!--   -->
 </a>
-<ul class="blockListLast">
+<ul class="blockList">
 <li class="blockList">
 <h4>PByteHeap</h4>
 <pre>public&nbsp;PByteHeap(<a href="../../../../../com/tonic/jaloc/memory/iface/NativeAllocator.html" title="interface in com.tonic.jaloc.memory.iface">NativeAllocator</a>&nbsp;allocator,
@@ -280,6 +291,40 @@ extends <a href="../../../../../com/tonic/jaloc/memory/abs/AbstractPrimitiveHeap
 <dd><code>initialCapacity</code> - the starting capacity</dd>
 <dt><span class="throwsLabel">Throws:</span></dt>
 <dd><code>java.lang.IllegalArgumentException</code> - if initialCapacity is negative</dd>
+</dl>
+</li>
+</ul>
+<a name="PByteHeap-byte...-">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>PByteHeap</h4>
+<pre>public&nbsp;PByteHeap(byte...&nbsp;values)</pre>
+<div class="block">Builds a heap from values in one heapify pass on the system allocator.</div>
+<dl>
+<dt><span class="paramLabel">Parameters:</span></dt>
+<dd><code>values</code> - the values to heapify</dd>
+<dt><span class="throwsLabel">Throws:</span></dt>
+<dd><code>java.lang.NullPointerException</code> - if values is null</dd>
+</dl>
+</li>
+</ul>
+<a name="PByteHeap-com.tonic.jaloc.memory.iface.NativeAllocator-byte...-">
+<!--   -->
+</a>
+<ul class="blockListLast">
+<li class="blockList">
+<h4>PByteHeap</h4>
+<pre>public&nbsp;PByteHeap(<a href="../../../../../com/tonic/jaloc/memory/iface/NativeAllocator.html" title="interface in com.tonic.jaloc.memory.iface">NativeAllocator</a>&nbsp;allocator,
+                 byte...&nbsp;values)</pre>
+<div class="block">Builds a heap from values in one heapify pass on the given allocator.</div>
+<dl>
+<dt><span class="paramLabel">Parameters:</span></dt>
+<dd><code>allocator</code> - the allocator to source memory from</dd>
+<dd><code>values</code> - the values to heapify</dd>
+<dt><span class="throwsLabel">Throws:</span></dt>
+<dd><code>java.lang.NullPointerException</code> - if values is null</dd>
 </dl>
 </li>
 </ul>
@@ -368,8 +413,8 @@ extends <a href="../../../../../com/tonic/jaloc/memory/abs/AbstractPrimitiveHeap
 </div>
 <div class="subNav">
 <ul class="navList">
-<li><a href="../../../../../com/tonic/jaloc/impl/heaps/PBoolHeap.html" title="class in com.tonic.jaloc.impl.heaps"><span class="typeNameLink">Prev&nbsp;Class</span></a></li>
-<li><a href="../../../../../com/tonic/jaloc/impl/heaps/PCharHeap.html" title="class in com.tonic.jaloc.impl.heaps"><span class="typeNameLink">Next&nbsp;Class</span></a></li>
+<li><a href="../../../../../com/tonic/jaloc/impl/heaps/PBoolMaxHeap.html" title="class in com.tonic.jaloc.impl.heaps"><span class="typeNameLink">Prev&nbsp;Class</span></a></li>
+<li><a href="../../../../../com/tonic/jaloc/impl/heaps/PByteMaxHeap.html" title="class in com.tonic.jaloc.impl.heaps"><span class="typeNameLink">Next&nbsp;Class</span></a></li>
 </ul>
 <ul class="navList">
 <li><a href="../../../../../index.html?com/tonic/jaloc/impl/heaps/PByteHeap.html" target="_top">Frames</a></li>

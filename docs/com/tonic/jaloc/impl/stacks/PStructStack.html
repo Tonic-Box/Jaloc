@@ -25,7 +25,7 @@
     catch(err) {
     }
 //-->
-var methods = {"i0":10,"i1":10,"i2":10,"i3":10,"i4":10};
+var methods = {"i0":10,"i1":10,"i2":10,"i3":10};
 var tabs = {65535:["t0","All Methods"],2:["t2","Instance Methods"],8:["t4","Concrete Methods"]};
 var altColor = "altColor";
 var rowColor = "rowColor";
@@ -112,7 +112,12 @@ var activeTableTab = "activeTableTab";
 <li><a href="../../../../../com/tonic/jaloc/memory/abs/AbstractNativeList.html" title="class in com.tonic.jaloc.memory.abs">com.tonic.jaloc.memory.abs.AbstractNativeList</a>&lt;<a href="../../../../../com/tonic/jaloc/impl/arrays/struct/PStructArray.html" title="class in com.tonic.jaloc.impl.arrays.struct">PStructArray</a>&lt;T&gt;,<a href="../../../../../com/tonic/jaloc/impl/arrays/struct/PStructWriter.html" title="class in com.tonic.jaloc.impl.arrays.struct">PStructWriter</a>&lt;T&gt;&gt;</li>
 <li>
 <ul class="inheritance">
+<li><a href="../../../../../com/tonic/jaloc/memory/abs/AbstractStructList.html" title="class in com.tonic.jaloc.memory.abs">com.tonic.jaloc.memory.abs.AbstractStructList</a>&lt;T&gt;</li>
+<li>
+<ul class="inheritance">
 <li>com.tonic.jaloc.impl.stacks.PStructStack&lt;T&gt;</li>
+</ul>
+</li>
 </ul>
 </li>
 </ul>
@@ -130,7 +135,7 @@ var activeTableTab = "activeTableTab";
 <hr>
 <br>
 <pre>public final class <span class="typeNameLabel">PStructStack&lt;T extends <a href="../../../../../com/tonic/jaloc/impl/arrays/struct/PStruct.html" title="class in com.tonic.jaloc.impl.arrays.struct">PStruct</a>&gt;</span>
-extends <a href="../../../../../com/tonic/jaloc/memory/abs/AbstractNativeList.html" title="class in com.tonic.jaloc.memory.abs">AbstractNativeList</a>&lt;<a href="../../../../../com/tonic/jaloc/impl/arrays/struct/PStructArray.html" title="class in com.tonic.jaloc.impl.arrays.struct">PStructArray</a>&lt;T&gt;,<a href="../../../../../com/tonic/jaloc/impl/arrays/struct/PStructWriter.html" title="class in com.tonic.jaloc.impl.arrays.struct">PStructWriter</a>&lt;T&gt;&gt;</pre>
+extends <a href="../../../../../com/tonic/jaloc/memory/abs/AbstractStructList.html" title="class in com.tonic.jaloc.memory.abs">AbstractStructList</a>&lt;T&gt;</pre>
 <div class="block">A growable native struct stack; elements are accessed through views, and any capacity change invalidates outstanding views.</div>
 </li>
 </ul>
@@ -186,34 +191,37 @@ extends <a href="../../../../../com/tonic/jaloc/memory/abs/AbstractNativeList.ht
 <th class="colLast" scope="col">Method and Description</th>
 </tr>
 <tr id="i0" class="altColor">
-<td class="colFirst"><code><a href="../../../../../com/tonic/jaloc/memory/data/struct/StructLayout.html" title="class in com.tonic.jaloc.memory.data.struct">StructLayout</a></code></td>
-<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/tonic/jaloc/impl/stacks/PStructStack.html#layout--">layout</a></span>()</code>&nbsp;</td>
-</tr>
-<tr id="i1" class="rowColor">
 <td class="colFirst"><code><a href="../../../../../com/tonic/jaloc/impl/stacks/PStructStack.html" title="type parameter in PStructStack">T</a></code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/tonic/jaloc/impl/stacks/PStructStack.html#peek--">peek</a></span>()</code>
 <div class="block">Creates a view of the top element.</div>
 </td>
 </tr>
-<tr id="i2" class="altColor">
+<tr id="i1" class="rowColor">
 <td class="colFirst"><code>void</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/tonic/jaloc/impl/stacks/PStructStack.html#pop--">pop</a></span>()</code>
 <div class="block">Removes the top element, zeroing its slot.</div>
 </td>
 </tr>
-<tr id="i3" class="rowColor">
+<tr id="i2" class="altColor">
 <td class="colFirst"><code><a href="../../../../../com/tonic/jaloc/impl/stacks/PStructStack.html" title="type parameter in PStructStack">T</a></code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/tonic/jaloc/impl/stacks/PStructStack.html#push--">push</a></span>()</code>
 <div class="block">Pushes a zeroed element and returns its view.</div>
 </td>
 </tr>
-<tr id="i4" class="altColor">
+<tr id="i3" class="rowColor">
 <td class="colFirst"><code><a href="../../../../../com/tonic/jaloc/impl/stacks/PStructStack.html" title="type parameter in PStructStack">T</a></code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/tonic/jaloc/impl/stacks/PStructStack.html#push-java.util.function.Consumer-">push</a></span>(java.util.function.Consumer&lt;? super <a href="../../../../../com/tonic/jaloc/impl/stacks/PStructStack.html" title="type parameter in PStructStack">T</a>&gt;&nbsp;initializer)</code>
 <div class="block">Pushes an element, initializes it, and returns its view; a throwing initializer rolls back.</div>
 </td>
 </tr>
 </table>
+<ul class="blockList">
+<li class="blockList"><a name="methods.inherited.from.class.com.tonic.jaloc.memory.abs.AbstractStructList">
+<!--   -->
+</a>
+<h3>Methods inherited from class&nbsp;com.tonic.jaloc.memory.abs.<a href="../../../../../com/tonic/jaloc/memory/abs/AbstractStructList.html" title="class in com.tonic.jaloc.memory.abs">AbstractStructList</a></h3>
+<code><a href="../../../../../com/tonic/jaloc/memory/abs/AbstractStructList.html#layout--">layout</a></code></li>
+</ul>
 <ul class="blockList">
 <li class="blockList"><a name="methods.inherited.from.class.com.tonic.jaloc.memory.abs.AbstractNativeList">
 <!--   -->
@@ -315,19 +323,6 @@ extends <a href="../../../../../com/tonic/jaloc/memory/abs/AbstractNativeList.ht
 <!--   -->
 </a>
 <h3>Method Detail</h3>
-<a name="layout--">
-<!--   -->
-</a>
-<ul class="blockList">
-<li class="blockList">
-<h4>layout</h4>
-<pre>public&nbsp;<a href="../../../../../com/tonic/jaloc/memory/data/struct/StructLayout.html" title="class in com.tonic.jaloc.memory.data.struct">StructLayout</a>&nbsp;layout()</pre>
-<dl>
-<dt><span class="returnLabel">Returns:</span></dt>
-<dd>the entry layout</dd>
-</dl>
-</li>
-</ul>
 <a name="push--">
 <!--   -->
 </a>

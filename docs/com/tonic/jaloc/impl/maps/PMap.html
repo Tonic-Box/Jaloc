@@ -25,7 +25,7 @@
     catch(err) {
     }
 //-->
-var methods = {"i0":10,"i1":10,"i2":10,"i3":10,"i4":10,"i5":10,"i6":10,"i7":10,"i8":10,"i9":10,"i10":10,"i11":10,"i12":10,"i13":10,"i14":10,"i15":10,"i16":10,"i17":10,"i18":10,"i19":10,"i20":10,"i21":10,"i22":10,"i23":10,"i24":10,"i25":10,"i26":10,"i27":10,"i28":10,"i29":10,"i30":10,"i31":10,"i32":10,"i33":10};
+var methods = {"i0":10,"i1":10,"i2":10,"i3":10,"i4":10,"i5":10,"i6":10,"i7":10,"i8":10,"i9":10,"i10":10,"i11":10,"i12":10,"i13":10,"i14":10,"i15":10,"i16":10,"i17":10,"i18":10,"i19":10,"i20":10,"i21":10,"i22":10,"i23":10,"i24":10,"i25":10,"i26":10,"i27":10,"i28":10,"i29":10};
 var tabs = {65535:["t0","All Methods"],2:["t2","Instance Methods"],8:["t4","Concrete Methods"]};
 var altColor = "altColor";
 var rowColor = "rowColor";
@@ -56,7 +56,7 @@ var activeTableTab = "activeTableTab";
 <div class="subNav">
 <ul class="navList">
 <li>Prev&nbsp;Class</li>
-<li><a href="../../../../../com/tonic/jaloc/impl/maps/PStructMap.html" title="class in com.tonic.jaloc.impl.maps"><span class="typeNameLink">Next&nbsp;Class</span></a></li>
+<li><a href="../../../../../com/tonic/jaloc/impl/maps/PMap.Slot.html" title="class in com.tonic.jaloc.impl.maps"><span class="typeNameLink">Next&nbsp;Class</span></a></li>
 </ul>
 <ul class="navList">
 <li><a href="../../../../../index.html?com/tonic/jaloc/impl/maps/PMap.html" target="_top">Frames</a></li>
@@ -80,7 +80,7 @@ var activeTableTab = "activeTableTab";
 <div>
 <ul class="subNavList">
 <li>Summary:&nbsp;</li>
-<li>Nested&nbsp;|&nbsp;</li>
+<li><a href="#nested.class.summary">Nested</a>&nbsp;|&nbsp;</li>
 <li>Field&nbsp;|&nbsp;</li>
 <li><a href="#constructor.summary">Constr</a>&nbsp;|&nbsp;</li>
 <li><a href="#method.summary">Method</a></li>
@@ -109,7 +109,7 @@ var activeTableTab = "activeTableTab";
 <li><a href="../../../../../com/tonic/jaloc/memory/abs/AbstractNativeCollection.html" title="class in com.tonic.jaloc.memory.abs">com.tonic.jaloc.memory.abs.AbstractNativeCollection</a>&lt;<a href="../../../../../com/tonic/jaloc/impl/arrays/struct/PStructArray.html" title="class in com.tonic.jaloc.impl.arrays.struct">PStructArray</a>&lt;T&gt;,<a href="../../../../../com/tonic/jaloc/impl/arrays/struct/PStructWriter.html" title="class in com.tonic.jaloc.impl.arrays.struct">PStructWriter</a>&lt;T&gt;&gt;</li>
 <li>
 <ul class="inheritance">
-<li><a href="../../../../../com/tonic/jaloc/memory/abs/AbstractNativeMap.html" title="class in com.tonic.jaloc.memory.abs">com.tonic.jaloc.memory.abs.AbstractNativeMap</a>&lt;com.tonic.jaloc.impl.maps.PMap.Slot&gt;</li>
+<li><a href="../../../../../com/tonic/jaloc/memory/abs/AbstractNativeMap.html" title="class in com.tonic.jaloc.memory.abs">com.tonic.jaloc.memory.abs.AbstractNativeMap</a>&lt;<a href="../../../../../com/tonic/jaloc/impl/maps/PMap.Slot.html" title="class in com.tonic.jaloc.impl.maps">PMap.Slot</a>&gt;</li>
 <li>
 <ul class="inheritance">
 <li>com.tonic.jaloc.impl.maps.PMap&lt;K,V&gt;</li>
@@ -130,7 +130,7 @@ var activeTableTab = "activeTableTab";
 <hr>
 <br>
 <pre>public final class <span class="typeNameLabel">PMap&lt;K,V&gt;</span>
-extends <a href="../../../../../com/tonic/jaloc/memory/abs/AbstractNativeMap.html" title="class in com.tonic.jaloc.memory.abs">AbstractNativeMap</a>&lt;com.tonic.jaloc.impl.maps.PMap.Slot&gt;</pre>
+extends <a href="../../../../../com/tonic/jaloc/memory/abs/AbstractNativeMap.html" title="class in com.tonic.jaloc.memory.abs">AbstractNativeMap</a>&lt;<a href="../../../../../com/tonic/jaloc/impl/maps/PMap.Slot.html" title="class in com.tonic.jaloc.impl.maps">PMap.Slot</a>&gt;</pre>
 <div class="block">A native primitive-to-primitive hash map; the StructType pair fixes the key and value types, K and V are declaration metadata only.</div>
 </li>
 </ul>
@@ -138,6 +138,27 @@ extends <a href="../../../../../com/tonic/jaloc/memory/abs/AbstractNativeMap.htm
 <div class="summary">
 <ul class="blockList">
 <li class="blockList">
+<!-- ======== NESTED CLASS SUMMARY ======== -->
+<ul class="blockList">
+<li class="blockList"><a name="nested.class.summary">
+<!--   -->
+</a>
+<h3>Nested Class Summary</h3>
+<table class="memberSummary" border="0" cellpadding="3" cellspacing="0" summary="Nested Class Summary table, listing nested classes, and an explanation">
+<caption><span>Nested Classes</span><span class="tabEnd">&nbsp;</span></caption>
+<tr>
+<th class="colFirst" scope="col">Modifier and Type</th>
+<th class="colLast" scope="col">Class and Description</th>
+</tr>
+<tr class="altColor">
+<td class="colFirst"><code>static class&nbsp;</code></td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/tonic/jaloc/impl/maps/PMap.Slot.html" title="class in com.tonic.jaloc.impl.maps">PMap.Slot</a></span></code>
+<div class="block">The internal entry view backing the map; not for direct use.</div>
+</td>
+</tr>
+</table>
+</li>
+</ul>
 <!-- ======== CONSTRUCTOR SUMMARY ======== -->
 <ul class="blockList">
 <li class="blockList"><a name="constructor.summary">
@@ -186,219 +207,195 @@ extends <a href="../../../../../com/tonic/jaloc/memory/abs/AbstractNativeMap.htm
 <th class="colLast" scope="col">Method and Description</th>
 </tr>
 <tr id="i0" class="altColor">
-<td class="colFirst"><code>boolean</code></td>
-<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/tonic/jaloc/impl/maps/PMap.html#containsKey-double-">containsKey</a></span>(double&nbsp;key)</code>
-<div class="block">Tests whether key is present.</div>
-</td>
-</tr>
-<tr id="i1" class="rowColor">
-<td class="colFirst"><code>boolean</code></td>
-<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/tonic/jaloc/impl/maps/PMap.html#containsKey-long-">containsKey</a></span>(long&nbsp;key)</code>
-<div class="block">Tests whether key is present.</div>
-</td>
-</tr>
-<tr id="i2" class="altColor">
 <td class="colFirst"><code>void</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/tonic/jaloc/impl/maps/PMap.html#forEachKey-java.util.function.DoubleConsumer-">forEachKey</a></span>(java.util.function.DoubleConsumer&nbsp;consumer)</code>
 <div class="block">Emits every key; floating-keyed maps only.</div>
 </td>
 </tr>
-<tr id="i3" class="rowColor">
+<tr id="i1" class="rowColor">
 <td class="colFirst"><code>void</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/tonic/jaloc/impl/maps/PMap.html#forEachKey-java.util.function.LongConsumer-">forEachKey</a></span>(java.util.function.LongConsumer&nbsp;consumer)</code>
 <div class="block">Emits every key; integral-keyed maps only.</div>
 </td>
 </tr>
-<tr id="i4" class="altColor">
+<tr id="i2" class="altColor">
 <td class="colFirst"><code>boolean</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/tonic/jaloc/impl/maps/PMap.html#getBool-double-">getBool</a></span>(double&nbsp;key)</code>
 <div class="block">Reads the value for key.</div>
 </td>
 </tr>
-<tr id="i5" class="rowColor">
+<tr id="i3" class="rowColor">
 <td class="colFirst"><code>boolean</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/tonic/jaloc/impl/maps/PMap.html#getBool-long-">getBool</a></span>(long&nbsp;key)</code>
 <div class="block">Reads the value for key.</div>
 </td>
 </tr>
-<tr id="i6" class="altColor">
+<tr id="i4" class="altColor">
 <td class="colFirst"><code>byte</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/tonic/jaloc/impl/maps/PMap.html#getByte-double-">getByte</a></span>(double&nbsp;key)</code>
 <div class="block">Reads the value for key.</div>
 </td>
 </tr>
-<tr id="i7" class="rowColor">
+<tr id="i5" class="rowColor">
 <td class="colFirst"><code>byte</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/tonic/jaloc/impl/maps/PMap.html#getByte-long-">getByte</a></span>(long&nbsp;key)</code>
 <div class="block">Reads the value for key.</div>
 </td>
 </tr>
-<tr id="i8" class="altColor">
+<tr id="i6" class="altColor">
 <td class="colFirst"><code>char</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/tonic/jaloc/impl/maps/PMap.html#getChar-double-">getChar</a></span>(double&nbsp;key)</code>
 <div class="block">Reads the value for key.</div>
 </td>
 </tr>
-<tr id="i9" class="rowColor">
+<tr id="i7" class="rowColor">
 <td class="colFirst"><code>char</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/tonic/jaloc/impl/maps/PMap.html#getChar-long-">getChar</a></span>(long&nbsp;key)</code>
 <div class="block">Reads the value for key.</div>
 </td>
 </tr>
-<tr id="i10" class="altColor">
+<tr id="i8" class="altColor">
 <td class="colFirst"><code>double</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/tonic/jaloc/impl/maps/PMap.html#getDouble-double-">getDouble</a></span>(double&nbsp;key)</code>
 <div class="block">Reads the value for key.</div>
 </td>
 </tr>
-<tr id="i11" class="rowColor">
+<tr id="i9" class="rowColor">
 <td class="colFirst"><code>double</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/tonic/jaloc/impl/maps/PMap.html#getDouble-long-">getDouble</a></span>(long&nbsp;key)</code>
 <div class="block">Reads the value for key.</div>
 </td>
 </tr>
-<tr id="i12" class="altColor">
+<tr id="i10" class="altColor">
 <td class="colFirst"><code>float</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/tonic/jaloc/impl/maps/PMap.html#getFloat-double-">getFloat</a></span>(double&nbsp;key)</code>
 <div class="block">Reads the value for key.</div>
 </td>
 </tr>
-<tr id="i13" class="rowColor">
+<tr id="i11" class="rowColor">
 <td class="colFirst"><code>float</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/tonic/jaloc/impl/maps/PMap.html#getFloat-long-">getFloat</a></span>(long&nbsp;key)</code>
 <div class="block">Reads the value for key.</div>
 </td>
 </tr>
-<tr id="i14" class="altColor">
+<tr id="i12" class="altColor">
 <td class="colFirst"><code>int</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/tonic/jaloc/impl/maps/PMap.html#getInt-double-">getInt</a></span>(double&nbsp;key)</code>
 <div class="block">Reads the value for key.</div>
 </td>
 </tr>
-<tr id="i15" class="rowColor">
+<tr id="i13" class="rowColor">
 <td class="colFirst"><code>int</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/tonic/jaloc/impl/maps/PMap.html#getInt-long-">getInt</a></span>(long&nbsp;key)</code>
 <div class="block">Reads the value for key.</div>
 </td>
 </tr>
-<tr id="i16" class="altColor">
+<tr id="i14" class="altColor">
 <td class="colFirst"><code>long</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/tonic/jaloc/impl/maps/PMap.html#getLong-double-">getLong</a></span>(double&nbsp;key)</code>
 <div class="block">Reads the value for key.</div>
 </td>
 </tr>
-<tr id="i17" class="rowColor">
+<tr id="i15" class="rowColor">
 <td class="colFirst"><code>long</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/tonic/jaloc/impl/maps/PMap.html#getLong-long-">getLong</a></span>(long&nbsp;key)</code>
 <div class="block">Reads the value for key.</div>
 </td>
 </tr>
-<tr id="i18" class="altColor">
+<tr id="i16" class="altColor">
 <td class="colFirst"><code>boolean</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/tonic/jaloc/impl/maps/PMap.html#getOrDefault-double-boolean-">getOrDefault</a></span>(double&nbsp;key,
             boolean&nbsp;defaultValue)</code>
 <div class="block">Reads the value for key, or defaultValue when absent.</div>
 </td>
 </tr>
-<tr id="i19" class="rowColor">
+<tr id="i17" class="rowColor">
 <td class="colFirst"><code>double</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/tonic/jaloc/impl/maps/PMap.html#getOrDefault-double-double-">getOrDefault</a></span>(double&nbsp;key,
             double&nbsp;defaultValue)</code>
 <div class="block">Reads the value for key, or defaultValue when absent.</div>
 </td>
 </tr>
-<tr id="i20" class="altColor">
+<tr id="i18" class="altColor">
 <td class="colFirst"><code>long</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/tonic/jaloc/impl/maps/PMap.html#getOrDefault-double-long-">getOrDefault</a></span>(double&nbsp;key,
             long&nbsp;defaultValue)</code>
 <div class="block">Reads the value for key, or defaultValue when absent.</div>
 </td>
 </tr>
-<tr id="i21" class="rowColor">
+<tr id="i19" class="rowColor">
 <td class="colFirst"><code>boolean</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/tonic/jaloc/impl/maps/PMap.html#getOrDefault-long-boolean-">getOrDefault</a></span>(long&nbsp;key,
             boolean&nbsp;defaultValue)</code>
 <div class="block">Reads the value for key, or defaultValue when absent.</div>
 </td>
 </tr>
-<tr id="i22" class="altColor">
+<tr id="i20" class="altColor">
 <td class="colFirst"><code>double</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/tonic/jaloc/impl/maps/PMap.html#getOrDefault-long-double-">getOrDefault</a></span>(long&nbsp;key,
             double&nbsp;defaultValue)</code>
 <div class="block">Reads the value for key, or defaultValue when absent.</div>
 </td>
 </tr>
-<tr id="i23" class="rowColor">
+<tr id="i21" class="rowColor">
 <td class="colFirst"><code>long</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/tonic/jaloc/impl/maps/PMap.html#getOrDefault-long-long-">getOrDefault</a></span>(long&nbsp;key,
             long&nbsp;defaultValue)</code>
 <div class="block">Reads the value for key, or defaultValue when absent.</div>
 </td>
 </tr>
-<tr id="i24" class="altColor">
+<tr id="i22" class="altColor">
 <td class="colFirst"><code>short</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/tonic/jaloc/impl/maps/PMap.html#getShort-double-">getShort</a></span>(double&nbsp;key)</code>
 <div class="block">Reads the value for key.</div>
 </td>
 </tr>
-<tr id="i25" class="rowColor">
+<tr id="i23" class="rowColor">
 <td class="colFirst"><code>short</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/tonic/jaloc/impl/maps/PMap.html#getShort-long-">getShort</a></span>(long&nbsp;key)</code>
 <div class="block">Reads the value for key.</div>
 </td>
 </tr>
-<tr id="i26" class="altColor">
+<tr id="i24" class="altColor">
 <td class="colFirst"><code>void</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/tonic/jaloc/impl/maps/PMap.html#put-double-boolean-">put</a></span>(double&nbsp;key,
    boolean&nbsp;value)</code>
 <div class="block">Maps key to value, replacing any existing mapping.</div>
 </td>
 </tr>
-<tr id="i27" class="rowColor">
+<tr id="i25" class="rowColor">
 <td class="colFirst"><code>void</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/tonic/jaloc/impl/maps/PMap.html#put-double-double-">put</a></span>(double&nbsp;key,
    double&nbsp;value)</code>
 <div class="block">Maps key to value, replacing any existing mapping.</div>
 </td>
 </tr>
-<tr id="i28" class="altColor">
+<tr id="i26" class="altColor">
 <td class="colFirst"><code>void</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/tonic/jaloc/impl/maps/PMap.html#put-double-long-">put</a></span>(double&nbsp;key,
    long&nbsp;value)</code>
 <div class="block">Maps key to value, replacing any existing mapping.</div>
 </td>
 </tr>
-<tr id="i29" class="rowColor">
+<tr id="i27" class="rowColor">
 <td class="colFirst"><code>void</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/tonic/jaloc/impl/maps/PMap.html#put-long-boolean-">put</a></span>(long&nbsp;key,
    boolean&nbsp;value)</code>
 <div class="block">Maps key to value, replacing any existing mapping.</div>
 </td>
 </tr>
-<tr id="i30" class="altColor">
+<tr id="i28" class="altColor">
 <td class="colFirst"><code>void</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/tonic/jaloc/impl/maps/PMap.html#put-long-double-">put</a></span>(long&nbsp;key,
    double&nbsp;value)</code>
 <div class="block">Maps key to value, replacing any existing mapping.</div>
 </td>
 </tr>
-<tr id="i31" class="rowColor">
+<tr id="i29" class="rowColor">
 <td class="colFirst"><code>void</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/tonic/jaloc/impl/maps/PMap.html#put-long-long-">put</a></span>(long&nbsp;key,
    long&nbsp;value)</code>
 <div class="block">Maps key to value, replacing any existing mapping.</div>
-</td>
-</tr>
-<tr id="i32" class="altColor">
-<td class="colFirst"><code>boolean</code></td>
-<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/tonic/jaloc/impl/maps/PMap.html#remove-double-">remove</a></span>(double&nbsp;key)</code>
-<div class="block">Removes the mapping for key.</div>
-</td>
-</tr>
-<tr id="i33" class="rowColor">
-<td class="colFirst"><code>boolean</code></td>
-<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/tonic/jaloc/impl/maps/PMap.html#remove-long-">remove</a></span>(long&nbsp;key)</code>
-<div class="block">Removes the mapping for key.</div>
 </td>
 </tr>
 </table>
@@ -407,7 +404,7 @@ extends <a href="../../../../../com/tonic/jaloc/memory/abs/AbstractNativeMap.htm
 <!--   -->
 </a>
 <h3>Methods inherited from class&nbsp;com.tonic.jaloc.memory.abs.<a href="../../../../../com/tonic/jaloc/memory/abs/AbstractNativeMap.html" title="class in com.tonic.jaloc.memory.abs">AbstractNativeMap</a></h3>
-<code><a href="../../../../../com/tonic/jaloc/memory/abs/AbstractNativeMap.html#clear--">clear</a>, <a href="../../../../../com/tonic/jaloc/memory/abs/AbstractNativeMap.html#layout--">layout</a></code></li>
+<code><a href="../../../../../com/tonic/jaloc/memory/abs/AbstractNativeMap.html#clear--">clear</a>, <a href="../../../../../com/tonic/jaloc/memory/abs/AbstractNativeMap.html#containsKey-double-">containsKey</a>, <a href="../../../../../com/tonic/jaloc/memory/abs/AbstractNativeMap.html#containsKey-long-">containsKey</a>, <a href="../../../../../com/tonic/jaloc/memory/abs/AbstractNativeMap.html#layout--">layout</a>, <a href="../../../../../com/tonic/jaloc/memory/abs/AbstractNativeMap.html#remove-double-">remove</a>, <a href="../../../../../com/tonic/jaloc/memory/abs/AbstractNativeMap.html#remove-long-">remove</a>, <a href="../../../../../com/tonic/jaloc/memory/abs/AbstractNativeMap.html#trim--">trim</a></code></li>
 </ul>
 <ul class="blockList">
 <li class="blockList"><a name="methods.inherited.from.class.com.tonic.jaloc.memory.abs.AbstractNativeCollection">
@@ -1065,82 +1062,6 @@ extends <a href="../../../../../com/tonic/jaloc/memory/abs/AbstractNativeMap.htm
 </dl>
 </li>
 </ul>
-<a name="containsKey-long-">
-<!--   -->
-</a>
-<ul class="blockList">
-<li class="blockList">
-<h4>containsKey</h4>
-<pre>public&nbsp;boolean&nbsp;containsKey(long&nbsp;key)</pre>
-<div class="block">Tests whether key is present.</div>
-<dl>
-<dt><span class="paramLabel">Parameters:</span></dt>
-<dd><code>key</code> - the key</dd>
-<dt><span class="returnLabel">Returns:</span></dt>
-<dd>true if present</dd>
-<dt><span class="throwsLabel">Throws:</span></dt>
-<dd><code>java.lang.IllegalArgumentException</code> - on key type mismatch</dd>
-<dd><code>java.lang.IllegalStateException</code> - if closed</dd>
-</dl>
-</li>
-</ul>
-<a name="containsKey-double-">
-<!--   -->
-</a>
-<ul class="blockList">
-<li class="blockList">
-<h4>containsKey</h4>
-<pre>public&nbsp;boolean&nbsp;containsKey(double&nbsp;key)</pre>
-<div class="block">Tests whether key is present.</div>
-<dl>
-<dt><span class="paramLabel">Parameters:</span></dt>
-<dd><code>key</code> - the key</dd>
-<dt><span class="returnLabel">Returns:</span></dt>
-<dd>true if present</dd>
-<dt><span class="throwsLabel">Throws:</span></dt>
-<dd><code>java.lang.IllegalArgumentException</code> - on key type mismatch</dd>
-<dd><code>java.lang.IllegalStateException</code> - if closed</dd>
-</dl>
-</li>
-</ul>
-<a name="remove-long-">
-<!--   -->
-</a>
-<ul class="blockList">
-<li class="blockList">
-<h4>remove</h4>
-<pre>public&nbsp;boolean&nbsp;remove(long&nbsp;key)</pre>
-<div class="block">Removes the mapping for key.</div>
-<dl>
-<dt><span class="paramLabel">Parameters:</span></dt>
-<dd><code>key</code> - the key</dd>
-<dt><span class="returnLabel">Returns:</span></dt>
-<dd>true if the map changed</dd>
-<dt><span class="throwsLabel">Throws:</span></dt>
-<dd><code>java.lang.IllegalArgumentException</code> - on key type mismatch</dd>
-<dd><code>java.lang.IllegalStateException</code> - if closed</dd>
-</dl>
-</li>
-</ul>
-<a name="remove-double-">
-<!--   -->
-</a>
-<ul class="blockList">
-<li class="blockList">
-<h4>remove</h4>
-<pre>public&nbsp;boolean&nbsp;remove(double&nbsp;key)</pre>
-<div class="block">Removes the mapping for key.</div>
-<dl>
-<dt><span class="paramLabel">Parameters:</span></dt>
-<dd><code>key</code> - the key</dd>
-<dt><span class="returnLabel">Returns:</span></dt>
-<dd>true if the map changed</dd>
-<dt><span class="throwsLabel">Throws:</span></dt>
-<dd><code>java.lang.IllegalArgumentException</code> - on key type mismatch</dd>
-<dd><code>java.lang.IllegalStateException</code> - if closed</dd>
-</dl>
-</li>
-</ul>
 <a name="forEachKey-java.util.function.LongConsumer-">
 <!--   -->
 </a>
@@ -1205,7 +1126,7 @@ extends <a href="../../../../../com/tonic/jaloc/memory/abs/AbstractNativeMap.htm
 <div class="subNav">
 <ul class="navList">
 <li>Prev&nbsp;Class</li>
-<li><a href="../../../../../com/tonic/jaloc/impl/maps/PStructMap.html" title="class in com.tonic.jaloc.impl.maps"><span class="typeNameLink">Next&nbsp;Class</span></a></li>
+<li><a href="../../../../../com/tonic/jaloc/impl/maps/PMap.Slot.html" title="class in com.tonic.jaloc.impl.maps"><span class="typeNameLink">Next&nbsp;Class</span></a></li>
 </ul>
 <ul class="navList">
 <li><a href="../../../../../index.html?com/tonic/jaloc/impl/maps/PMap.html" target="_top">Frames</a></li>
@@ -1229,7 +1150,7 @@ extends <a href="../../../../../com/tonic/jaloc/memory/abs/AbstractNativeMap.htm
 <div>
 <ul class="subNavList">
 <li>Summary:&nbsp;</li>
-<li>Nested&nbsp;|&nbsp;</li>
+<li><a href="#nested.class.summary">Nested</a>&nbsp;|&nbsp;</li>
 <li>Field&nbsp;|&nbsp;</li>
 <li><a href="#constructor.summary">Constr</a>&nbsp;|&nbsp;</li>
 <li><a href="#method.summary">Method</a></li>

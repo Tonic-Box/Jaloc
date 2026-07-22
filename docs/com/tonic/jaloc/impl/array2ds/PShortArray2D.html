@@ -25,7 +25,7 @@
     catch(err) {
     }
 //-->
-var methods = {"i0":10,"i1":10,"i2":10,"i3":10,"i4":10,"i5":10,"i6":10,"i7":10};
+var methods = {"i0":10,"i1":10};
 var tabs = {65535:["t0","All Methods"],2:["t2","Instance Methods"],8:["t4","Concrete Methods"]};
 var altColor = "altColor";
 var rowColor = "rowColor";
@@ -106,7 +106,12 @@ var activeTableTab = "activeTableTab";
 <li>java.lang.Object</li>
 <li>
 <ul class="inheritance">
+<li><a href="../../../../../com/tonic/jaloc/memory/abs/AbstractNativeArray2D.html" title="class in com.tonic.jaloc.memory.abs">com.tonic.jaloc.memory.abs.AbstractNativeArray2D</a></li>
+<li>
+<ul class="inheritance">
 <li>com.tonic.jaloc.impl.array2ds.PShortArray2D</li>
+</ul>
+</li>
 </ul>
 </li>
 </ul>
@@ -120,8 +125,7 @@ var activeTableTab = "activeTableTab";
 <hr>
 <br>
 <pre>public final class <span class="typeNameLabel">PShortArray2D</span>
-extends java.lang.Object
-implements java.lang.AutoCloseable</pre>
+extends <a href="../../../../../com/tonic/jaloc/memory/abs/AbstractNativeArray2D.html" title="class in com.tonic.jaloc.memory.abs">AbstractNativeArray2D</a></pre>
 <div class="block">A fixed-shape 2D short array over a single native allocation, addressed row-major.</div>
 </li>
 </ul>
@@ -169,41 +173,13 @@ implements java.lang.AutoCloseable</pre>
 <th class="colLast" scope="col">Method and Description</th>
 </tr>
 <tr id="i0" class="altColor">
-<td class="colFirst"><code>void</code></td>
-<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/tonic/jaloc/impl/array2ds/PShortArray2D.html#clear--">clear</a></span>()</code>
-<div class="block">Clears every cell to zero.</div>
-</td>
-</tr>
-<tr id="i1" class="rowColor">
-<td class="colFirst"><code>void</code></td>
-<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/tonic/jaloc/impl/array2ds/PShortArray2D.html#close--">close</a></span>()</code>
-<div class="block">Releases the backing native memory.</div>
-</td>
-</tr>
-<tr id="i2" class="altColor">
-<td class="colFirst"><code>long</code></td>
-<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/tonic/jaloc/impl/array2ds/PShortArray2D.html#columns--">columns</a></span>()</code>&nbsp;</td>
-</tr>
-<tr id="i3" class="rowColor">
 <td class="colFirst"><code>short</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/tonic/jaloc/impl/array2ds/PShortArray2D.html#get-long-long-">get</a></span>(long&nbsp;row,
    long&nbsp;column)</code>
 <div class="block">Reads the cell at row, column.</div>
 </td>
 </tr>
-<tr id="i4" class="altColor">
-<td class="colFirst"><code>boolean</code></td>
-<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/tonic/jaloc/impl/array2ds/PShortArray2D.html#isOpen--">isOpen</a></span>()</code>&nbsp;</td>
-</tr>
-<tr id="i5" class="rowColor">
-<td class="colFirst"><code>long</code></td>
-<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/tonic/jaloc/impl/array2ds/PShortArray2D.html#length--">length</a></span>()</code>&nbsp;</td>
-</tr>
-<tr id="i6" class="altColor">
-<td class="colFirst"><code>long</code></td>
-<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/tonic/jaloc/impl/array2ds/PShortArray2D.html#rows--">rows</a></span>()</code>&nbsp;</td>
-</tr>
-<tr id="i7" class="rowColor">
+<tr id="i1" class="rowColor">
 <td class="colFirst"><code>void</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/tonic/jaloc/impl/array2ds/PShortArray2D.html#set-long-long-short-">set</a></span>(long&nbsp;row,
    long&nbsp;column,
@@ -212,6 +188,13 @@ implements java.lang.AutoCloseable</pre>
 </td>
 </tr>
 </table>
+<ul class="blockList">
+<li class="blockList"><a name="methods.inherited.from.class.com.tonic.jaloc.memory.abs.AbstractNativeArray2D">
+<!--   -->
+</a>
+<h3>Methods inherited from class&nbsp;com.tonic.jaloc.memory.abs.<a href="../../../../../com/tonic/jaloc/memory/abs/AbstractNativeArray2D.html" title="class in com.tonic.jaloc.memory.abs">AbstractNativeArray2D</a></h3>
+<code><a href="../../../../../com/tonic/jaloc/memory/abs/AbstractNativeArray2D.html#clear--">clear</a>, <a href="../../../../../com/tonic/jaloc/memory/abs/AbstractNativeArray2D.html#close--">close</a>, <a href="../../../../../com/tonic/jaloc/memory/abs/AbstractNativeArray2D.html#columns--">columns</a>, <a href="../../../../../com/tonic/jaloc/memory/abs/AbstractNativeArray2D.html#isOpen--">isOpen</a>, <a href="../../../../../com/tonic/jaloc/memory/abs/AbstractNativeArray2D.html#length--">length</a>, <a href="../../../../../com/tonic/jaloc/memory/abs/AbstractNativeArray2D.html#rows--">rows</a></code></li>
+</ul>
 <ul class="blockList">
 <li class="blockList"><a name="methods.inherited.from.class.java.lang.Object">
 <!--   -->
@@ -279,58 +262,6 @@ implements java.lang.AutoCloseable</pre>
 <!--   -->
 </a>
 <h3>Method Detail</h3>
-<a name="rows--">
-<!--   -->
-</a>
-<ul class="blockList">
-<li class="blockList">
-<h4>rows</h4>
-<pre>public&nbsp;long&nbsp;rows()</pre>
-<dl>
-<dt><span class="returnLabel">Returns:</span></dt>
-<dd>the row count</dd>
-</dl>
-</li>
-</ul>
-<a name="columns--">
-<!--   -->
-</a>
-<ul class="blockList">
-<li class="blockList">
-<h4>columns</h4>
-<pre>public&nbsp;long&nbsp;columns()</pre>
-<dl>
-<dt><span class="returnLabel">Returns:</span></dt>
-<dd>the column count</dd>
-</dl>
-</li>
-</ul>
-<a name="length--">
-<!--   -->
-</a>
-<ul class="blockList">
-<li class="blockList">
-<h4>length</h4>
-<pre>public&nbsp;long&nbsp;length()</pre>
-<dl>
-<dt><span class="returnLabel">Returns:</span></dt>
-<dd>total cell count, rows x columns</dd>
-</dl>
-</li>
-</ul>
-<a name="isOpen--">
-<!--   -->
-</a>
-<ul class="blockList">
-<li class="blockList">
-<h4>isOpen</h4>
-<pre>public&nbsp;boolean&nbsp;isOpen()</pre>
-<dl>
-<dt><span class="returnLabel">Returns:</span></dt>
-<dd>true until closed</dd>
-</dl>
-</li>
-</ul>
 <a name="get-long-long-">
 <!--   -->
 </a>
@@ -355,7 +286,7 @@ implements java.lang.AutoCloseable</pre>
 <a name="set-long-long-short-">
 <!--   -->
 </a>
-<ul class="blockList">
+<ul class="blockListLast">
 <li class="blockList">
 <h4>set</h4>
 <pre>public&nbsp;void&nbsp;set(long&nbsp;row,
@@ -370,34 +301,6 @@ implements java.lang.AutoCloseable</pre>
 <dt><span class="throwsLabel">Throws:</span></dt>
 <dd><code>java.lang.IndexOutOfBoundsException</code> - if either index is out of range</dd>
 <dd><code>java.lang.IllegalStateException</code> - if closed</dd>
-</dl>
-</li>
-</ul>
-<a name="clear--">
-<!--   -->
-</a>
-<ul class="blockList">
-<li class="blockList">
-<h4>clear</h4>
-<pre>public&nbsp;void&nbsp;clear()</pre>
-<div class="block">Clears every cell to zero.</div>
-<dl>
-<dt><span class="throwsLabel">Throws:</span></dt>
-<dd><code>java.lang.IllegalStateException</code> - if closed</dd>
-</dl>
-</li>
-</ul>
-<a name="close--">
-<!--   -->
-</a>
-<ul class="blockListLast">
-<li class="blockList">
-<h4>close</h4>
-<pre>public&nbsp;void&nbsp;close()</pre>
-<div class="block">Releases the backing native memory. Safe to call more than once.</div>
-<dl>
-<dt><span class="overrideSpecifyLabel">Specified by:</span></dt>
-<dd><code>close</code>&nbsp;in interface&nbsp;<code>java.lang.AutoCloseable</code></dd>
 </dl>
 </li>
 </ul>
