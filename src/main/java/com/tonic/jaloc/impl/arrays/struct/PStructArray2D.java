@@ -1,6 +1,8 @@
 package com.tonic.jaloc.impl.arrays.struct;
 
 import com.tonic.jaloc.memory.SystemAllocator;
+import com.tonic.jaloc.memory.abs.AbstractNativeArray;
+import com.tonic.jaloc.memory.abs.AbstractNativeArray2D;
 import com.tonic.jaloc.memory.data.struct.StructLayout;
 import com.tonic.jaloc.memory.iface.NativeAllocator;
 
@@ -9,11 +11,9 @@ import java.util.Objects;
 /**
  * A fixed-shape 2D struct array over a single native allocation, addressed row-major.
  */
-public final class PStructArray2D<T extends PStruct> implements AutoCloseable
+public final class PStructArray2D<T extends PStruct> extends AbstractNativeArray2D
 {
     private final PStructArray<T> array;
-    private final long rows;
-    private final long columns;
 
     /**
      * Allocates a rows x columns grid on the system allocator, zeroed.
@@ -41,11 +41,17 @@ public final class PStructArray2D<T extends PStruct> implements AutoCloseable
      */
     public PStructArray2D(NativeAllocator allocator, StructViewFactory<T> viewFactory, StructLayout layout, long rows, long columns)
     {
+        super(rows, columns);
+
         Objects.requireNonNull(allocator, "allocator");
 
-        this.rows = requireDimension(rows, "rows");
-        this.columns = requireDimension(columns, "columns");
         this.array = new PStructArray<>(allocator, viewFactory, layout, Math.multiplyExact(rows, columns));
+    }
+
+    @Override
+    protected AbstractNativeArray<?> backing()
+    {
+        return array;
     }
 
     /**
@@ -54,38 +60,6 @@ public final class PStructArray2D<T extends PStruct> implements AutoCloseable
     public StructLayout layout()
     {
         return array.layout();
-    }
-
-    /**
-     * @return the row count
-     */
-    public long rows()
-    {
-        return rows;
-    }
-
-    /**
-     * @return the column count
-     */
-    public long columns()
-    {
-        return columns;
-    }
-
-    /**
-     * @return total cell count, rows x columns
-     */
-    public long length()
-    {
-        return array.length();
-    }
-
-    /**
-     * @return true until closed
-     */
-    public boolean isOpen()
-    {
-        return array.isOpen();
     }
 
     /**
@@ -113,44 +87,5 @@ public final class PStructArray2D<T extends PStruct> implements AutoCloseable
     public void clearStruct(long row, long column)
     {
         array.clearStruct(flatIndex(row, column));
-    }
-
-    /**
-     * Zeroes every cell.
-     *
-     * @throws IllegalStateException if closed
-     */
-    public void clear()
-    {
-        array.clear();
-    }
-
-    /**
-     * Releases the backing native memory. Safe to call more than once.
-     */
-    @Override
-    public void close()
-    {
-        array.close();
-    }
-
-    private long flatIndex(long row, long column)
-    {
-        if (row < 0 || row >= rows || column < 0 || column >= columns)
-        {
-            throw new IndexOutOfBoundsException("row=" + row + ", column=" + column + ", rows=" + rows + ", columns=" + columns);
-        }
-
-        return row * columns + column;
-    }
-
-    private static long requireDimension(long value, String name)
-    {
-        if (value < 0)
-        {
-            throw new IllegalArgumentException(name + " cannot be negative");
-        }
-
-        return value;
     }
 }
