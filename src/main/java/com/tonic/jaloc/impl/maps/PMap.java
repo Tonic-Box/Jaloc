@@ -27,7 +27,6 @@ public final class PMap<K, V> extends AbstractNativeMap<PMap.Slot>
     private static final int VALUE_INT = 3;
     private static final int VALUE_LONG = 4;
 
-    private final StructField valueField;
     private final StructType valueType;
     private final long valueOffset;
     private final int valueKind;
@@ -71,7 +70,8 @@ public final class PMap<K, V> extends AbstractNativeMap<PMap.Slot>
     {
         super(Objects.requireNonNull(allocator, "allocator"), new PStructArray<>(allocator, Slot::new, buildLayout(keyType, valueType), tableLength(expectedElements)), "key");
 
-        this.valueField = layout().field("value");
+        StructField valueField = layout().field("value");
+
         this.valueType = valueField.getType();
         this.valueOffset = valueField.getOffset();
         this.valueKind = valueKindOf(valueType);
@@ -545,70 +545,6 @@ public final class PMap<K, V> extends AbstractNativeMap<PMap.Slot>
     }
 
     /**
-     * Tests whether key is present.
-     *
-     * @param key the key
-     * @return true if present
-     * @throws IllegalArgumentException on key type mismatch
-     * @throws IllegalStateException if closed
-     */
-    public boolean containsKey(long key)
-    {
-        ensureOpen();
-
-        return findKey(integralKeyBits(key)) >= 0;
-    }
-
-    /**
-     * Tests whether key is present.
-     *
-     * @param key the key
-     * @return true if present
-     * @throws IllegalArgumentException on key type mismatch
-     * @throws IllegalStateException if closed
-     */
-    public boolean containsKey(double key)
-    {
-        ensureOpen();
-
-        return findKey(floatingKeyBits(key)) >= 0;
-    }
-
-    /**
-     * Removes the mapping for key.
-     *
-     * @param key the key
-     * @return true if the map changed
-     * @throws IllegalArgumentException on key type mismatch
-     * @throws IllegalStateException if closed
-     */
-    public boolean remove(long key)
-    {
-        ensureOpen();
-
-        long bits = integralKeyBits(key);
-
-        return bits == 0 ? removeZero() : removeSlot(bits);
-    }
-
-    /**
-     * Removes the mapping for key.
-     *
-     * @param key the key
-     * @return true if the map changed
-     * @throws IllegalArgumentException on key type mismatch
-     * @throws IllegalStateException if closed
-     */
-    public boolean remove(double key)
-    {
-        ensureOpen();
-
-        long bits = floatingKeyBits(key);
-
-        return bits == 0 ? removeZero() : removeSlot(bits);
-    }
-
-    /**
      * Emits every key; integral-keyed maps only.
      *
      * @param consumer the receiver
@@ -675,18 +611,6 @@ public final class PMap<K, V> extends AbstractNativeMap<PMap.Slot>
     private long valueAddress(long slot)
     {
         return slotAddress(slot) + valueOffset;
-    }
-
-    private long findKey(long bits)
-    {
-        return bits == 0 ? (containsZeroKey() ? zeroSlot() : -1) : findSlot(bits);
-    }
-
-    private long insertKey(long bits)
-    {
-        long slot = bits == 0 ? zeroInsert() : insertSlot(bits);
-
-        return slot < 0 ? ~slot : slot;
     }
 
     private long requireSlot(long bits, long key)
@@ -927,7 +851,10 @@ public final class PMap<K, V> extends AbstractNativeMap<PMap.Slot>
         }
     }
 
-    static final class Slot extends PStruct
+    /**
+     * The internal entry view backing the map; not for direct use.
+     */
+    public static final class Slot extends PStruct
     {
         private Slot(PStructArray<Slot> array, long index)
         {

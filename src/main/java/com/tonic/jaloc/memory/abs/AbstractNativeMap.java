@@ -155,6 +155,82 @@ public abstract class AbstractNativeMap<T extends PStruct> extends AbstractNativ
         return true;
     }
 
+    /**
+     * Tests whether key is present.
+     *
+     * @param key the key
+     * @return true if present
+     * @throws IllegalArgumentException on key type mismatch
+     * @throws IllegalStateException if closed
+     */
+    public final boolean containsKey(long key)
+    {
+        ensureOpen();
+
+        return findKey(integralKeyBits(key)) >= 0;
+    }
+
+    /**
+     * Tests whether key is present.
+     *
+     * @param key the key
+     * @return true if present
+     * @throws IllegalArgumentException on key type mismatch
+     * @throws IllegalStateException if closed
+     */
+    public final boolean containsKey(double key)
+    {
+        ensureOpen();
+
+        return findKey(floatingKeyBits(key)) >= 0;
+    }
+
+    /**
+     * Removes the mapping for key.
+     *
+     * @param key the key
+     * @return true if the map changed
+     * @throws IllegalArgumentException on key type mismatch
+     * @throws IllegalStateException if closed
+     */
+    public final boolean remove(long key)
+    {
+        ensureOpen();
+
+        long bits = integralKeyBits(key);
+
+        return bits == 0 ? removeZero() : removeSlot(bits);
+    }
+
+    /**
+     * Removes the mapping for key.
+     *
+     * @param key the key
+     * @return true if the map changed
+     * @throws IllegalArgumentException on key type mismatch
+     * @throws IllegalStateException if closed
+     */
+    public final boolean remove(double key)
+    {
+        ensureOpen();
+
+        long bits = floatingKeyBits(key);
+
+        return bits == 0 ? removeZero() : removeSlot(bits);
+    }
+
+    protected final long findKey(long bits)
+    {
+        return bits == 0 ? (containsZeroKey() ? zeroSlot() : -1) : findSlot(bits);
+    }
+
+    protected final long insertKey(long bits)
+    {
+        long slot = bits == 0 ? zeroInsert() : insertSlot(bits);
+
+        return slot < 0 ? ~slot : slot;
+    }
+
     protected final long findSlot(long keyBits)
     {
         if (keyKind == KEY_LONG)

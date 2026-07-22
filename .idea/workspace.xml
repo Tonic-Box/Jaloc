@@ -4,16 +4,9 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="2824b8b6-14eb-456f-be4b-62b6e25e85cf" name="Changes" comment="update readme">
-      <change afterPath="$PROJECT_DIR$/.idea/inspectionProfiles/Project_Default.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/uiDesigner.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/tonic/jaloc/impl/arrays/PDoubleArray.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/tonic/jaloc/impl/arrays/PDoubleArray.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/tonic/jaloc/impl/arrays/PFloatArray.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/tonic/jaloc/impl/arrays/PFloatArray.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/tonic/jaloc/impl/arrays/PIntArray.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/tonic/jaloc/impl/arrays/PIntArray.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/tonic/jaloc/impl/arrays/PLongArray.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/tonic/jaloc/impl/arrays/PLongArray.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/tonic/jaloc/impl/sets/PIntSet.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/tonic/jaloc/impl/sets/PIntSet.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/tonic/jaloc/impl/sets/PLongSet.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/tonic/jaloc/impl/sets/PLongSet.java" afterDir="false" />
+    <list default="true" id="2824b8b6-14eb-456f-be4b-62b6e25e85cf" name="Changes" comment="Fold shared map facade methods into AbstractNativeMap">
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/tonic/jaloc/impl/maps/PMap.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/tonic/jaloc/impl/maps/PMap.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/tonic/jaloc/impl/maps/PStructMap.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/tonic/jaloc/impl/maps/PStructMap.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/com/tonic/jaloc/memory/abs/AbstractNativeMap.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/tonic/jaloc/memory/abs/AbstractNativeMap.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -179,14 +172,6 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1784496645962</updated>
-    </task>
-    <task id="LOCAL-00002" summary=" - fixed an issue where zero-length allocation would cause a crash&#10; - fixed some typos in exception messages">
-      <option name="closed" value="true" />
-      <created>1784532842512</created>
-      <option name="number" value="00002" />
-      <option name="presentableId" value="LOCAL-00002" />
-      <option name="project" value="LOCAL" />
-      <updated>1784532842512</updated>
     </task>
     <task id="LOCAL-00003" summary="Extract AllocationRecord from AllocationState as the deallocation authority">
       <option name="closed" value="true" />
@@ -572,7 +557,15 @@
       <option name="project" value="LOCAL" />
       <updated>1784636707697</updated>
     </task>
-    <option name="localTasksCounter" value="51" />
+    <task id="LOCAL-00051" summary="Centralize hash-table math and radix trivial-pass check">
+      <option name="closed" value="true" />
+      <created>1784699338559</created>
+      <option name="number" value="00051" />
+      <option name="presentableId" value="LOCAL-00051" />
+      <option name="project" value="LOCAL" />
+      <updated>1784699338559</updated>
+    </task>
+    <option name="localTasksCounter" value="52" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -587,8 +580,6 @@
     </option>
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="Add struct-entry hash map engine and PStructMap" />
-    <MESSAGE value="- Add PMap, the primitive-to-primitive hash map" />
     <MESSAGE value="Add cursor-based lookups to PStructMap" />
     <MESSAGE value="Read size without liveness checks in post-entry bookkeeping" />
     <MESSAGE value="Collapse ensureOpen to a local flag on arrays and collections" />
@@ -612,7 +603,9 @@
     <MESSAGE value="tweak to doc generation" />
     <MESSAGE value="docs tweak" />
     <MESSAGE value="update readme" />
-    <option name="LAST_COMMIT_MESSAGE" value="update readme" />
+    <MESSAGE value="Centralize hash-table math and radix trivial-pass check" />
+    <MESSAGE value="Fold shared map facade methods into AbstractNativeMap" />
+    <option name="LAST_COMMIT_MESSAGE" value="Fold shared map facade methods into AbstractNativeMap" />
   </component>
   <component name="XSLT-Support.FileAssociations.UIState">
     <expand />

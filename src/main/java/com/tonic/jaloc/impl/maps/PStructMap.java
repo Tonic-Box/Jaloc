@@ -80,12 +80,7 @@ public final class PStructMap<K, V extends PStruct> extends AbstractNativeMap<V>
         ensureOpen();
 
         long bits = integralKeyBits(key);
-        long slot = bits == 0 ? zeroInsert() : insertSlot(bits);
-
-        if (slot < 0)
-        {
-            slot = ~slot;
-        }
+        long slot = insertKey(bits);
 
         return elements().at(slot);
     }
@@ -103,12 +98,7 @@ public final class PStructMap<K, V extends PStruct> extends AbstractNativeMap<V>
         ensureOpen();
 
         long bits = floatingKeyBits(key);
-        long slot = bits == 0 ? zeroInsert() : insertSlot(bits);
-
-        if (slot < 0)
-        {
-            slot = ~slot;
-        }
+        long slot = insertKey(bits);
 
         return elements().at(slot);
     }
@@ -126,7 +116,7 @@ public final class PStructMap<K, V extends PStruct> extends AbstractNativeMap<V>
         ensureOpen();
 
         long bits = integralKeyBits(key);
-        long slot = bits == 0 ? (containsZeroKey() ? zeroSlot() : -1) : findSlot(bits);
+        long slot = findKey(bits);
 
         return slot < 0 ? null : elements().at(slot);
     }
@@ -144,7 +134,7 @@ public final class PStructMap<K, V extends PStruct> extends AbstractNativeMap<V>
         ensureOpen();
 
         long bits = floatingKeyBits(key);
-        long slot = bits == 0 ? (containsZeroKey() ? zeroSlot() : -1) : findSlot(bits);
+        long slot = findKey(bits);
 
         return slot < 0 ? null : elements().at(slot);
     }
@@ -176,7 +166,7 @@ public final class PStructMap<K, V extends PStruct> extends AbstractNativeMap<V>
         ensureOpen();
 
         long bits = integralKeyBits(key);
-        long slot = bits == 0 ? (containsZeroKey() ? zeroSlot() : -1) : findSlot(bits);
+        long slot = findKey(bits);
 
         if (slot < 0)
         {
@@ -203,7 +193,7 @@ public final class PStructMap<K, V extends PStruct> extends AbstractNativeMap<V>
         ensureOpen();
 
         long bits = floatingKeyBits(key);
-        long slot = bits == 0 ? (containsZeroKey() ? zeroSlot() : -1) : findSlot(bits);
+        long slot = findKey(bits);
 
         if (slot < 0)
         {
@@ -212,74 +202,6 @@ public final class PStructMap<K, V extends PStruct> extends AbstractNativeMap<V>
 
         cursor.moveTo(slot);
         return cursor;
-    }
-
-    /**
-     * Tests whether key is present.
-     *
-     * @param key the key
-     * @return true if present
-     * @throws IllegalArgumentException on key type mismatch
-     * @throws IllegalStateException if closed
-     */
-    public boolean containsKey(long key)
-    {
-        ensureOpen();
-
-        long bits = integralKeyBits(key);
-
-        return bits == 0 ? containsZeroKey() : findSlot(bits) >= 0;
-    }
-
-    /**
-     * Tests whether key is present.
-     *
-     * @param key the key
-     * @return true if present
-     * @throws IllegalArgumentException on key type mismatch
-     * @throws IllegalStateException if closed
-     */
-    public boolean containsKey(double key)
-    {
-        ensureOpen();
-
-        long bits = floatingKeyBits(key);
-
-        return bits == 0 ? containsZeroKey() : findSlot(bits) >= 0;
-    }
-
-    /**
-     * Removes the mapping for key.
-     *
-     * @param key the key
-     * @return true if the map changed
-     * @throws IllegalArgumentException on key type mismatch
-     * @throws IllegalStateException if closed
-     */
-    public boolean remove(long key)
-    {
-        ensureOpen();
-
-        long bits = integralKeyBits(key);
-
-        return bits == 0 ? removeZero() : removeSlot(bits);
-    }
-
-    /**
-     * Removes the mapping for key.
-     *
-     * @param key the key
-     * @return true if the map changed
-     * @throws IllegalArgumentException on key type mismatch
-     * @throws IllegalStateException if closed
-     */
-    public boolean remove(double key)
-    {
-        ensureOpen();
-
-        long bits = floatingKeyBits(key);
-
-        return bits == 0 ? removeZero() : removeSlot(bits);
     }
 
     /**
