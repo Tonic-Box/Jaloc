@@ -25,7 +25,7 @@
     catch(err) {
     }
 //-->
-var methods = {"i0":18,"i1":6,"i2":18};
+var methods = {"i0":18,"i1":6,"i2":18,"i3":18};
 var tabs = {65535:["t0","All Methods"],2:["t2","Instance Methods"],4:["t3","Abstract Methods"],16:["t5","Default Methods"]};
 var altColor = "altColor";
 var rowColor = "rowColor";
@@ -107,7 +107,7 @@ var activeTableTab = "activeTableTab";
 <li class="blockList">
 <dl>
 <dt>All Known Implementing Classes:</dt>
-<dd><a href="../../../../../com/tonic/jaloc/memory/SystemAllocator.html" title="class in com.tonic.jaloc.memory">SystemAllocator</a></dd>
+<dd><a href="../../../../../com/tonic/jaloc/memory/MappedAllocator.html" title="class in com.tonic.jaloc.memory">MappedAllocator</a>, <a href="../../../../../com/tonic/jaloc/memory/SystemAllocator.html" title="class in com.tonic.jaloc.memory">SystemAllocator</a></dd>
 </dl>
 <hr>
 <br>
@@ -150,6 +150,10 @@ var activeTableTab = "activeTableTab";
               int&nbsp;alignment)</code>
 <div class="block">Allocates bytes with the given alignment and zeroes them.</div>
 </td>
+</tr>
+<tr id="i3" class="rowColor">
+<td class="colFirst"><code>default boolean</code></td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/tonic/jaloc/memory/iface/NativeAllocator.html#clearRequired--">clearRequired</a></span>()</code>&nbsp;</td>
 </tr>
 </table>
 </li>
@@ -207,7 +211,7 @@ var activeTableTab = "activeTableTab";
 <a name="allocateZeroed-long-int-">
 <!--   -->
 </a>
-<ul class="blockListLast">
+<ul class="blockList">
 <li class="blockList">
 <h4>allocateZeroed</h4>
 <pre>default&nbsp;com.tonic.jaloc.memory.internal.MemoryBlock&nbsp;allocateZeroed(long&nbsp;bytes,
@@ -221,6 +225,19 @@ var activeTableTab = "activeTableTab";
 <dd>the block</dd>
 <dt><span class="throwsLabel">Throws:</span></dt>
 <dd><code>java.lang.IllegalArgumentException</code> - if bytes is negative or alignment is not a power of two</dd>
+</dl>
+</li>
+</ul>
+<a name="clearRequired--">
+<!--   -->
+</a>
+<ul class="blockListLast">
+<li class="blockList">
+<h4>clearRequired</h4>
+<pre>default&nbsp;boolean&nbsp;clearRequired()</pre>
+<dl>
+<dt><span class="returnLabel">Returns:</span></dt>
+<dd>true if fresh blocks need explicit zeroing; allocators handing out pre-zeroed memory return false</dd>
 </dl>
 </li>
 </ul>

@@ -376,6 +376,8 @@
 <dd>
 <div class="block">Allocates bytes with 8-byte alignment.</div>
 </dd>
+<dt><span class="memberNameLink"><a href="com/tonic/jaloc/memory/MappedAllocator.html#allocate-long-int-">allocate(long, int)</a></span> - Method in class com.tonic.jaloc.memory.<a href="com/tonic/jaloc/memory/MappedAllocator.html" title="class in com.tonic.jaloc.memory">MappedAllocator</a></dt>
+<dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="com/tonic/jaloc/memory/SystemAllocator.html#allocate-long-int-">allocate(long, int)</a></span> - Method in class com.tonic.jaloc.memory.<a href="com/tonic/jaloc/memory/SystemAllocator.html" title="class in com.tonic.jaloc.memory">SystemAllocator</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="com/tonic/jaloc/memory/iface/NativeAllocator.html#allocateZeroed-long-int-">allocateZeroed(long, int)</a></span> - Method in interface com.tonic.jaloc.memory.iface.<a href="com/tonic/jaloc/memory/iface/NativeAllocator.html" title="interface in com.tonic.jaloc.memory.iface">NativeAllocator</a></dt>
@@ -606,6 +608,10 @@
 </dd>
 <dt><span class="memberNameLink"><a href="com/tonic/jaloc/memory/abs/AbstractPrimitiveArray.html#clearRange-long-long-">clearRange(long, long)</a></span> - Method in class com.tonic.jaloc.memory.abs.<a href="com/tonic/jaloc/memory/abs/AbstractPrimitiveArray.html" title="class in com.tonic.jaloc.memory.abs">AbstractPrimitiveArray</a></dt>
 <dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="com/tonic/jaloc/memory/iface/NativeAllocator.html#clearRequired--">clearRequired()</a></span> - Method in interface com.tonic.jaloc.memory.iface.<a href="com/tonic/jaloc/memory/iface/NativeAllocator.html" title="interface in com.tonic.jaloc.memory.iface">NativeAllocator</a></dt>
+<dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="com/tonic/jaloc/memory/MappedAllocator.html#clearRequired--">clearRequired()</a></span> - Method in class com.tonic.jaloc.memory.<a href="com/tonic/jaloc/memory/MappedAllocator.html" title="class in com.tonic.jaloc.memory">MappedAllocator</a></dt>
+<dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="com/tonic/jaloc/impl/arrays/struct/PStructArray.html#clearStruct-long-">clearStruct(long)</a></span> - Method in class com.tonic.jaloc.impl.arrays.struct.<a href="com/tonic/jaloc/impl/arrays/struct/PStructArray.html" title="class in com.tonic.jaloc.impl.arrays.struct">PStructArray</a></dt>
 <dd>
 <div class="block">Zeroes the struct at index.</div>
@@ -633,6 +639,10 @@
 <dt><span class="memberNameLink"><a href="com/tonic/jaloc/memory/abs/AbstractNativeCollection.html#close--">close()</a></span> - Method in class com.tonic.jaloc.memory.abs.<a href="com/tonic/jaloc/memory/abs/AbstractNativeCollection.html" title="class in com.tonic.jaloc.memory.abs">AbstractNativeCollection</a></dt>
 <dd>
 <div class="block">Releases the backing native memory.</div>
+</dd>
+<dt><span class="memberNameLink"><a href="com/tonic/jaloc/memory/MappedAllocator.html#close--">close()</a></span> - Method in class com.tonic.jaloc.memory.<a href="com/tonic/jaloc/memory/MappedAllocator.html" title="class in com.tonic.jaloc.memory">MappedAllocator</a></dt>
+<dd>
+<div class="block">Refuses further allocations.</div>
 </dd>
 <dt><span class="memberNameLink"><a href="com/tonic/jaloc/memory/abs/AbstractNativeArray2D.html#columns--">columns()</a></span> - Method in class com.tonic.jaloc.memory.abs.<a href="com/tonic/jaloc/memory/abs/AbstractNativeArray2D.html" title="class in com.tonic.jaloc.memory.abs">AbstractNativeArray2D</a></dt>
 <dd>&nbsp;</dd>
@@ -773,6 +783,38 @@
 <dt><span class="memberNameLink"><a href="com/tonic/jaloc/impl/arrays/PShortArray.html#copyTo-long-short:A-int-int-">copyTo(long, short[], int, int)</a></span> - Method in class com.tonic.jaloc.impl.arrays.<a href="com/tonic/jaloc/impl/arrays/PShortArray.html" title="class in com.tonic.jaloc.impl.arrays">PShortArray</a></dt>
 <dd>
 <div class="block">Bulk copies length elements from this array into destination.</div>
+</dd>
+<dt><span class="memberNameLink"><a href="com/tonic/jaloc/impl/arrays/PBoolArray.html#create-java.nio.file.Path-long-">create(Path, long)</a></span> - Static method in class com.tonic.jaloc.impl.arrays.<a href="com/tonic/jaloc/impl/arrays/PBoolArray.html" title="class in com.tonic.jaloc.impl.arrays">PBoolArray</a></dt>
+<dd>
+<div class="block">Creates a new file holding length elements and maps it, zeroed.</div>
+</dd>
+<dt><span class="memberNameLink"><a href="com/tonic/jaloc/impl/arrays/PByteArray.html#create-java.nio.file.Path-long-">create(Path, long)</a></span> - Static method in class com.tonic.jaloc.impl.arrays.<a href="com/tonic/jaloc/impl/arrays/PByteArray.html" title="class in com.tonic.jaloc.impl.arrays">PByteArray</a></dt>
+<dd>
+<div class="block">Creates a new file holding length elements and maps it, zeroed.</div>
+</dd>
+<dt><span class="memberNameLink"><a href="com/tonic/jaloc/impl/arrays/PCharArray.html#create-java.nio.file.Path-long-">create(Path, long)</a></span> - Static method in class com.tonic.jaloc.impl.arrays.<a href="com/tonic/jaloc/impl/arrays/PCharArray.html" title="class in com.tonic.jaloc.impl.arrays">PCharArray</a></dt>
+<dd>
+<div class="block">Creates a new file holding length elements and maps it, zeroed.</div>
+</dd>
+<dt><span class="memberNameLink"><a href="com/tonic/jaloc/impl/arrays/PDoubleArray.html#create-java.nio.file.Path-long-">create(Path, long)</a></span> - Static method in class com.tonic.jaloc.impl.arrays.<a href="com/tonic/jaloc/impl/arrays/PDoubleArray.html" title="class in com.tonic.jaloc.impl.arrays">PDoubleArray</a></dt>
+<dd>
+<div class="block">Creates a new file holding length elements and maps it, zeroed.</div>
+</dd>
+<dt><span class="memberNameLink"><a href="com/tonic/jaloc/impl/arrays/PFloatArray.html#create-java.nio.file.Path-long-">create(Path, long)</a></span> - Static method in class com.tonic.jaloc.impl.arrays.<a href="com/tonic/jaloc/impl/arrays/PFloatArray.html" title="class in com.tonic.jaloc.impl.arrays">PFloatArray</a></dt>
+<dd>
+<div class="block">Creates a new file holding length elements and maps it, zeroed.</div>
+</dd>
+<dt><span class="memberNameLink"><a href="com/tonic/jaloc/impl/arrays/PIntArray.html#create-java.nio.file.Path-long-">create(Path, long)</a></span> - Static method in class com.tonic.jaloc.impl.arrays.<a href="com/tonic/jaloc/impl/arrays/PIntArray.html" title="class in com.tonic.jaloc.impl.arrays">PIntArray</a></dt>
+<dd>
+<div class="block">Creates a new file holding length elements and maps it, zeroed.</div>
+</dd>
+<dt><span class="memberNameLink"><a href="com/tonic/jaloc/impl/arrays/PLongArray.html#create-java.nio.file.Path-long-">create(Path, long)</a></span> - Static method in class com.tonic.jaloc.impl.arrays.<a href="com/tonic/jaloc/impl/arrays/PLongArray.html" title="class in com.tonic.jaloc.impl.arrays">PLongArray</a></dt>
+<dd>
+<div class="block">Creates a new file holding length elements and maps it, zeroed.</div>
+</dd>
+<dt><span class="memberNameLink"><a href="com/tonic/jaloc/impl/arrays/PShortArray.html#create-java.nio.file.Path-long-">create(Path, long)</a></span> - Static method in class com.tonic.jaloc.impl.arrays.<a href="com/tonic/jaloc/impl/arrays/PShortArray.html" title="class in com.tonic.jaloc.impl.arrays">PShortArray</a></dt>
+<dd>
+<div class="block">Creates a new file holding length elements and maps it, zeroed.</div>
 </dd>
 <dt><span class="memberNameLink"><a href="com/tonic/jaloc/impl/arrays/struct/StructViewFactory.html#create-com.tonic.jaloc.impl.arrays.struct.PStructArray-long-">create(PStructArray&lt;T&gt;, long)</a></span> - Method in interface com.tonic.jaloc.impl.arrays.struct.<a href="com/tonic/jaloc/impl/arrays/struct/StructViewFactory.html" title="interface in com.tonic.jaloc.impl.arrays.struct">StructViewFactory</a></dt>
 <dd>&nbsp;</dd>
@@ -1209,6 +1251,14 @@
 <dt><span class="memberNameLink"><a href="com/tonic/jaloc/memory/abs/AbstractNativeList.html#ensureCapacity-long-">ensureCapacity(long)</a></span> - Method in class com.tonic.jaloc.memory.abs.<a href="com/tonic/jaloc/memory/abs/AbstractNativeList.html" title="class in com.tonic.jaloc.memory.abs">AbstractNativeList</a></dt>
 <dd>
 <div class="block">Grows capacity to at least requiredCapacity.</div>
+</dd>
+<dt><span class="memberNameLink"><a href="com/tonic/jaloc/memory/MappedAllocator.html#ephemeral--">ephemeral()</a></span> - Static method in class com.tonic.jaloc.memory.<a href="com/tonic/jaloc/memory/MappedAllocator.html" title="class in com.tonic.jaloc.memory">MappedAllocator</a></dt>
+<dd>
+<div class="block">Creates a spill allocator over temp files in the system temp directory.</div>
+</dd>
+<dt><span class="memberNameLink"><a href="com/tonic/jaloc/memory/MappedAllocator.html#ephemeral-java.nio.file.Path-">ephemeral(Path)</a></span> - Static method in class com.tonic.jaloc.memory.<a href="com/tonic/jaloc/memory/MappedAllocator.html" title="class in com.tonic.jaloc.memory">MappedAllocator</a></dt>
+<dd>
+<div class="block">Creates a spill allocator over temp files in directory.</div>
 </dd>
 </dl>
 <a name="I:F">
@@ -1710,6 +1760,8 @@
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="com/tonic/jaloc/memory/iface/AllocationOwner.html#isOpen--">isOpen()</a></span> - Method in interface com.tonic.jaloc.memory.iface.<a href="com/tonic/jaloc/memory/iface/AllocationOwner.html" title="interface in com.tonic.jaloc.memory.iface">AllocationOwner</a></dt>
 <dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="com/tonic/jaloc/memory/MappedAllocator.html#isOpen--">isOpen()</a></span> - Method in class com.tonic.jaloc.memory.<a href="com/tonic/jaloc/memory/MappedAllocator.html" title="class in com.tonic.jaloc.memory">MappedAllocator</a></dt>
+<dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="com/tonic/jaloc/memory/SystemAllocator.html#isOpen--">isOpen()</a></span> - Method in class com.tonic.jaloc.memory.<a href="com/tonic/jaloc/memory/SystemAllocator.html" title="class in com.tonic.jaloc.memory">SystemAllocator</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="com/tonic/jaloc/impl/arrays/struct/PStructArray.html#iterator--">iterator()</a></span> - Method in class com.tonic.jaloc.impl.arrays.struct.<a href="com/tonic/jaloc/impl/arrays/struct/PStructArray.html" title="class in com.tonic.jaloc.impl.arrays.struct">PStructArray</a></dt>
@@ -1750,6 +1802,13 @@
 </a>
 <h2 class="title">M</h2>
 <dl>
+<dt><a href="com/tonic/jaloc/memory/MappedAllocator.html" title="class in com.tonic.jaloc.memory"><span class="typeNameLink">MappedAllocator</span></a> - Class in <a href="com/tonic/jaloc/memory/package-summary.html">com.tonic.jaloc.memory</a></dt>
+<dd>
+<div class="block">An allocator backing each block with a memory-mapped temp file the kernel deletes at process exit, so pages are
+ OS-reclaimable under memory pressure instead of pinned like malloc.</div>
+</dd>
+<dt><span class="memberNameLink"><a href="com/tonic/jaloc/memory/MappedAllocator.html#mappedBytes--">mappedBytes()</a></span> - Method in class com.tonic.jaloc.memory.<a href="com/tonic/jaloc/memory/MappedAllocator.html" title="class in com.tonic.jaloc.memory">MappedAllocator</a></dt>
+<dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="com/tonic/jaloc/impl/sets/PBloomFilter.html#mightContain-long-">mightContain(long)</a></span> - Method in class com.tonic.jaloc.impl.sets.<a href="com/tonic/jaloc/impl/sets/PBloomFilter.html" title="class in com.tonic.jaloc.impl.sets">PBloomFilter</a></dt>
 <dd>
 <div class="block">Tests whether value may have been recorded.</div>
@@ -1821,6 +1880,38 @@
 <dt><span class="memberNameLink"><a href="com/tonic/jaloc/memory/data/ElementSize.html#offsetOf-long-">offsetOf(long)</a></span> - Method in enum com.tonic.jaloc.memory.data.<a href="com/tonic/jaloc/memory/data/ElementSize.html" title="enum in com.tonic.jaloc.memory.data">ElementSize</a></dt>
 <dd>
 <div class="block">Byte offset of index.</div>
+</dd>
+<dt><span class="memberNameLink"><a href="com/tonic/jaloc/impl/arrays/PBoolArray.html#open-java.nio.file.Path-">open(Path)</a></span> - Static method in class com.tonic.jaloc.impl.arrays.<a href="com/tonic/jaloc/impl/arrays/PBoolArray.html" title="class in com.tonic.jaloc.impl.arrays">PBoolArray</a></dt>
+<dd>
+<div class="block">Opens an existing file and maps it, keeping its contents; bit packing rounds the length up to eight per byte.</div>
+</dd>
+<dt><span class="memberNameLink"><a href="com/tonic/jaloc/impl/arrays/PByteArray.html#open-java.nio.file.Path-">open(Path)</a></span> - Static method in class com.tonic.jaloc.impl.arrays.<a href="com/tonic/jaloc/impl/arrays/PByteArray.html" title="class in com.tonic.jaloc.impl.arrays">PByteArray</a></dt>
+<dd>
+<div class="block">Opens an existing file and maps it, keeping its contents.</div>
+</dd>
+<dt><span class="memberNameLink"><a href="com/tonic/jaloc/impl/arrays/PCharArray.html#open-java.nio.file.Path-">open(Path)</a></span> - Static method in class com.tonic.jaloc.impl.arrays.<a href="com/tonic/jaloc/impl/arrays/PCharArray.html" title="class in com.tonic.jaloc.impl.arrays">PCharArray</a></dt>
+<dd>
+<div class="block">Opens an existing file and maps it, keeping its contents.</div>
+</dd>
+<dt><span class="memberNameLink"><a href="com/tonic/jaloc/impl/arrays/PDoubleArray.html#open-java.nio.file.Path-">open(Path)</a></span> - Static method in class com.tonic.jaloc.impl.arrays.<a href="com/tonic/jaloc/impl/arrays/PDoubleArray.html" title="class in com.tonic.jaloc.impl.arrays">PDoubleArray</a></dt>
+<dd>
+<div class="block">Opens an existing file and maps it, keeping its contents.</div>
+</dd>
+<dt><span class="memberNameLink"><a href="com/tonic/jaloc/impl/arrays/PFloatArray.html#open-java.nio.file.Path-">open(Path)</a></span> - Static method in class com.tonic.jaloc.impl.arrays.<a href="com/tonic/jaloc/impl/arrays/PFloatArray.html" title="class in com.tonic.jaloc.impl.arrays">PFloatArray</a></dt>
+<dd>
+<div class="block">Opens an existing file and maps it, keeping its contents.</div>
+</dd>
+<dt><span class="memberNameLink"><a href="com/tonic/jaloc/impl/arrays/PIntArray.html#open-java.nio.file.Path-">open(Path)</a></span> - Static method in class com.tonic.jaloc.impl.arrays.<a href="com/tonic/jaloc/impl/arrays/PIntArray.html" title="class in com.tonic.jaloc.impl.arrays">PIntArray</a></dt>
+<dd>
+<div class="block">Opens an existing file and maps it, keeping its contents.</div>
+</dd>
+<dt><span class="memberNameLink"><a href="com/tonic/jaloc/impl/arrays/PLongArray.html#open-java.nio.file.Path-">open(Path)</a></span> - Static method in class com.tonic.jaloc.impl.arrays.<a href="com/tonic/jaloc/impl/arrays/PLongArray.html" title="class in com.tonic.jaloc.impl.arrays">PLongArray</a></dt>
+<dd>
+<div class="block">Opens an existing file and maps it, keeping its contents.</div>
+</dd>
+<dt><span class="memberNameLink"><a href="com/tonic/jaloc/impl/arrays/PShortArray.html#open-java.nio.file.Path-">open(Path)</a></span> - Static method in class com.tonic.jaloc.impl.arrays.<a href="com/tonic/jaloc/impl/arrays/PShortArray.html" title="class in com.tonic.jaloc.impl.arrays">PShortArray</a></dt>
+<dd>
+<div class="block">Opens an existing file and maps it, keeping its contents.</div>
 </dd>
 <dt><span class="memberNameLink"><a href="com/tonic/jaloc/impl/sets/PBitSet.html#or-com.tonic.jaloc.impl.sets.PBitSet-">or(PBitSet)</a></span> - Method in class com.tonic.jaloc.impl.sets.<a href="com/tonic/jaloc/impl/sets/PBitSet.html" title="class in com.tonic.jaloc.impl.sets">PBitSet</a></dt>
 <dd>
@@ -4048,6 +4139,8 @@
 <dd>
 <div class="block">Releases the allocation's memory.</div>
 </dd>
+<dt><span class="memberNameLink"><a href="com/tonic/jaloc/memory/MappedAllocator.html#release-com.tonic.jaloc.memory.internal.AllocationRecord-">release(AllocationRecord)</a></span> - Method in class com.tonic.jaloc.memory.<a href="com/tonic/jaloc/memory/MappedAllocator.html" title="class in com.tonic.jaloc.memory">MappedAllocator</a></dt>
+<dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="com/tonic/jaloc/memory/SystemAllocator.html#release-com.tonic.jaloc.memory.internal.AllocationRecord-">release(AllocationRecord)</a></span> - Method in class com.tonic.jaloc.memory.<a href="com/tonic/jaloc/memory/SystemAllocator.html" title="class in com.tonic.jaloc.memory">SystemAllocator</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="com/tonic/jaloc/memory/abs/AbstractArrayWriter.html#remaining--">remaining()</a></span> - Method in class com.tonic.jaloc.memory.abs.<a href="com/tonic/jaloc/memory/abs/AbstractArrayWriter.html" title="class in com.tonic.jaloc.memory.abs">AbstractArrayWriter</a></dt>
